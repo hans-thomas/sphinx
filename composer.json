@@ -1,0 +1,49 @@
+{
+    "name": "hans-thomas/sphinx",
+    "description": "Json web token driver for laravel",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "mortazavi",
+            "email": "s.mohammad027@live.com"
+        }
+    ],
+    "require": {
+        "hans-thomas/horus": "dev-master",
+        "jenssegers/agent": "^2.6",
+        "lcobucci/jwt": "^4.1"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.24",
+        "nunomaduro/collision": "^5.10"
+    },
+    "autoload": {
+        "psr-4": {
+            "Hans\\Sphinx\\": "src/"
+        },
+        "files": [
+            "src/Helpers/functions.php",
+            "src/Helpers/constants.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Hans\\Sphinx\\Tests\\": "tests/",
+            "App\\": "tests/skeleton/laravel-8.x/app",
+            "Database\\Factories\\": "tests/skeleton/laravel-8.x/database/factories"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+              "Hans\\Sphinx\\SphinxServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@php ./vendor/bin/testbench package:discover --ansi"
+        ]
+    }
+}
