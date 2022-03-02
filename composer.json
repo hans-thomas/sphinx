@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "hans-thomas/horus": "dev-master",
+        "hans-thomas/horus": "^8.0",
         "jenssegers/agent": "^2.6",
         "lcobucci/jwt": "^4.1"
     },
@@ -44,6 +44,9 @@
     "scripts": {
         "post-autoload-dump": [
             "@php ./vendor/bin/testbench package:discover --ansi"
-        ]
+        ],
+        "testbench": "./vendor/bin/testbench",
+        "test": "./vendor/bin/testbench package:test",
+        "unit": "./vendor/bin/phpunit"
     }
 }
