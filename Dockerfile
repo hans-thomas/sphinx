@@ -18,9 +18,6 @@ RUN curl https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin
 
 # add aliases
 RUN echo 'alias testbench="./vendor/bin/testbench"' >> ~/.bashrc
-RUN echo 'alias test="testbench package:test"' >> ~/.bashrc
-RUN echo 'alias chownw="chown -R www-data:www-data "' >> ~/.bashrc
-RUN echo 'alias unit="./vendor/bin/phpunit"' >> ~/.bashrc
 
 CMD ["php-fpm"]
 
