@@ -30,8 +30,8 @@
     "autoload-dev": {
         "psr-4": {
             "Hans\\Sphinx\\Tests\\": "tests/",
-            "App\\": "tests/skeleton/laravel-8.x/app",
-            "Database\\Factories\\": "tests/skeleton/laravel-8.x/database/factories"
+            "App\\": "tests/skeleton/laravel-9.x/app",
+            "Database\\Factories\\": "tests/skeleton/laravel-9.x/database/factories"
         }
     },
     "extra": {

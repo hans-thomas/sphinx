@@ -8,7 +8,9 @@
 	use Hans\Horus\Models\Role;
 	use Hans\Sphinx\Contracts\SphinxContract;
 	use Hans\Sphinx\SphinxServiceProvider;
+	use Illuminate\Foundation\Application;
 	use Illuminate\Foundation\Testing\RefreshDatabase;
+	use Illuminate\Routing\Router;
 	use Orchestra\Testbench\TestCase as BaseTestCase;
 	use RolesEnum;
 
@@ -66,7 +68,7 @@
 		/**
 		 * Get application timezone.
 		 *
-		 * @param \Illuminate\Foundation\Application $app
+		 * @param Application $app
 		 *
 		 * @return string|null
 		 */
@@ -77,7 +79,7 @@
 		/**
 		 * Get package providers.
 		 *
-		 * @param \Illuminate\Foundation\Application $app
+		 * @param Application $app
 		 *
 		 * @return array
 		 */
@@ -91,7 +93,7 @@
 		/**
 		 * Override application aliases.
 		 *
-		 * @param \Illuminate\Foundation\Application $app
+		 * @param Application $app
 		 *
 		 * @return array
 		 */
@@ -103,7 +105,7 @@
 		/**
 		 * Define environment setup.
 		 *
-		 * @param \Illuminate\Foundation\Application $app
+		 * @param Application $app
 		 *
 		 * @return void
 		 */
@@ -120,7 +122,7 @@
 		/**
 		 * Define routes setup.
 		 *
-		 * @param \Illuminate\Routing\Router $router
+		 * @param Router $router
 		 *
 		 * @return void
 		 */
@@ -145,6 +147,6 @@
 		 * @return string
 		 */
 		protected function getBasePath() {
-			return __DIR__ . '/skeleton/laravel-8.x';
+			return __DIR__ . '/skeleton/laravel-9.x';
 		}
 	}

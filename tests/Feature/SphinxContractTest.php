@@ -8,7 +8,9 @@
 	use Hans\Sphinx\Models\Session;
 	use Hans\Sphinx\Tests\Factories\UserFactory;
 	use Hans\Sphinx\Tests\TestCase;
+	use Illuminate\Support\Facades\Cache;
 	use Lcobucci\JWT\UnencryptedToken;
+	use SphinxCacheEnum;
 
 	class SphinxContractTest extends TestCase {
 
@@ -23,7 +25,8 @@
 		 */
 		protected function setUp(): void {
 			parent::setUp();
-			$this->user    = UserFactory::createNormalUserWithSession();
+			$this->user = UserFactory::createNormalUserWithSession();
+			Cache::forget( SphinxCacheEnum::ROLE . $this->user->getRole()->id );
 			$this->session = $this->user->sessions()->latest()->first();
 			$this->token   = UserFactory::createAccessToken( $this->user );
 		}
