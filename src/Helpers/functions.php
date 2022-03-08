@@ -17,9 +17,9 @@
 				$browser = rtrim( ( $browser = Agent::browser() ) . ( ' ' . Agent::version( $browser ) ? : '' ) );
 				$os      = rtrim( ( $os = Agent::platform() ) . ( ' ' . Agent::version( $os ) ? : null ) );
 				$user    = auth()->user();
-				if ( ( $limit = $user->getDeviceLimit() ) <= $user->sessions()->count( 'id' ) ) {
-					$ids = $user->sessions->take( count( $user->sessions ) - ( $limit - 1 ) )->pluck( 'id' )->toArray();
-					$user->sessions()->whereIn( 'id', $ids )->delete();
+				if ( ( $limit = $user->getDeviceLimit() ) <= ( $sessionCount = $user->sessions()->count( 'id' ) ) ) {
+					$ids = $user->sessions()->limit( $sessionCount - ( $limit - 1 ) )->pluck( 'id' )->toArray();
+					$user->sessions()->whereIn( 'id', $ids )->each( fn( Session $session ) => $session->delete() );
 				}
 				DB::beginTransaction();
 				$session = $user->sessions()->create( [
