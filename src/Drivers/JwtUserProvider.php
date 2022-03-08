@@ -53,8 +53,13 @@
 		 * @return Authenticatable|null
 		 */
 		public function retrieveByCredentials( array $credentials ) {
-			$instance         = ( new ( config( 'sphinx.model' ) ) )->forceFill( $credentials );
-			$instance->exists = true;
+			$model = new ( config( 'sphinx.model' ) )();
+			if ( ! isset( $credentials[ 'id' ] ) ) {
+				$instance = $model->query()->firstWhere( collect( $credentials )->except( 'password' )->toArray() );
+			} else {
+				$instance         = $model->forceFill( $credentials );
+				$instance->exists = true;
+			}
 
 			return $instance;
 		}
@@ -68,10 +73,6 @@
 		 * @return bool
 		 */
 		public function validateCredentials( Authenticatable $user, array $credentials ) {
-			if ( $user->id == ( $credentials[ 'id' ] ?? null ) ) {
-				return true;
-			}
-
-			return false;
+			return collect( $user->toArray() )->every( fn( $value, $key ) => ! isset( $credentials[ $key ] ) || $value === $credentials[ $key ] );
 		}
 	}

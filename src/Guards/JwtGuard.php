@@ -62,7 +62,7 @@
 
 		public function attempt( array $credentials, ?bool $remember = false ): bool {
 			$user = $this->provider->retrieveByCredentials( $credentials );
-			if ( $this->provider->validateCredentials( $user, $credentials ) ) {
+			if ( ! is_null( $user ) and $this->provider->validateCredentials( $user, $credentials ) ) {
 				$this->user = $user;
 
 				return true;

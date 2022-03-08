@@ -37,10 +37,6 @@
 		 * @return void
 		 */
 		public function boot() {
-			/*			if ( ! config( 'sphinx' ) ) {
-							throw new SphinxException( 'Please publish the config file!',
-								SphinxErrorCode::CONFIG_FILE_NOT_PUBLISHED );
-						}*/
 			$this->publishes( [
 				__DIR__ . '/../config/config.php' => config_path( 'sphinx.php' )
 			], 'sphinx-config' );
