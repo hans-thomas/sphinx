@@ -6,6 +6,7 @@
 	use Illuminate\Support\Facades\DB;
 	use Illuminate\Support\Str;
 	use Jenssegers\Agent\Facades\Agent;
+	use Symfony\Component\HttpFoundation\Response;
 
 	if ( ! function_exists( 'capture_session' ) ) {
 		/**
@@ -30,8 +31,8 @@
 				DB::commit();
 			} catch ( Throwable $e ) {
 				DB::rollBack();
-				throw new SphinxException( $e->getMessage(),
-					SphinxErrorCode::CAPTURE_SESSION_FAILED );
+				throw new SphinxException( $e->getMessage(), SphinxErrorCode::CAPTURE_SESSION_FAILED,
+					Response::HTTP_INTERNAL_SERVER_ERROR );
 			}
 
 			return $session;

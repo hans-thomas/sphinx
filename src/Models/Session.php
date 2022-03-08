@@ -14,6 +14,7 @@
 		protected $fillable = [ 'ip', 'device', 'platform', 'secret' ];
 
 		protected static function booted() {
+			// TODO: created and updated events == saved event
 			self::created( function( self $model ) {
 				Cache::forever( SphinxCacheEnum::SESSION . $model->id, $model->getForCache() );
 			} );
