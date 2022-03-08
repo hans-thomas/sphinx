@@ -18,16 +18,16 @@
 		private SphinxContract $sphinx;
 
 		public function __construct( UserProvider $provider, Request $request, SphinxContract $sphinx_contract ) {
-			$this->provider    = $provider;
-			$this->sphinx = $sphinx_contract;
-			$this->user        = null;
-			$token             = $request->bearerToken();
+			$this->provider = $provider;
+			$this->sphinx   = $sphinx_contract;
+			$this->user     = null;
+			$token          = $request->bearerToken();
 			if ( $token ) {
 				if ( ! $this->sphinx->extract( $token )->headers()->get( 'refresh', false ) ) {
 					$this->sphinx->assert( $token );
 					$this->user = $this->provider->retrieveByCredentials( $this->sphinx->getInsideToken( $token )
-					                                                                        ->claims()
-					                                                                        ->get( 'user' ) );
+					                                                                   ->claims()
+					                                                                   ->get( 'user' ) );
 				}
 			}
 		}
@@ -63,6 +63,8 @@
 		public function attempt( array $credentials, ?bool $remember = false ): bool {
 			$user = $this->provider->retrieveByCredentials( $credentials );
 			if ( $this->provider->validateCredentials( $user, $credentials ) ) {
+				$this->user = $user;
+
 				return true;
 			}
 
@@ -78,8 +80,11 @@
 		}
 
 		public function loginUsingId( int $id ) {
+			$this->user = $this->provider->retrieveById( $id );
+
 			// TODO: set the user's token in header
-			return $this->user = $this->provider->retrieveById( $id );
+
+			return $this->user;
 		}
 
 		/**

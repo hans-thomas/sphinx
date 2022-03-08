@@ -12,5 +12,6 @@
 		public const SESSION_NOT_FOUND = 1007;
 		public const USERS_VERSION_NOT_FOUND = 1008;
 		public const UNAUTHENTICATED = 1009;
-		public const TOKEN_MISMATCH = 1009;
+		public const TOKEN_MISMATCH = 1010;
+		public const CAPTURE_SESSION_FAILED = 1011;
 	}

@@ -2,7 +2,6 @@
 
 	namespace Hans\Sphinx\Drivers;
 
-	use App\Models\User;
 	use Illuminate\Contracts\Auth\Authenticatable;
 	use Illuminate\Contracts\Auth\UserProvider;
 
@@ -28,7 +27,7 @@
 		 * @return Authenticatable|null
 		 */
 		public function retrieveById( $identifier ) {
-			$instance         = ( new User() )->forceFill( [ 'id' => $identifier ] );
+			$instance         = ( new ( config( 'sphinx.model' ) ) )->forceFill( [ 'id' => $identifier ] );
 			$instance->exists = true;
 
 			return $instance;
@@ -54,7 +53,7 @@
 		 * @return Authenticatable|null
 		 */
 		public function retrieveByCredentials( array $credentials ) {
-			$instance         = ( new User )->forceFill( $credentials );
+			$instance         = ( new ( config( 'sphinx.model' ) ) )->forceFill( $credentials );
 			$instance->exists = true;
 
 			return $instance;
