@@ -29,7 +29,7 @@
 		}
 
 		public function getVersion(): int {
-			return $this->version;
+			return $this->version ? : $this->fresh()->version;
 		}
 
 		abstract public function getDeviceLimit(): int;
