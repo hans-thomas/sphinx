@@ -33,6 +33,8 @@
 		}
 
 		public function user(): BelongsTo {
-			return $this->belongsTo( config( 'sphinx.model' ) );
+			$related = config( 'sphinx.model' );
+
+			return $this->belongsTo( $related, ( new $related )->getForeignKey() );
 		}
 	}
