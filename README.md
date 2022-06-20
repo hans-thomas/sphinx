@@ -9,9 +9,10 @@ it's a jwt-based authentication system for laravel with features like:
 - refresh token
 - limiting logged-in users in an account
 
-Sphinx has two layers of encryption. first, creates a token and put general data on it and encrypts using a private
-static key. next, creates a token with user's data contains user object, user's role and permissions and encrypts this
-token using a dynamic private key which is stores on database.
+Sphinx has two layers of encryption. first, creates a token and puts general data on it and encrypts using a private
+static key. next, creates a token with the user's data that contains the user object, user role and permissions and
+encrypts this token using a dynamic private key which is stores on database. finally, puts the second token inside the
+first token.
 
 # Table of contents
 
@@ -46,7 +47,7 @@ php artisan vendor:publish --tag sphinx-config
 ### Setting up the model
 
 first, use `HasRoles`, `HasRelations` and `SphinxTrait`. then call `handleCaching` method in `booted` model's method.
-next, you should implement `getDeviceLimit`, `extract` and `username` abstract methods.
+next, you have to implement `getDeviceLimit`, `extract` and `username` abstract methods.
 
 ```php
 namespace App\Models;
