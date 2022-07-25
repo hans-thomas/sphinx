@@ -4,6 +4,7 @@
 
 	use Illuminate\Contracts\Auth\Authenticatable;
 	use Illuminate\Contracts\Auth\UserProvider;
+	use Illuminate\Support\Facades\Hash;
 
 	class JwtUserProvider implements UserProvider {
 
@@ -73,6 +74,6 @@
 		 * @return bool
 		 */
 		public function validateCredentials( Authenticatable $user, array $credentials ) {
-			return collect( $user->toArray() )->every( fn( $value, $key ) => ! isset( $credentials[ $key ] ) || $value === $credentials[ $key ] );
+			return Hash::check( $credentials[ 'password' ], $user->getAuthPassword() );
 		}
 	}
