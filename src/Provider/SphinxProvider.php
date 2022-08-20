@@ -25,12 +25,9 @@
 		private Builder $instance;
 
 		public function __construct( string $secret, bool $inside = false ) {
-			/*$this->configuration = Configuration::forAsymmetricSigner( new \Lcobucci\JWT\Signer\Rsa\Sha512(),
-				LocalFileReference::file( __DIR__ . '/secret.pem' ),
-				InMemory::base64Encoded( $this->getConfig( 'public_key' ) ) );*/
 			try {
 				$this->configuration = Configuration::forSymmetricSigner( new Sha512(),
-					InMemory::base64Encoded( $secret ) );
+					InMemory::plainText( $secret ) );
 			} catch ( Throwable $e ) {
 				throw new SphinxException( $e->getMessage(), SphinxErrorCode::DECODE_FAILED,
 					ResponseAlias::HTTP_FORBIDDEN );
