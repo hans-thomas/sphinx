@@ -4,6 +4,7 @@
 
 	use Hans\Sphinx\Contracts\SphinxContract;
 	use Illuminate\Support\Facades\App;
+	use Illuminate\Support\Str;
 
 	trait SphinxTokenCan {
 		private array $tokenPermissions;
@@ -67,7 +68,7 @@
 				                             ->getPermissions( request()->bearerToken() );
 			}
 
-			[ $model ] = explode( '-', $ability );
+			$model = Str::beforeLast( $ability, '-' );
 			// high order permissions
 			if ( in_array( "*-*", $this->tokenPermissions ) ) {
 				return true;
