@@ -55,8 +55,8 @@
 		 */
 		public function retrieveByCredentials( array $credentials ) {
 			$model = new ( config( 'sphinx.model' ) )();
-			if ( ! isset( $credentials[ 'id' ] ) ) {
-				$instance = $model->query()->firstWhere( collect( $credentials )->except( 'password' )->toArray() );
+			if ( ! isset( $credentials[ 'id' ] ) and collect( $credentials )->except( [ 'password' ] )->count() > 0 ) {
+				$instance = $model->query()->firstWhere( collect( $credentials )->except( [ 'password' ] )->toArray() );
 			} else {
 				$instance         = $model->forceFill( $credentials );
 				$instance->exists = true;
