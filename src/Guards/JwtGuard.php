@@ -82,7 +82,12 @@
 		public function loginUsingId( int $id ) {
 			$this->user = $this->provider->retrieveById( $id );
 
-			// TODO: set the user's token in header
+			\request()->headers->add( [
+				'Authorization' => 'Bearer ' . app( SphinxContract::class )
+						->session( capture_session() )
+						->create( $this->user )
+						->accessToken()
+			] );
 
 			return $this->user;
 		}
