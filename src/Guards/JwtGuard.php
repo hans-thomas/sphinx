@@ -106,4 +106,10 @@
 
 			return false;
 		}
+
+		public function login( Authenticatable $user, bool $remember = false ): void {
+			$this->setUser( $user );
+		}
+
+
 	}
