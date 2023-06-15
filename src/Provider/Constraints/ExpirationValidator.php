@@ -12,6 +12,8 @@
 	final class ExpirationValidator implements Constraint {
 
 		/**
+		 * @param Token $token
+		 *
 		 * @throws SphinxException
 		 */
 		public function assert( Token $token ): void {

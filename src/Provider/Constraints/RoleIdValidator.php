@@ -15,6 +15,8 @@
 	final class RoleIdValidator implements Constraint {
 
 		/**
+		 * @param Token $token
+		 *
 		 * @throws SphinxException
 		 */
 		public function assert( Token $token ): void {
@@ -30,6 +32,7 @@
 					SphinxErrorCode::ROLE_VERSION_NOT_FOUND, ResponseAlias::HTTP_FORBIDDEN );
 			}
 			$role = Cache::rememberForever( SphinxCacheEnum::ROLE . $role_id, function() use ( $role_id ) {
+				// TODO: get role model in config
 				return App::make( HorusContract::class )->findRole( $role_id );
 			} );
 
