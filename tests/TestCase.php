@@ -2,6 +2,7 @@
 
 	namespace Hans\Sphinx\Tests;
 
+	use App\Models\User;
 	use AreasEnum;
 	use Hans\Horus\Facades\HorusSeeder as Horus;
 	use Hans\Horus\HorusServiceProvider;
@@ -23,21 +24,23 @@
 		 * Setup the test environment.
 		 */
 		protected function setUp(): void {
-			// Code before application created.
-
 			parent::setUp();
 
-			// Code after application created.
+			config()->set( 'sphinx.private_key',
+				'XELnlAjESvqWDS3utBoN9cEA8eF3PlTtyXJ1OmCUIhxfIJKdePkoof8aKCbfucOCqpuygSDv4ZobA4936UXqzshfJrw' );
+			config()->set( 'sphinx.model', User::class );
+
 			$this->sphinx = app( SphinxContract::class );
 			$this->seedHorus();
 		}
 
 		private function seedHorus(): void {
 			Horus::createPermissions( [
-				"User" => 'admin'
+				User::class => '*',
 			], AreasEnum::ADMIN );
+
 			Horus::createPermissions( [
-				"User" => 'user'
+				User::class => [ 'view' ]
 			], AreasEnum::USER );
 
 			Horus::createRoles( [ RolesEnum::DEFAULT_ADMINS ], AreasEnum::ADMIN );
@@ -45,23 +48,23 @@
 			Horus::createRoles( [ RolesEnum::DEFAULT_USERS ], AreasEnum::USER );
 
 			Horus::assignPermissionsToRole( Role::findByName( RolesEnum::DEFAULT_ADMINS, AreasEnum::ADMIN ), [
-				"User" => [
+				User::class => [
 					'view',
 					'update'
 				]
 			], AreasEnum::ADMIN );
 
 			Horus::assignPermissionsToRole( Role::findByName( RolesEnum::DEFAULT_USERS, AreasEnum::USER ), [
-				"User" => [ 'view' ],
+				User::class => [ 'view' ],
 			], AreasEnum::USER );
 
 
 			Horus::createSuperPermissions( [
-				"User" => '*',
+				User::class => '*',
 			], AreasEnum::ADMIN );
 
 			Horus::assignSuperPermissionsToRole( Role::findByName( RolesEnum::DEFAULT_ADMINS, AreasEnum::ADMIN ), [
-				"User"
+				User::class
 			] );
 		}
 
@@ -147,6 +150,6 @@
 		 * @return string
 		 */
 		protected function getBasePath() {
-			return __DIR__ . '/skeleton/laravel-9.x';
+			return __DIR__ . '/skeleton/laravel-10.x';
 		}
 	}

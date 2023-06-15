@@ -1,8 +1,14 @@
 <?php
-    return [
-        'private_key'        => env( 'SPHINX_PRIVATE_KEY', 'XEf8aKCbfucOCDS3utBoN9cEA8eF3PlTtyPkooqpuygSDOCDS3utBoN9ceqzshfJrw' ),
-        'expired_at'        => '+1 hour',
-        'refreshExpired_at' => '+24 hour',
 
-	    'model' => \App\Models\User::class
-    ];
+	use App\Models\User;
+
+	return [
+		'private_key'       => env( 'SPHINX_PRIVATE_KEY', false ),
+		'expired_at'        => '+1 hour',
+		'refreshExpired_at' => '+24 hour', // TODO: snake case
+		'model'             => User::class,
+		// TODO: use this instead of mode
+		'authenticatables'  => [
+			User::class
+		]
+	];

@@ -1,4 +1,4 @@
-FROM php:8.0-fpm
+FROM php:8.1-fpm
 
 # Install PHP extensions
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
 RUN curl https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # add aliases
-RUN echo 'alias testbench="./vendor/bin/testbench"' >> ~/.bashrc
+RUN echo 'alias chownw="chown -R www-data:www-data "' >> ~/.bashrc
 
 CMD ["php-fpm"]
 

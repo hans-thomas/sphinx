@@ -8,7 +8,7 @@
 	use Hans\Sphinx\Exceptions\SphinxErrorCode;
 	use Hans\Sphinx\Exceptions\SphinxException;
 	use Hans\Sphinx\Models\Session;
-	use Hans\Sphinx\Provider\SphinxProvider;
+	use Hans\Sphinx\Provider\Contracts\Provider;
 	use Illuminate\Contracts\Auth\Authenticatable;
 	use Illuminate\Support\Arr;
 	use Illuminate\Support\Facades\Cache;
@@ -17,9 +17,9 @@
 	use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 	class SphinxService implements SphinxContract {
-		private SphinxProvider $mainProvider, $insideProvider;
+		private Provider $mainProvider, $insideProvider;
 		private array $configuration;
-		private SphinxProvider $mainInstance, $insideInstance;
+		private Provider $mainInstance, $insideInstance;
 		private object|null $session = null;
 
 		/**
@@ -27,7 +27,7 @@
 		 */
 		public function __construct() {
 			$this->configuration = config( 'sphinx' );
-			$this->mainProvider  = new SphinxProvider( $this->getConfig( 'private_key' ) );
+			$this->mainProvider  = new Provider( $this->getConfig( 'private_key' ) );
 			$this->session();
 		}
 
@@ -41,6 +41,7 @@
 				$this->session = $session;
 			} else if ( $token = request()->bearerToken() ) {
 				$session_id    = $this->mainProvider->decode( $token )->headers()->get( 'session_id', null );
+				// TODO: findAndCache method for Session model
 				$cachedSession = Cache::rememberForever( SphinxCacheEnum::SESSION . $session_id,
 					function() use ( $session_id ) {
 						return Session::find( $session_id )?->getForCache();
@@ -53,17 +54,18 @@
 				}
 			}
 			if ( $secret = $this->session?->secret ) {
-				$this->insideProvider = new SphinxProvider( $secret, true );
+				$this->insideProvider = new Provider( $secret, true );
 			}
 
 			return $this;
 		}
 
 		public function setConfig( array $config ): self {
+			// TODO: should be deleted
 			if ( app()->runningUnitTests() ) {
 				$this->configuration = $config;
 			} else {
-				// TODO: throw an exception( "not allowed in production" )
+
 			}
 
 			return $this;

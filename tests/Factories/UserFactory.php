@@ -31,7 +31,7 @@
 				'ip'       => '127.0.0.' . rand( 0, 255 ),
 				'device'   => 'Nokia 5.3',
 				'platform' => 'Android 11',
-				'secret'   => \Illuminate\Support\Str::random()
+				'secret' => \Illuminate\Support\Str::random( 64 )
 			] );
 
 			return $user->fresh();

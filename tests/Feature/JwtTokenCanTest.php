@@ -2,15 +2,15 @@
 
 	namespace Hans\Sphinx\Tests\Feature;
 
-	use App\Models\User;
 	use AreasEnum;
 	use Hans\Horus\Models\Permission;
 	use Hans\Sphinx\Tests\Factories\UserFactory;
 	use Hans\Sphinx\Tests\TestCase;
+	use Illuminate\Contracts\Auth\Authenticatable;
 	use Illuminate\Support\Arr;
 
 	class JwtTokenCanTest extends TestCase {
-		private User $user;
+		private Authenticatable $user;
 		private string $token;
 		private Permission $normalPermission;
 		private Permission $adminPermission;
@@ -26,7 +26,7 @@
 			$this->token = UserFactory::createAccessToken( $this->user );
 
 			$this->normalPermission = Permission::firstWhere( [
-				'name' => 'user-view',
+				'name' => 'models-user-view',
 				'area' => AreasEnum::USER
 			] );
 			$this->adminPermission  = Permission::whereNotIn( 'name',

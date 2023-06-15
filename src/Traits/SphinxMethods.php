@@ -29,6 +29,7 @@
 		}
 
 		public function getVersion(): int {
+			// TODO: if version was null, this->query()->where(...)->limit(1)->first()->version
 			return $this->version ? : $this->fresh()->version;
 		}
 

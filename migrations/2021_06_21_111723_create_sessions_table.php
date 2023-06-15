@@ -13,6 +13,7 @@
 		public function up() {
 			Schema::create( 'sessions', function( Blueprint $table ) {
 				$table->id();
+				// TODO: morphTo => sessionable
 				$table->foreignIdFor( config( 'sphinx.model' ) )->constrained();
 				$table->string( 'ip', 100 );
 				$table->string( 'device', 100 );

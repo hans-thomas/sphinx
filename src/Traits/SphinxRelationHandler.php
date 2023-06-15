@@ -12,6 +12,7 @@
 		 * @return HasMany
 		 */
 		public function sessions(): HasMany {
+			// TODO: morphTo
 			return $this->hasMany( Session::class );
 		}
 	}

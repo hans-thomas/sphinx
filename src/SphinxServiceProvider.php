@@ -11,24 +11,23 @@
 	use Illuminate\Support\ServiceProvider;
 
 	class SphinxServiceProvider extends ServiceProvider {
+
 		/**
 		 * Register any application services.
 		 *
 		 * @return void
 		 */
 		public function register() {
-			Auth::provider( 'SphinxProvider', function() {
-				return new JwtUserProvider;
-			} );
+			Auth::provider( 'Provider', fn() => new JwtUserProvider );
 
 			Auth::extend( 'SphinxJwtDriver', function( Application $app, $name, array $config ) {
-				return $app->makeWith( JwtGuard::class,
-					[ 'provider' => Auth::createUserProvider( $config[ 'provider' ] ) ] );
+				return $app->makeWith(
+					JwtGuard::class,
+					[ 'provider' => Auth::createUserProvider( $config[ 'provider' ] ) ]
+				);
 			} );
 
-			$this->app->singleton( SphinxContract::class, function() {
-				return new SphinxService();
-			} );
+			$this->app->singleton( SphinxContract::class, fn() => new SphinxService );
 		}
 
 		/**
@@ -37,10 +36,15 @@
 		 * @return void
 		 */
 		public function boot() {
-			$this->publishes( [
-				__DIR__ . '/../config/config.php' => config_path( 'sphinx.php' )
-			], 'sphinx-config' );
 			$this->mergeConfigFrom( __DIR__ . '/../config/config.php', 'sphinx' );
-			$this->loadMigrationsFrom( __DIR__ . '/../migrations' );
+			if ( $this->app->runningInConsole() ) {
+				$this->loadMigrationsFrom( __DIR__ . '/../migrations' );
+				$this->publishes(
+					[
+						__DIR__ . '/../config/config.php' => config_path( 'sphinx.php' )
+					],
+					'sphinx-config'
+				);
+			}
 		}
 	}
