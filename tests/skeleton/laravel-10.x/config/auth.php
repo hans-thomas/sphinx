@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard'     => 'sphinx',
+        'guard'     => 'jwt',
         'passwords' => 'users',
     ],
 
@@ -40,7 +40,7 @@ return [
             'driver'   => 'session',
             'provider' => 'users',
         ],
-        'sphinx' => [
+        'jwt' => [
             'driver'   => 'SphinxDriver',
             'provider' => 'SphinxProvider',
         ],
@@ -64,12 +64,13 @@ return [
     */
 
     'providers' => [
-        'users'          => [
+        'users'  => [
             'driver' => 'eloquent',
             'model'  => App\Models\User::class,
         ],
-        'SphinxProvider' => [
-            'model' => App\Models\User::class,
+        'sphinx' => [
+            'driver' => 'SphinxProvider',
+            'model'  => App\Models\User::class,
         ],
 
         // 'users' => [
