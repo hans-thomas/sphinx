@@ -4,15 +4,17 @@
 
 	use Illuminate\Support\Facades\Cache;
 	use SphinxCacheEnum;
+	use Throwable;
 
 	trait SphinxMethods {
+
 		protected static function booted() {
 			static::saved( function( self $model ) {
 				$model->increaseVersion();
-				$userVersion = $model->getVersion();
-				collect( $model->sessions )->each( function( $session ) use ( $userVersion ) {
+				$user_version = $model->getVersion();
+				collect( $model->sessions )->each( function( $session ) use ( $user_version ) {
 					Cache::forget( $key = SphinxCacheEnum::SESSION . $session->id );
-					Cache::forever( $key, array_merge( $session->toArray(), compact( 'userVersion' ) ) );
+					Cache::forever( $key, array_merge( $session->toArray(), compact( 'user_version' ) ) );
 				} );
 			} );
 		}
@@ -21,7 +23,7 @@
 			try {
 				$this->forceFill( [ 'version' => $this->getVersion() + 1 ] );
 				$this->saveQuietly();
-			} catch ( \Throwable $e ) {
+			} catch ( Throwable $e ) {
 				return false;
 			}
 
@@ -42,4 +44,5 @@
 		public function getUsername(): string {
 			return static::username();
 		}
+
 	}

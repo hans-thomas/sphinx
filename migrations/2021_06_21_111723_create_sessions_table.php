@@ -10,15 +10,17 @@
 		 *
 		 * @return void
 		 */
-		public function up() {
+		public function up(): void {
 			Schema::create( 'sessions', function( Blueprint $table ) {
 				$table->id();
-				// TODO: morphTo => sessionable
-				$table->foreignIdFor( config( 'sphinx.model' ) )->constrained();
+
+				$table->morphs( 'sessionable' );
+
 				$table->string( 'ip', 100 );
 				$table->string( 'device', 100 );
 				$table->string( 'platform', 100 );
 				$table->string( 'secret', 512 );
+
 				$table->timestamps();
 			} );
 		}
@@ -28,7 +30,7 @@
 		 *
 		 * @return void
 		 */
-		public function down() {
+		public function down(): void {
 			Schema::dropIfExists( 'sessions' );
 		}
 	}

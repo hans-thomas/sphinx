@@ -4,7 +4,7 @@
 	namespace Hans\Sphinx\Services;
 
 
-	use Hans\Sphinx\Contracts\SphinxContract;
+	use Hans\Sphinx\Facades\Sphinx;
 	use Illuminate\Auth\GuardHelpers;
 	use Illuminate\Contracts\Auth\Authenticatable;
 	use Illuminate\Contracts\Auth\Guard;
@@ -17,18 +17,16 @@
 		public function __construct(
 			protected $provider,
 			private readonly Request $request,
-			private readonly SphinxContract $sphinx
 		) {
 			if ( $token = $request->bearerToken() ) {
 				// TODO: isRefreshToken(): bool
-				if ( ! $this->sphinx->extract( $token )->headers()->get( 'refresh', false ) ) {
-					$this->sphinx->assert( $token );
+				if ( ! Sphinx::extract( $token )->headers()->get( 'refresh', false ) ) {
+					Sphinx::assert( $token );
 					$this->user = $this->provider
 						->retrieveByCredentials(
-							$this->sphinx
-								->getInsideToken( $token )
-								->claims()
-								->get( 'user' )
+							Sphinx::getInsideToken( $token )
+							      ->claims()
+							      ->get( 'user' )
 						);
 				}
 			}

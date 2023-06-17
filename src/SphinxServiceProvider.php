@@ -3,7 +3,6 @@
 
 	namespace Hans\Sphinx;
 
-	use Hans\Sphinx\Contracts\SphinxContract;
 	use Hans\Sphinx\Services\SphinxGuard;
 	use Hans\Sphinx\Services\SphinxService;
 	use Hans\Sphinx\Services\SphinxUserProvider;
@@ -47,6 +46,7 @@
 		 */
 		public function boot(): void {
 			$this->mergeConfigFrom( __DIR__ . '/../config/config.php', 'sphinx' );
+
 			if ( $this->app->runningInConsole() ) {
 				$this->loadMigrationsFrom( __DIR__ . '/../migrations' );
 				$this->publishes(
