@@ -23,20 +23,31 @@
 			$user_version = $token->headers()->get( 'user_version', false );
 
 			if ( ! $session_id ) {
-				throw new SphinxException( 'Session id not found in header!', SphinxErrorCode::SESSION_NOT_FOUND,
-					ResponseAlias::HTTP_FORBIDDEN );
+				throw new SphinxException(
+					'Session id not found in header!',
+					SphinxErrorCode::SESSION_NOT_FOUND,
+					ResponseAlias::HTTP_FORBIDDEN
+				);
 			}
 			if ( ! $user_version ) {
-				throw new SphinxException( 'User\'s version not found in header!',
-					SphinxErrorCode::USERS_VERSION_NOT_FOUND, ResponseAlias::HTTP_FORBIDDEN );
+				throw new SphinxException(
+					"User's version not found in header!",
+					SphinxErrorCode::USERS_VERSION_NOT_FOUND,
+					ResponseAlias::HTTP_FORBIDDEN
+				);
 			}
-			$session = Cache::rememberForever( SphinxCacheEnum::SESSION . $session_id, function() use ( $session_id ) {
-				return Session::find( $session_id )->getForCache();
-			} );
 
-			if ( $session[ 'userVersion' ] != $user_version ) {
-				throw new SphinxException( 'User\'s token is out-of-date!', SphinxErrorCode::TOKEN_IS_OUT_OF_DATE,
-					ResponseAlias::HTTP_FORBIDDEN );
+			$session = Cache::rememberForever(
+				SphinxCacheEnum::SESSION . $session_id,
+				fn() => Session::query()->findOrFail( $session_id )->getForCache()
+			);
+
+			if ( $session[ 'user_version' ] != $user_version ) {
+				throw new SphinxException(
+					"Token is out-of-date!",
+					SphinxErrorCode::TOKEN_IS_OUT_OF_DATE,
+					ResponseAlias::HTTP_FORBIDDEN
+				);
 			}
 		}
 	}

@@ -28,8 +28,10 @@
 		}
 
 		public function getForCache(): array {
-			return array_merge( $this->only( 'id', 'ip', 'device', 'platform', 'secret' ),
-				[ 'user_version' => $this->sessionable->getVersion() ] );
+			return array_merge(
+				$this->only( 'id', 'ip', 'device', 'platform', 'secret' ),
+				[ 'user_version' => $this->sessionable->getVersion() ]
+			);
 		}
 
 		public function sessionable(): MorphTo {

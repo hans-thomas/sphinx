@@ -2,10 +2,8 @@
 
 	namespace Hans\Sphinx\Providers\Constraints;
 
-	use Hans\Horus\Contracts\HorusContract;
 	use Hans\Sphinx\Exceptions\SphinxErrorCode;
 	use Hans\Sphinx\Exceptions\SphinxException;
-	use Illuminate\Support\Facades\App;
 	use Illuminate\Support\Facades\Cache;
 	use Lcobucci\JWT\Token;
 	use Lcobucci\JWT\Validation\Constraint;
@@ -31,10 +29,10 @@
 				throw new SphinxException( 'Role\'s version not found in header!',
 					SphinxErrorCode::ROLE_VERSION_NOT_FOUND, ResponseAlias::HTTP_FORBIDDEN );
 			}
-			$role = Cache::rememberForever( SphinxCacheEnum::ROLE . $role_id, function() use ( $role_id ) {
-				// TODO: get role model in config
-				return App::make( HorusContract::class )->findRole( $role_id );
-			} );
+			$role = Cache::rememberForever(
+				SphinxCacheEnum::ROLE . $role_id,
+				fn() => app( sphinx_config( 'role_model' ) )->query()->findOrFail( $role_id )
+			);
 
 			if ( $role?->getVersion() != $role_version ) {
 				throw new SphinxException( 'User\'s token is out-of-date!', SphinxErrorCode::TOKEN_IS_OUT_OF_DATE,
