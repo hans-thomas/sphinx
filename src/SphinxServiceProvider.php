@@ -18,12 +18,14 @@
 		 *
 		 * @return void
 		 */
-		public function register() {
+		public function register(): void {
+			$this->app->bind( 'sphinx-service', SphinxService::class );
+
 			Auth::provider(
 				'SphinxProvider',
 				fn() => app(
 					SphinxUserProvider::class,
-					[ 'config' => $this->app[ 'config' ][ 'auth.providers.SphinxProvider' ] ]
+					[ 'config' => $this->app[ 'config' ][ 'auth.providers.sphinx' ] ]
 				)
 			);
 
@@ -31,15 +33,11 @@
 				return $app->makeWith(
 					SphinxGuard::class,
 					[
-						'provider' => app(
-							SphinxUserProvider::class,
-							[ 'config' => $this->app[ 'config' ][ 'auth.providers.SphinxProvider' ] ]
-						)
+						'provider' => Auth::createUserProvider( 'sphinx' )
 					]
 				);
 			} );
 
-			$this->app->singleton( SphinxContract::class, fn() => new SphinxService );
 		}
 
 		/**
@@ -47,7 +45,7 @@
 		 *
 		 * @return void
 		 */
-		public function boot() {
+		public function boot(): void {
 			$this->mergeConfigFrom( __DIR__ . '/../config/config.php', 'sphinx' );
 			if ( $this->app->runningInConsole() ) {
 				$this->loadMigrationsFrom( __DIR__ . '/../migrations' );
