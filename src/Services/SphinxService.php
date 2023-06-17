@@ -1,14 +1,16 @@
 <?php
 
 
-	namespace Hans\Sphinx;
+	namespace Hans\Sphinx\Services;
 
 
 	use Hans\Sphinx\Contracts\SphinxContract;
 	use Hans\Sphinx\Exceptions\SphinxErrorCode;
 	use Hans\Sphinx\Exceptions\SphinxException;
 	use Hans\Sphinx\Models\Session;
-	use Hans\Sphinx\Provider\Contracts\Provider;
+	use Hans\Sphinx\Providers\Contracts\Provider;
+	use Hans\Sphinx\Providers\InnerTokenProvider;
+	use Hans\Sphinx\Providers\WrapperTokenProvider;
 	use Illuminate\Contracts\Auth\Authenticatable;
 	use Illuminate\Support\Arr;
 	use Illuminate\Support\Facades\Cache;
@@ -27,7 +29,7 @@
 		 */
 		public function __construct() {
 			$this->configuration = config( 'sphinx' );
-			$this->mainProvider  = new Provider( $this->getConfig( 'private_key' ) );
+			$this->mainProvider  = new WrapperTokenProvider( $this->getConfig( 'private_key' ) );
 			$this->session();
 		}
 
@@ -54,7 +56,7 @@
 				}
 			}
 			if ( $secret = $this->session?->secret ) {
-				$this->insideProvider = new Provider( $secret, true );
+				$this->insideProvider = new InnerTokenProvider( $secret, true );
 			}
 
 			return $this;

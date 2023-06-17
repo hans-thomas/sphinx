@@ -1,12 +1,12 @@
 <?php
 
-	namespace Hans\Sphinx\Provider;
+	namespace Hans\Sphinx\Providers;
 
-	use Hans\Sphinx\Provider\Constraints\ExpirationValidator;
-	use Hans\Sphinx\Provider\Constraints\RoleIdValidator;
-	use Hans\Sphinx\Provider\Constraints\SecretVerificationValidator;
-	use Hans\Sphinx\Provider\Constraints\SessionIdValidator;
-	use Hans\Sphinx\Provider\Contracts\Provider;
+	use Hans\Sphinx\Providers\Constraints\ExpirationValidator;
+	use Hans\Sphinx\Providers\Constraints\RoleIdValidator;
+	use Hans\Sphinx\Providers\Constraints\SecretVerificationValidator;
+	use Hans\Sphinx\Providers\Constraints\SessionIdValidator;
+	use Hans\Sphinx\Providers\Contracts\Provider;
 
 	class WrapperTokenProvider extends Provider {
 

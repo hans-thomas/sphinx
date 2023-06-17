@@ -1,6 +1,6 @@
 <?php
 
-	namespace Hans\Sphinx\Provider\Constraints;
+	namespace Hans\Sphinx\Providers\Constraints;
 
 	use Hans\Horus\Contracts\HorusContract;
 	use Hans\Sphinx\Exceptions\SphinxErrorCode;

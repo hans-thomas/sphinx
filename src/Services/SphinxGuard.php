@@ -1,23 +1,22 @@
 <?php
 
 
-	namespace Hans\Sphinx\Guards;
+	namespace Hans\Sphinx\Services;
 
 
 	use Hans\Sphinx\Contracts\SphinxContract;
 	use Illuminate\Auth\GuardHelpers;
 	use Illuminate\Contracts\Auth\Authenticatable;
 	use Illuminate\Contracts\Auth\Guard;
-	use Illuminate\Contracts\Auth\UserProvider;
 	use Illuminate\Http\Request;
 
-	class JwtGuard implements Authenticatable, Guard {
+	class SphinxGuard implements Authenticatable, Guard {
 		use GuardHelpers;
 
 		private Request $request;
 		private SphinxContract $sphinx;
 
-		public function __construct( UserProvider $provider, Request $request, SphinxContract $sphinx_contract ) {
+		public function __construct( SphinxUserProvider $provider, Request $request, SphinxContract $sphinx_contract ) {
 			$this->provider = $provider;
 			$this->sphinx   = $sphinx_contract;
 			$this->user     = null;
@@ -37,7 +36,7 @@
 		}
 
 		public function getAuthIdentifier() {
-			return $this->user->id;
+			return $this->user->{$this->getAuthIdentifierName()};
 		}
 
 		public function getAuthPassword(): string {
@@ -60,10 +59,10 @@
 			return $this->user;
 		}
 
-		public function attempt( array $credentials, ?bool $remember = false ): bool {
+		public function attempt( array $credentials ): bool {
 			$user = $this->provider->retrieveByCredentials( $credentials );
 			if ( ! is_null( $user ) and $this->provider->validateCredentials( $user, $credentials ) ) {
-				$this->user = $user;
+				$this->login( $user );
 
 				return true;
 			}
@@ -81,13 +80,6 @@
 
 		public function loginUsingId( int $id ) {
 			$this->user = $this->provider->retrieveById( $id );
-
-			\request()->headers->add( [
-				'Authorization' => 'Bearer ' . app( SphinxContract::class )
-						->session( capture_session() )
-						->create( $this->user )
-						->accessToken()
-			] );
 
 			return $this->user;
 		}

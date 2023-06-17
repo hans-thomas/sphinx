@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard'     => 'sphinx',
         'passwords' => 'users',
     ],
 
@@ -36,9 +36,13 @@ return [
     */
 
     'guards' => [
-        'web' => [
-            'driver' => 'session',
+        'web'    => [
+            'driver'   => 'session',
             'provider' => 'users',
+        ],
+        'sphinx' => [
+            'driver'   => 'SphinxDriver',
+            'provider' => 'SphinxProvider',
         ],
     ],
 
@@ -60,8 +64,11 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'users'          => [
             'driver' => 'eloquent',
+            'model'  => App\Models\User::class,
+        ],
+        'SphinxProvider' => [
             'model' => App\Models\User::class,
         ],
 

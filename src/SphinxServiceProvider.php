@@ -4,8 +4,9 @@
 	namespace Hans\Sphinx;
 
 	use Hans\Sphinx\Contracts\SphinxContract;
-	use Hans\Sphinx\Drivers\JwtUserProvider;
-	use Hans\Sphinx\Guards\JwtGuard;
+	use Hans\Sphinx\Services\SphinxGuard;
+	use Hans\Sphinx\Services\SphinxService;
+	use Hans\Sphinx\Services\SphinxUserProvider;
 	use Illuminate\Foundation\Application;
 	use Illuminate\Support\Facades\Auth;
 	use Illuminate\Support\ServiceProvider;
@@ -18,12 +19,23 @@
 		 * @return void
 		 */
 		public function register() {
-			Auth::provider( 'Provider', fn() => new JwtUserProvider );
+			Auth::provider(
+				'SphinxProvider',
+				fn() => app(
+					SphinxUserProvider::class,
+					[ 'config' => $this->app[ 'config' ][ 'auth.providers.SphinxProvider' ] ]
+				)
+			);
 
-			Auth::extend( 'SphinxJwtDriver', function( Application $app, $name, array $config ) {
+			Auth::extend( 'SphinxDriver', function( Application $app, $name, array $config ) {
 				return $app->makeWith(
-					JwtGuard::class,
-					[ 'provider' => Auth::createUserProvider( $config[ 'provider' ] ) ]
+					SphinxGuard::class,
+					[
+						'provider' => app(
+							SphinxUserProvider::class,
+							[ 'config' => $this->app[ 'config' ][ 'auth.providers.SphinxProvider' ] ]
+						)
+					]
 				);
 			} );
 

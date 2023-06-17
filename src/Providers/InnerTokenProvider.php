@@ -1,9 +1,9 @@
 <?php
 
-	namespace Hans\Sphinx\Provider;
+	namespace Hans\Sphinx\Providers;
 
-	use Hans\Sphinx\Provider\Constraints\SecretVerificationValidator;
-	use Hans\Sphinx\Provider\Contracts\Provider;
+	use Hans\Sphinx\Providers\Constraints\SecretVerificationValidator;
+	use Hans\Sphinx\Providers\Contracts\Provider;
 
 	class InnerTokenProvider extends Provider {
 

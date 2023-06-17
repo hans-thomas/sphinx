@@ -7,7 +7,6 @@
 	use Hans\Horus\Facades\HorusSeeder as Horus;
 	use Hans\Horus\HorusServiceProvider;
 	use Hans\Horus\Models\Role;
-	use Hans\Sphinx\Contracts\SphinxContract;
 	use Hans\Sphinx\SphinxServiceProvider;
 	use Illuminate\Foundation\Application;
 	use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -18,19 +17,17 @@
 	class TestCase extends BaseTestCase {
 		use RefreshDatabase;
 
-		public SphinxContract $sphinx;
-
 		/**
 		 * Setup the test environment.
 		 */
 		protected function setUp(): void {
 			parent::setUp();
 
-			config()->set( 'sphinx.private_key',
-				'XELnlAjESvqWDS3utBoN9cEA8eF3PlTtyXJ1OmCUIhxfIJKdePkoof8aKCbfucOCqpuygSDv4ZobA4936UXqzshfJrw' );
-			config()->set( 'sphinx.model', User::class );
+			config()->set(
+				'sphinx.private_key',
+				'XELnlAjESvqWDS3utBoN9cEA8eF3PlTtyXJ1OmCUIhxfIJKdePkoof8aKCbfucOCqpuygSDv4ZobA4936UXqzshfJrw'
+			);
 
-			$this->sphinx = app( SphinxContract::class );
 			$this->seedHorus();
 		}
 
@@ -132,7 +129,9 @@
 		protected function defineRoutes( $router ) {
 			$router->get( '/me', function() {
 				return auth()->user();
-			} )->middleware( 'auth:api' )->name( 'test.me' );
+			} )
+			       ->middleware( 'auth:api' )
+			       ->name( 'test.me' );
 		}
 
 		/**

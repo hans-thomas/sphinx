@@ -1,7 +1,7 @@
 <?php
 
 
-	namespace Hans\Sphinx\Provider\Contracts;
+	namespace Hans\Sphinx\Providers\Contracts;
 
 
 	use DateTimeImmutable;
