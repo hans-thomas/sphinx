@@ -32,10 +32,11 @@
 				}
 				DB::beginTransaction();
 				$session = $user->sessions()->create( [
-					'ip'       => request()->ip(),
-					'device'   => $os . ' ' . $browser,
-					'platform' => $device,
-					'secret'   => Str::random( 64 )
+					'ip'      => request()->ip(),
+					'device'  => $device ? : 'Unknown',
+					'browser' => $browser ? : 'Unknown',
+					'os'      => json_encode( $os ),
+					'secret'  => Str::random( 64 )
 				] );
 				DB::commit();
 			} catch ( Throwable $e ) {

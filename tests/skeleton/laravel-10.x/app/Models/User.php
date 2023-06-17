@@ -63,7 +63,15 @@
             return $this->toArray();
         }
 
-        public static function username(): string {
+        public function username(): string {
             return 'email';
+        }
+
+        public function extractRole(): ?array {
+            return $this->roles()->first()?->toArray();
+        }
+
+        public function extractPermissions(): array {
+            return $this->getAllPermissions()->toArray();
         }
     }

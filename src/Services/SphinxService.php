@@ -21,63 +21,35 @@
 		/**
 		 * @var WrapperTokenProvider
 		 */
-		private WrapperTokenProvider $wrapperProvider;
+		private WrapperTokenProvider $wrapperAccessTokenProvider;
 
 		/**
 		 * @var InnerTokenProvider
 		 */
-		private InnerTokenProvider $innerProvider;
+		private InnerTokenProvider $innerAccessTokenProvider;
+
+		/**
+		 * @var WrapperTokenProvider
+		 */
+		private WrapperTokenProvider $wrapperRefreshTokenProvider;
+
+		/**
+		 * @var InnerTokenProvider
+		 */
+		private InnerTokenProvider $innerRefreshTokenProvider;
 
 		/**
 		 * @var object|null
 		 */
-		private object|null $session = null;
+		private ?object $session = null;
 
 		/**
 		 * @throws SphinxException
 		 */
 		public function __construct() {
-			$this->wrapperProvider = new WrapperTokenProvider( sphinx_config( 'private_key' ) );
+			$this->wrapperAccessTokenProvider  = new WrapperTokenProvider( sphinx_config( 'private_key' ) );
+			$this->wrapperRefreshTokenProvider = new WrapperTokenProvider( sphinx_config( 'private_key' ) );
 			$this->guessSession();
-		}
-
-		/**
-		 * @return void
-		 * @throws SphinxException
-		 */
-		private function guessSession(): void {
-			if ( $token = request()->bearerToken() ) {
-				$session_id = $this->wrapperProvider->decode( $token )->headers()->get( 'session_id', null );
-
-				try {
-					$cachedSession = Cache::rememberForever(
-						SphinxCacheEnum::SESSION . $session_id,
-						// TODO: findAndCache method for Session model
-						fn() => Session::query()->findOrFail( $session_id )?->getForCache()
-					);
-					$this->session = (object) $cachedSession;
-				} catch ( Throwable $e ) {
-					throw new SphinxException(
-						'Token expired! probably reached your device count limit.',
-						SphinxErrorCode::TOKEN_EXPIRED,
-						ResponseAlias::HTTP_FORBIDDEN
-					);
-				}
-
-				$this->innerProvider = new InnerTokenProvider( $this->session->secret );
-			}
-
-		}
-
-		/**
-		 * @param Session $session
-		 *
-		 * @return $this
-		 */
-		public function session( Session $session ): self {
-			$this->session = $session;
-
-			return $this;
 		}
 
 		/**
@@ -86,43 +58,84 @@
 		 * @return UnencryptedToken
 		 * @throws SphinxException
 		 */
-		public function extract( string $token ): UnencryptedToken {
-			return $this->wrapperProvider->decode( $token );
+		public function decode( string $token ): UnencryptedToken {
+			return $this->wrapperAccessTokenProvider->decode( $token );
+		}
+
+		/**
+		 * @throws SphinxException
+		 */
+		public function generateTokenFor( Authenticatable $user ): self {
+			$this->createAccessToken( $user );
+			$this->createRefreshToken( $user );
+
+			return $this;
+		}
+
+		/**
+		 * @return string
+		 */
+		public function getAccessToken(): string {
+			$this->wrapperAccessTokenProvider
+				->claim( '_token', $this->innerAccessTokenProvider->getToken()->toString() );
+
+			return $this->wrapperAccessTokenProvider->getToken()->toString();
+		}
+
+		/**
+		 * @return string
+		 */
+		public function getRefreshToken(): string {
+			$this->wrapperRefreshTokenProvider
+				->claim( '_token', $this->innerRefreshTokenProvider->getToken()->toString() );
+
+			return $this->wrapperRefreshTokenProvider->getToken()->toString();
 		}
 
 		/**
 		 * @param Authenticatable $user
 		 *
-		 * @return $this
+		 * @return void
 		 * @throws SphinxException
 		 */
-		public function create( Authenticatable $user ): self {
+		private function createAccessToken( Authenticatable $user ): void {
 			try {
-				$this->wrapperProvider->encode()
-				                      ->expiresAt( sphinx_config( 'expired_at' ) )
-				                      ->header( 'session_id', $this->session->id )
-				                      ->header( 'user_version', $user->getVersion() )
-					// TODO: determine inside of related model
-					                  ->header( 'role_id', ( $role = $user->roles()->first() )->id )
-				                      ->header( 'role_version', $role->getVersion() );
+				$this->wrapperAccessTokenProvider->encode()
+				                                 ->expiresAt( sphinx_config( 'expired_at' ) )
+				                                 ->header( 'session_id', $this->session->id )
+				                                 ->header( 'user_version', $user->getVersion() )
+				                                 ->headerWhen(
+					                                 isset( $user->extractRole()[ 'id' ] ),
+					                                 'role_id',
+					                                 fn() => $user->extractRole()[ 'id' ]
+				                                 )
+				                                 ->headerWhen(
+					                                 isset( $user->extractRole()[ 'version' ] ),
+					                                 'role_version',
+					                                 fn() => $user->extractRole()[ 'version' ]
+				                                 );
 
-				$this->insideProvider->encode()
-					// TODO: extractRoleData on model
-					                 ->claim( 'role', $role->only( 'id', 'name' ) )
-					// TODO: extractPermissionsData on model
-					                 ->claim( 'permissions', $user->getAllPermissions()
-					                                              ->pluck( 'name', 'id' )
-					                                              ->toArray() )
-				                     ->claim(
-					                     'user',
-					                     array_merge(
-						                     $user->extract(),
-						                     [
-							                     'id'                 => $user->id,
-							                     $user->getUsername() => $user->{$user->getUsername()}
-						                     ]
-					                     )
-				                     );
+				$this->innerAccessTokenProvider->encode()
+				                               ->claim(
+					                               'role',
+					                               collect( $user->extractRole() )->only( 'id', 'name' )
+				                               )
+				                               ->claim(
+					                               'permissions',
+					                               collect( $user->extractPermissions() )
+						                               ->pluck( 'name', 'id' )
+						                               ->toArray()
+				                               )
+				                               ->claim(
+					                               'user',
+					                               array_merge(
+						                               $user->extract(),
+						                               [
+							                               'id'              => $user->id,
+							                               $user->username() => $user->{$user->username()}
+						                               ]
+					                               )
+				                               );
 			} catch ( Throwable $e ) {
 				throw new SphinxException(
 					'Failed to create token! ' . $e->getMessage(),
@@ -131,84 +144,30 @@
 				);
 			}
 
-			return $this;
-		}
-
-		/**
-		 * @param string           $key
-		 * @param string|int|array $value
-		 *
-		 * @return $this
-		 */
-		public function claim( string $key, string|int|array $value ): self {
-			$this->innerProvider->claim( $key, $value );
-
-			return $this;
-		}
-
-		/**
-		 * @param string           $key
-		 * @param string|int|array $value
-		 *
-		 * @return $this
-		 */
-		public function header( string $key, string|int|array $value ): self {
-			$this->innerProvider->header( $key, $value );
-
-			return $this;
-		}
-
-		/**
-		 * @return string
-		 */
-		public function accessToken(): string {
-			$this->wrapperProvider->claim( '_token', $this->innerProvider->getToken()->toString() );
-
-			return $this->wrapperProvider->getToken()->toString();
-		}
-
-		/**
-		 * @param string $token
-		 *
-		 * @return bool
-		 * @throws SphinxException
-		 */
-		public function validate( string $token ): bool {
-			return $this->wrapperProvider->validate( $token );
-		}
-
-		/**
-		 * @param string $token
-		 *
-		 * @return void
-		 * @throws SphinxException
-		 */
-		public function assert( string $token ): void {
-			$this->wrapperProvider->assert( $token );
 		}
 
 		/**
 		 * @param Authenticatable $user
 		 *
-		 * @return $this
+		 * @return void
 		 * @throws SphinxException
 		 */
-		public function createRefreshToken( Authenticatable $user ): self {
+		private function createRefreshToken( Authenticatable $user ): void {
 			try {
-				$this->wrapperProvider
+				$this->wrapperRefreshTokenProvider
 					->encode()
 					->expiresAt( sphinx_config( 'refresh_expired_at' ) )
 					->header( 'refresh', true )
 					->header( 'session_id', $this->session->id );
-				$this->innerProvider
+				$this->innerRefreshTokenProvider
 					->encode()
 					->claim(
 						'user',
 						array_merge(
 							$user->extract(),
 							[
-								'id'                 => $user->id,
-								$user->getUsername() => $user->{$user->getUsername()}
+								'id'              => $user->id,
+								$user->username() => $user->{$user->username()}
 							]
 						)
 					);
@@ -220,65 +179,40 @@
 				);
 			}
 
-			return $this;
 		}
 
 		/**
-		 * @return string
-		 */
-		public function refreshToken(): string {
-			$this->wrapperProvider->claim( '_token', $this->innerProvider->getToken()->toString() );
-
-			return $this->wrapperProvider->getToken()->toString();
-		}
-
-		/**
-		 * @param string $token
-		 *
-		 * @return array
-		 * @throws SphinxException
-		 */
-		public function getPermissions( string $token ): array {
-			return $this->getInsideToken( $token )->claims()->get( 'permissions' );
-		}
-
-		/**
-		 * @param string $token
-		 *
-		 * @return UnencryptedToken
-		 * @throws SphinxException
-		 */
-		public function getInsideToken( string $token ): UnencryptedToken {
-			$this->assertInsideToken( $token );
-			$token       = $this->wrapperProvider->decode( $token );
-			$insideToken = $token->claims()->get( '_token' );
-
-			return $this->innerProvider->decode( $insideToken );
-		}
-
-		/**
-		 * @param string $token
-		 *
 		 * @return void
 		 * @throws SphinxException
 		 */
-		public function assertInsideToken( string $token ): void {
-			$token       = $this->wrapperProvider->decode( $token );
-			$insideToken = $token->claims()->get( '_token' );
+		private function guessSession(): void {
+			if ( $token = request()->bearerToken() ) {
+				$session_id = $this->wrapperAccessTokenProvider->decode( $token )->headers()->get( 'session_id', null );
 
-			$this->innerProvider->assert( $insideToken );
+				try {
+					$cachedSession = Cache::rememberForever(
+						SphinxCacheEnum::SESSION . $session_id,
+						// TODO: findAndCache method for Session model
+						fn() => Session::query()->findOrFail( $session_id )->getForCache()
+					);
+					$this->session = (object) $cachedSession;
+				} catch ( Throwable $e ) {
+					throw new SphinxException(
+						'Token expired! probably reached your device count limit.',
+						SphinxErrorCode::TOKEN_EXPIRED,
+						ResponseAlias::HTTP_FORBIDDEN
+					);
+				}
+			} else {
+				$capturedSession = capture_session();
+				$cachedSession   = Cache::rememberForever(
+					SphinxCacheEnum::SESSION . $capturedSession->id,
+					fn() => $capturedSession->getForCache()
+				);
+				$this->session   = (object) $cachedSession;
+			}
+			$this->innerAccessTokenProvider  = new InnerTokenProvider( $this->session->secret );
+			$this->innerRefreshTokenProvider = new InnerTokenProvider( $this->session->secret );
 		}
 
-		/**
-		 * @param string $token
-		 *
-		 * @return bool
-		 * @throws SphinxException
-		 */
-		public function validateInsideToken( string $token ): bool {
-			$token       = $this->wrapperProvider->decode( $token );
-			$insideToken = $token->claims()->get( '_token' );
-
-			return $this->innerProvider->validate( $insideToken );
-		}
 	}

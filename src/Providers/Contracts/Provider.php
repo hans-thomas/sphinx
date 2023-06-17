@@ -4,6 +4,7 @@
 	namespace Hans\Sphinx\Providers\Contracts;
 
 
+	use Closure;
 	use DateTimeImmutable;
 	use Hans\Sphinx\Exceptions\SphinxErrorCode;
 	use Hans\Sphinx\Exceptions\SphinxException;
@@ -48,7 +49,7 @@
 		 * @return $this
 		 */
 		public function issuedBy( string $issuedBy ): self {
-			$this->instance = $this->instance->issuedBy( $issuedBy );
+			$this->instance->issuedBy( $issuedBy );
 
 			return $this;
 		}
@@ -59,7 +60,7 @@
 		 * @return $this
 		 */
 		public function permittedFor( string $permittedFor ): self {
-			$this->instance = $this->instance->permittedFor( $permittedFor );
+			$this->instance->permittedFor( $permittedFor );
 
 			return $this;
 		}
@@ -70,7 +71,7 @@
 		 * @return $this
 		 */
 		public function identifiedBy( string $identifiedBy ): self {
-			$this->instance = $this->instance->identifiedBy( $identifiedBy );
+			$this->instance->identifiedBy( $identifiedBy );
 
 			return $this;
 		}
@@ -81,8 +82,8 @@
 		 * @return $this
 		 */
 		public function canOnlyBeUsedAfter( string $due = '+1 minute' ): self {
-			$date           = new DateTimeImmutable();
-			$this->instance = $this->instance->canOnlyBeUsedAfter( $date->modify( $due ) );
+			$date = new DateTimeImmutable();
+			$this->instance->canOnlyBeUsedAfter( $date->modify( $due ) );
 
 			return $this;
 		}
@@ -93,8 +94,8 @@
 		 * @return $this
 		 */
 		public function expiresAt( string $due = '+5 hour' ): self {
-			$date           = new DateTimeImmutable();
-			$this->instance = $this->instance->expiresAt( $date->modify( $due ) );
+			$date = new DateTimeImmutable();
+			$this->instance->expiresAt( $date->modify( $due ) );
 
 			return $this;
 		}
@@ -133,6 +134,24 @@
 		}
 
 		/**
+		 * @param bool                      $condition
+		 * @param string                    $key
+		 * @param string|int|array|callable $value
+		 *
+		 * @return $this
+		 */
+		public function claimWhen( bool $condition, string $key, string|int|array|callable $value ): self {
+			if ( $condition ) {
+				if ( $value instanceof Closure ) {
+					$value = $value();
+				}
+				$this->instance->withClaim( $key, $value );
+			}
+
+			return $this;
+		}
+
+		/**
 		 * @param array $headers
 		 *
 		 * @return $this
@@ -166,11 +185,29 @@
 		}
 
 		/**
+		 * @param bool                $condition
+		 * @param string              $key
+		 * @param string|int|callable $value
+		 *
+		 * @return $this
+		 */
+		public function headerWhen( bool $condition, string $key, string|int|callable $value ): self {
+			if ( $condition ) {
+				if ( $value instanceof Closure ) {
+					$value = $value();
+				}
+				$this->instance->withHeader( $key, $value );
+			}
+
+			return $this;
+		}
+
+		/**
 		 * @return $this
 		 */
 		public function encode(): self {
-			$now            = new DateTimeImmutable();
-			$this->instance = $this->instance->issuedAt( $now );
+			$now = new DateTimeImmutable();
+			$this->instance->issuedAt( $now );
 
 			return $this;
 		}

@@ -39,10 +39,10 @@
 
 		abstract public function extract(): array;
 
-		abstract public static function username(): string;
+		abstract public function username(): string;
 
-		public function getUsername(): string {
-			return static::username();
-		}
+		abstract public function extractRole(): ?array;
+
+		abstract public function extractPermissions(): ?array;
 
 	}

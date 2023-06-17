@@ -18,7 +18,8 @@
 
 				$table->string( 'ip', 100 );
 				$table->string( 'device', 100 );
-				$table->string( 'platform', 100 );
+				$table->string( 'browser', 100 );
+				$table->string( 'os', 100 );
 				$table->string( 'secret', 512 );
 
 				$table->timestamps();

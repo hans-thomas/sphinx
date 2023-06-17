@@ -7,10 +7,11 @@
 	use App\Models\User;
 	use AreasEnum;
 	use Hans\Horus\Models\Role;
-	use Hans\Sphinx\Contracts\SphinxContract;
+	use Hans\Sphinx\Facades\Sphinx;
 	use RolesEnum;
 
 	class UserFactory {
+
 		public static function createAUser(): User {
 			$user = User::factory()->create();
 			$user->assignRole( Role::findByName( RolesEnum::DEFAULT_USERS, AreasEnum::USER ) );
@@ -38,17 +39,10 @@
 		}
 
 		public static function createAccessToken( User $user ): string {
-			return app( SphinxContract::class )
-				->session( $user->sessions()->latest()->first() )
-				->create( $user )
-				->accessToken();
+			return Sphinx::generateTokenFor( $user )->getAccessToken();
 		}
 
 		public static function createRefreshToken( User $user ): string {
-			if ( ! $session = $user->sessions()->latest()->first() ) {
-				throw new \Exception( 'User didnt have session!' );
-			}
-
-			return app( SphinxContract::class )->session( $session )->createRefreshToken( $user )->refreshToken();
+			return Sphinx::generateTokenFor( $user )->getRefreshToken();
 		}
 	}

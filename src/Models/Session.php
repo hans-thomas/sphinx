@@ -12,7 +12,8 @@
 		protected $fillable = [
 			'ip',
 			'device',
-			'platform',
+			'browser',
+			'os',
 			'secret'
 		];
 
