@@ -93,6 +93,160 @@
 		}
 
 		/**
+		 * @param string           $key
+		 * @param string|int|array $value
+		 *
+		 * @return $this
+		 */
+		public function claim( string $key, string|int|array $value ): self {
+			$this->innerAccessTokenProvider->claim( $key, $value );
+
+			return $this;
+		}
+
+		/**
+		 * @param string           $key
+		 * @param string|int|array $value
+		 *
+		 * @return $this
+		 */
+		public function header( string $key, string|int|array $value ): self {
+			$this->innerAccessTokenProvider->header( $key, $value );
+
+			return $this;
+		}
+
+		/**
+		 * @param string $token
+		 *
+		 * @return bool
+		 * @throws SphinxException
+		 */
+		public function validateWrapperAccessToken( string $token ): bool {
+			return $this->wrapperAccessTokenProvider->validate( $token );
+		}
+
+		/**
+		 * @param string $token
+		 *
+		 * @return void
+		 * @throws SphinxException
+		 */
+		public function assertWrapperAccessToken( string $token ): void {
+			$this->wrapperAccessTokenProvider->assert( $token );
+		}
+
+		/**
+		 * @param string $token
+		 *
+		 * @return void
+		 * @throws SphinxException
+		 */
+		public function assertInnerAccessToken( string $token ): void {
+			$token       = $this->wrapperAccessTokenProvider->decode( $token );
+			$insideToken = $token->claims()->get( '_token' );
+
+			$this->innerAccessTokenProvider->assert( $insideToken );
+		}
+
+		/**
+		 * @param string $token
+		 *
+		 * @return bool
+		 * @throws SphinxException
+		 */
+		public function validateInnerAccessToken( string $token ): bool {
+			$token       = $this->wrapperAccessTokenProvider->decode( $token );
+			$insideToken = $token->claims()->get( '_token' );
+
+			return $this->innerAccessTokenProvider->validate( $insideToken );
+		}
+
+		/**
+		 * @param string $token
+		 *
+		 * @return UnencryptedToken
+		 * @throws SphinxException
+		 */
+		public function getInnerAccessToken( string $token ): UnencryptedToken {
+			$this->assertInnerAccessToken( $token );
+			$token       = $this->wrapperAccessTokenProvider->decode( $token );
+			$insideToken = $token->claims()->get( '_token' );
+
+			return $this->innerAccessTokenProvider->decode( $insideToken );
+		}
+
+		/**
+		 * @param string $token
+		 *
+		 * @return bool
+		 * @throws SphinxException
+		 */
+		public function validateWrapperRefreshToken( string $token ): bool {
+			return $this->wrapperRefreshTokenProvider->validate( $token );
+		}
+
+		/**
+		 * @param string $token
+		 *
+		 * @return void
+		 * @throws SphinxException
+		 */
+		public function assertWrapperRefreshToken( string $token ): void {
+			$this->wrapperRefreshTokenProvider->assert( $token );
+		}
+
+		/**
+		 * @param string $token
+		 *
+		 * @return void
+		 * @throws SphinxException
+		 */
+		public function assertInnerRefreshToken( string $token ): void {
+			$token       = $this->wrapperRefreshTokenProvider->decode( $token );
+			$insideToken = $token->claims()->get( '_token' );
+
+			$this->innerRefreshTokenProvider->assert( $insideToken );
+		}
+
+		/**
+		 * @param string $token
+		 *
+		 * @return bool
+		 * @throws SphinxException
+		 */
+		public function validateInnerRefreshToken( string $token ): bool {
+			$token       = $this->wrapperRefreshTokenProvider->decode( $token );
+			$insideToken = $token->claims()->get( '_token' );
+
+			return $this->innerRefreshTokenProvider->validate( $insideToken );
+		}
+
+		/**
+		 * @param string $token
+		 *
+		 * @return UnencryptedToken
+		 * @throws SphinxException
+		 */
+		public function getInnerRefreshToken( string $token ): UnencryptedToken {
+			$this->assertInnerRefreshToken( $token );
+			$token       = $this->wrapperRefreshTokenProvider->decode( $token );
+			$insideToken = $token->claims()->get( '_token' );
+
+			return $this->innerRefreshTokenProvider->decode( $insideToken );
+		}
+
+		/**
+		 * @param string $token
+		 *
+		 * @return array
+		 * @throws SphinxException
+		 */
+		public function getPermissions( string $token ): array {
+			return $this->getInnerAccessToken( $token )->claims()->get( 'permissions' );
+		}
+
+		/**
 		 * @param Authenticatable $user
 		 *
 		 * @return void
