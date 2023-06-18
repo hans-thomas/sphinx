@@ -1,16 +1,17 @@
 <?php
 
-	namespace Hans\Sphinx\Providers\Constraints;
+	namespace Hans\Sphinx\Drivers\Constraints;
 
 	use Hans\Sphinx\Exceptions\SphinxErrorCode;
 	use Hans\Sphinx\Exceptions\SphinxException;
 	use Hans\Sphinx\Helpers\Enums\SphinxCache;
+	use Hans\Sphinx\Models\Session;
 	use Illuminate\Support\Facades\Cache;
 	use Lcobucci\JWT\Token;
 	use Lcobucci\JWT\Validation\Constraint;
 	use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
-	final class RoleIdValidator implements Constraint {
+	final class SessionIdValidator implements Constraint {
 
 		/**
 		 * @param Token $token
@@ -18,32 +19,32 @@
 		 * @throws SphinxException
 		 */
 		public function assert( Token $token ): void {
-			$role_id      = $token->headers()->get( 'role_id', false );
-			$role_version = $token->headers()->get( 'role_version', false );
+			$session_id   = $token->headers()->get( 'session_id', false );
+			$user_version = $token->headers()->get( 'user_version', false );
 
-			if ( ! $role_id ) {
+			if ( ! $session_id ) {
 				throw new SphinxException(
-					'Role id not found in header!',
-					SphinxErrorCode::ROLE_NOT_FOUND,
+					'Session id not found in header!',
+					SphinxErrorCode::SESSION_NOT_FOUND,
 					ResponseAlias::HTTP_FORBIDDEN
 				);
 			}
-			if ( ! $role_version ) {
+			if ( ! $user_version ) {
 				throw new SphinxException(
-					'Role\'s version not found in header!',
-					SphinxErrorCode::ROLE_VERSION_NOT_FOUND,
+					"User's version not found in header!",
+					SphinxErrorCode::USERS_VERSION_NOT_FOUND,
 					ResponseAlias::HTTP_FORBIDDEN
 				);
 			}
 
-			$role = Cache::rememberForever(
-				SphinxCache::ROLE . $role_id,
-				fn() => app( sphinx_config( 'role_model' ) )->query()->find( $role_id )
+			$session = Cache::rememberForever(
+				SphinxCache::SESSION . $session_id,
+				fn() => Session::query()->findOrFail( $session_id )->getForCache()
 			);
 
-			if ( $role?->getVersion() != $role_version ) {
+			if ( $session[ 'user_version' ] != $user_version ) {
 				throw new SphinxException(
-					'User\'s token is out-of-date!',
+					"Token is out-of-date!",
 					SphinxErrorCode::TOKEN_IS_OUT_OF_DATE,
 					ResponseAlias::HTTP_FORBIDDEN
 				);

@@ -1,7 +1,7 @@
 <?php
 
 
-	namespace Hans\Sphinx\Providers\Contracts;
+	namespace Hans\Sphinx\Drivers\Contracts;
 
 
 	use Closure;
@@ -17,7 +17,7 @@
 	use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 	use Throwable;
 
-	abstract class Provider {
+	abstract class JwtToken {
 
 		/**
 		 * @var Configuration
@@ -30,6 +30,7 @@
 		protected Builder $instance;
 
 		public function __construct( string $secret ) {
+			// TODO: RSA support?
 			$this->configuration = Configuration::forSymmetricSigner(
 				new Sha512(),
 				InMemory::plainText( $secret )
@@ -46,7 +47,7 @@
 		/**
 		 * @param string $issuedBy
 		 *
-		 * @return $this
+		 * @return self
 		 */
 		public function issuedBy( string $issuedBy ): self {
 			$this->instance->issuedBy( $issuedBy );
@@ -57,7 +58,7 @@
 		/**
 		 * @param string $permittedFor
 		 *
-		 * @return $this
+		 * @return self
 		 */
 		public function permittedFor( string $permittedFor ): self {
 			$this->instance->permittedFor( $permittedFor );
@@ -68,7 +69,7 @@
 		/**
 		 * @param string $identifiedBy
 		 *
-		 * @return $this
+		 * @return self
 		 */
 		public function identifiedBy( string $identifiedBy ): self {
 			$this->instance->identifiedBy( $identifiedBy );
@@ -79,7 +80,7 @@
 		/**
 		 * @param string $due
 		 *
-		 * @return $this
+		 * @return self
 		 */
 		public function canOnlyBeUsedAfter( string $due = '+1 minute' ): self {
 			$date = new DateTimeImmutable();
@@ -91,7 +92,7 @@
 		/**
 		 * @param string $due
 		 *
-		 * @return $this
+		 * @return self
 		 */
 		public function expiresAt( string $due = '+5 hour' ): self {
 			$date = new DateTimeImmutable();
@@ -103,7 +104,7 @@
 		/**
 		 * @param array $claims
 		 *
-		 * @return $this
+		 * @return self
 		 * @throws SphinxException
 		 */
 		public function claims( array $claims ): self {
@@ -125,7 +126,7 @@
 		 * @param string           $key
 		 * @param string|int|array $value
 		 *
-		 * @return $this
+		 * @return self
 		 */
 		public function claim( string $key, string|int|array $value ): self {
 			$this->instance->withClaim( $key, $value );
@@ -138,7 +139,7 @@
 		 * @param string                    $key
 		 * @param string|int|array|callable $value
 		 *
-		 * @return $this
+		 * @return self
 		 */
 		public function claimWhen( bool $condition, string $key, string|int|array|callable $value ): self {
 			if ( $condition ) {
@@ -154,7 +155,7 @@
 		/**
 		 * @param array $headers
 		 *
-		 * @return $this
+		 * @return self
 		 * @throws SphinxException
 		 */
 		public function headers( array $headers ): self {
@@ -176,7 +177,7 @@
 		 * @param string     $key
 		 * @param string|int $value
 		 *
-		 * @return $this
+		 * @return self
 		 */
 		public function header( string $key, string|int $value ): self {
 			$this->instance->withHeader( $key, $value );
@@ -189,7 +190,7 @@
 		 * @param string              $key
 		 * @param string|int|callable $value
 		 *
-		 * @return $this
+		 * @return self
 		 */
 		public function headerWhen( bool $condition, string $key, string|int|callable $value ): self {
 			if ( $condition ) {
@@ -203,7 +204,7 @@
 		}
 
 		/**
-		 * @return $this
+		 * @return self
 		 */
 		public function encode(): self {
 			$now = new DateTimeImmutable();

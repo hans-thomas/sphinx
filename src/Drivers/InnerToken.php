@@ -1,11 +1,11 @@
 <?php
 
-	namespace Hans\Sphinx\Providers;
+	namespace Hans\Sphinx\Drivers;
 
-	use Hans\Sphinx\Providers\Constraints\SecretVerificationValidator;
-	use Hans\Sphinx\Providers\Contracts\Provider;
+	use Hans\Sphinx\Drivers\Constraints\SecretVerificationValidator;
+	use Hans\Sphinx\Drivers\Contracts\JwtToken;
 
-	class InnerTokenProvider extends Provider {
+	class InnerToken extends JwtToken {
 
 		/**
 		 * @return array

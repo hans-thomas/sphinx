@@ -1,6 +1,6 @@
 <?php
 
-	namespace Hans\Sphinx\Providers\Constraints;
+	namespace Hans\Sphinx\Drivers\Constraints;
 
 	use DateTimeImmutable;
 	use Hans\Sphinx\Exceptions\SphinxErrorCode;

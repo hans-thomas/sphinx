@@ -1,6 +1,6 @@
 <?php
 
-	namespace Hans\Sphinx\Providers\Constraints;
+	namespace Hans\Sphinx\Drivers\Constraints;
 
 	use Hans\Sphinx\Exceptions\SphinxErrorCode;
 	use Hans\Sphinx\Exceptions\SphinxException;
