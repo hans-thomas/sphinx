@@ -24,8 +24,7 @@
             "Hans\\Sphinx\\": "src/"
         },
         "files": [
-            "src/Helpers/functions.php",
-            "src/Helpers/constants.php"
+            "src/Helpers/functions.php"
         ]
     },
     "autoload-dev": {
