@@ -4,10 +4,10 @@
 
 	use Hans\Sphinx\Exceptions\SphinxErrorCode;
 	use Hans\Sphinx\Exceptions\SphinxException;
+	use Hans\Sphinx\Helpers\Enums\SphinxCache;
 	use Illuminate\Support\Facades\Cache;
 	use Lcobucci\JWT\Token;
 	use Lcobucci\JWT\Validation\Constraint;
-	use SphinxCacheEnum;
 	use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 	final class RoleIdValidator implements Constraint {
@@ -22,21 +22,31 @@
 			$role_version = $token->headers()->get( 'role_version', false );
 
 			if ( ! $role_id ) {
-				throw new SphinxException( 'Role id not found in header!', SphinxErrorCode::ROLE_NOT_FOUND,
-					ResponseAlias::HTTP_FORBIDDEN );
+				throw new SphinxException(
+					'Role id not found in header!',
+					SphinxErrorCode::ROLE_NOT_FOUND,
+					ResponseAlias::HTTP_FORBIDDEN
+				);
 			}
 			if ( ! $role_version ) {
-				throw new SphinxException( 'Role\'s version not found in header!',
-					SphinxErrorCode::ROLE_VERSION_NOT_FOUND, ResponseAlias::HTTP_FORBIDDEN );
+				throw new SphinxException(
+					'Role\'s version not found in header!',
+					SphinxErrorCode::ROLE_VERSION_NOT_FOUND,
+					ResponseAlias::HTTP_FORBIDDEN
+				);
 			}
+
 			$role = Cache::rememberForever(
-				SphinxCacheEnum::ROLE . $role_id,
-				fn() => app( sphinx_config( 'role_model' ) )->query()->findOrFail( $role_id )
+				SphinxCache::ROLE . $role_id,
+				fn() => app( sphinx_config( 'role_model' ) )->query()->find( $role_id )
 			);
 
 			if ( $role?->getVersion() != $role_version ) {
-				throw new SphinxException( 'User\'s token is out-of-date!', SphinxErrorCode::TOKEN_IS_OUT_OF_DATE,
-					ResponseAlias::HTTP_FORBIDDEN );
+				throw new SphinxException(
+					'User\'s token is out-of-date!',
+					SphinxErrorCode::TOKEN_IS_OUT_OF_DATE,
+					ResponseAlias::HTTP_FORBIDDEN
+				);
 			}
 		}
 	}

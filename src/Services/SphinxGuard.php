@@ -4,6 +4,8 @@
 	namespace Hans\Sphinx\Services;
 
 
+	use Hans\Sphinx\Exceptions\SphinxErrorCode;
+	use Hans\Sphinx\Exceptions\SphinxException;
 	use Hans\Sphinx\Facades\Sphinx;
 	use Illuminate\Auth\GuardHelpers;
 	use Illuminate\Contracts\Auth\Authenticatable;
@@ -14,21 +16,29 @@
 	class SphinxGuard implements Authenticatable, Guard {
 		use GuardHelpers, Macroable;
 
+
 		public function __construct(
 			protected $provider,
 			private readonly Request $request,
 		) {
-			if ( $token = $request->bearerToken() ) {
-				// TODO: isRefreshToken(): bool
-				if ( ! Sphinx::extract( $token )->headers()->get( 'refresh', false ) ) {
-					Sphinx::assert( $token );
-					$this->user = $this->provider
-						->retrieveByCredentials(
-							Sphinx::getInsideToken( $token )
-							      ->claims()
-							      ->get( 'user' )
-						);
+
+			if ( $token = $request->bearerToken() and Sphinx::isNotRefreshToken( $token ) ) {
+				Sphinx::assertWrapperAccessToken( $token );
+				$this->user = $this->provider
+					->retrieveByCredentials(
+						$credentials = Sphinx::getInnerAccessToken( $token )
+						                     ->claims()
+						                     ->get( 'user' )
+					);
+				if (
+					! $this->provider->validateCredentials( $this->user, $credentials )
+				) {
+					throw new SphinxException(
+						"Failed to validate given credentials.",
+						SphinxErrorCode::FAILED_TO_VALIDATE_CREDENTIALS
+					);
 				}
+
 			}
 		}
 

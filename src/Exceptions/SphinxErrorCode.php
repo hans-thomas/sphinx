@@ -16,4 +16,5 @@
 		public const FAILED_TO_SET_HEADER = 1011;
 		public const FAILED_TO_CREATE_TOKEN = 1011;
 		public const FAILED_TO_CREATE_REFRESH_TOKEN = 1011;
+		public const FAILED_TO_VALIDATE_CREDENTIALS = 1011;
 	}

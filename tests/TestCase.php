@@ -27,6 +27,10 @@
 				'sphinx.private_key',
 				'XELnlAjESvqWDS3utBoN9cEA8eF3PlTtyXJ1OmCUIhxfIJKdePkoof8aKCbfucOCqpuygSDv4ZobA4936UXqzshfJrw'
 			);
+			config()->set(
+				'sphinx.role_model',
+				Role::class
+			);
 
 			$this->seedHorus();
 		}
@@ -130,7 +134,7 @@
 			$router->get( '/me', function() {
 				return auth()->user();
 			} )
-			       ->middleware( 'auth:api' )
+			       ->middleware( 'auth:jwt' )
 			       ->name( 'test.me' );
 		}
 

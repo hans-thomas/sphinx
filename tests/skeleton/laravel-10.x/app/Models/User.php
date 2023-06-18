@@ -28,6 +28,7 @@
             'name',
             'email',
             'password',
+            'version',
         ];
 
         /**
@@ -60,7 +61,11 @@
         }
 
         public function extract(): array {
-            return $this->toArray();
+            return [
+                'name'    => $this->name,
+                'email'   => $this->email,
+                'version' => $this->getVersion(),
+            ];
         }
 
         public function username(): string {

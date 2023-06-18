@@ -4,11 +4,11 @@
 
 	use Hans\Sphinx\Exceptions\SphinxErrorCode;
 	use Hans\Sphinx\Exceptions\SphinxException;
+	use Hans\Sphinx\Helpers\Enums\SphinxCache;
 	use Hans\Sphinx\Models\Session;
 	use Illuminate\Support\Facades\Cache;
 	use Lcobucci\JWT\Token;
 	use Lcobucci\JWT\Validation\Constraint;
-	use SphinxCacheEnum;
 	use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 	final class SessionIdValidator implements Constraint {
@@ -38,7 +38,7 @@
 			}
 
 			$session = Cache::rememberForever(
-				SphinxCacheEnum::SESSION . $session_id,
+				SphinxCache::SESSION . $session_id,
 				fn() => Session::query()->findOrFail( $session_id )->getForCache()
 			);
 

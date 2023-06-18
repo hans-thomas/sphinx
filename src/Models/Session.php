@@ -2,10 +2,10 @@
 
 	namespace Hans\Sphinx\Models;
 
+	use Hans\Sphinx\Helpers\Enums\SphinxCache;
 	use Illuminate\Database\Eloquent\Model;
 	use Illuminate\Database\Eloquent\Relations\MorphTo;
 	use Illuminate\Support\Facades\Cache;
-	use SphinxCacheEnum;
 
 	class Session extends Model {
 
@@ -19,11 +19,11 @@
 
 		protected static function booted() {
 			self::saved( function( self $model ) {
-				Cache::forget( SphinxCacheEnum::SESSION . $model->id );
-				Cache::forever( SphinxCacheEnum::SESSION . $model->id, $model->getForCache() );
+				Cache::forget( SphinxCache::SESSION . $model->id );
+				Cache::forever( SphinxCache::SESSION . $model->id, $model->getForCache() );
 			} );
 			self::deleted( function( self $model ) {
-				Cache::forget( SphinxCacheEnum::SESSION . $model->id );
+				Cache::forget( SphinxCache::SESSION . $model->id );
 			} );
 		}
 

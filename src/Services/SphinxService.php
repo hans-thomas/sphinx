@@ -6,13 +6,13 @@
 
 	use Hans\Sphinx\Exceptions\SphinxErrorCode;
 	use Hans\Sphinx\Exceptions\SphinxException;
+	use Hans\Sphinx\Helpers\Enums\SphinxCache;
 	use Hans\Sphinx\Models\Session;
 	use Hans\Sphinx\Providers\InnerTokenProvider;
 	use Hans\Sphinx\Providers\WrapperTokenProvider;
 	use Illuminate\Contracts\Auth\Authenticatable;
 	use Illuminate\Support\Facades\Cache;
 	use Lcobucci\JWT\UnencryptedToken;
-	use SphinxCacheEnum;
 	use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 	use Throwable;
 
@@ -66,6 +66,8 @@
 		 * @throws SphinxException
 		 */
 		public function generateTokenFor( Authenticatable $user ): self {
+			$this->openASessionFor( $user );
+
 			$this->createAccessToken( $user );
 			$this->createRefreshToken( $user );
 
@@ -247,6 +249,26 @@
 		}
 
 		/**
+		 * @param string $token
+		 *
+		 * @return bool
+		 * @throws SphinxException
+		 */
+		public function isRefreshToken( string $token ): bool {
+			return $this->decode( $token )->headers()->get( 'refresh', false );
+		}
+
+		/**
+		 * @param string $token
+		 *
+		 * @return bool
+		 * @throws SphinxException
+		 */
+		public function isNotRefreshToken( string $token ): bool {
+			return ! $this->isRefreshToken( $token );
+		}
+
+		/**
 		 * @param Authenticatable $user
 		 *
 		 * @return void
@@ -341,11 +363,14 @@
 		 */
 		private function guessSession(): void {
 			if ( $token = request()->bearerToken() ) {
-				$session_id = $this->wrapperAccessTokenProvider->decode( $token )->headers()->get( 'session_id', null );
+				$session_id = $this->wrapperAccessTokenProvider
+					->decode( $token )
+					->headers()
+					->get( 'session_id' );
 
 				try {
 					$cachedSession = Cache::rememberForever(
-						SphinxCacheEnum::SESSION . $session_id,
+						SphinxCache::SESSION . $session_id,
 						// TODO: findAndCache method for Session model
 						fn() => Session::query()->findOrFail( $session_id )->getForCache()
 					);
@@ -357,14 +382,33 @@
 						ResponseAlias::HTTP_FORBIDDEN
 					);
 				}
-			} else {
-				$capturedSession = capture_session();
-				$cachedSession   = Cache::rememberForever(
-					SphinxCacheEnum::SESSION . $capturedSession->id,
-					fn() => $capturedSession->getForCache()
-				);
-				$this->session   = (object) $cachedSession;
+
+				$this->initInnerTokensInstance();
 			}
+
+		}
+
+		/**
+		 * @param Authenticatable $user
+		 *
+		 * @return void
+		 * @throws SphinxException
+		 */
+		private function openASessionFor( Authenticatable $user ): void {
+			$capturedSession = capture_session( $user );
+			$cachedSession   = Cache::rememberForever(
+				SphinxCache::SESSION . $capturedSession->id,
+				fn() => $capturedSession->getForCache()
+			);
+			$this->session   = (object) $cachedSession;
+
+			$this->initInnerTokensInstance();
+		}
+
+		/**
+		 * @return void
+		 */
+		private function initInnerTokensInstance(): void {
 			$this->innerAccessTokenProvider  = new InnerTokenProvider( $this->session->secret );
 			$this->innerRefreshTokenProvider = new InnerTokenProvider( $this->session->secret );
 		}
