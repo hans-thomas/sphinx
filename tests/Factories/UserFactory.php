@@ -6,43 +6,55 @@
 
 	use App\Models\User;
 	use AreasEnum;
+	use Hans\Horus\Exceptions\HorusException;
 	use Hans\Horus\Models\Role;
+	use Hans\Sphinx\Exceptions\SphinxException;
 	use Hans\Sphinx\Facades\Sphinx;
+	use Hans\Sphinx\Services\SphinxService;
 	use RolesEnum;
 
 	class UserFactory {
 
-		public static function createAUser(): User {
+		/**
+		 * @return User
+		 */
+		public static function creatWithoutRole(): User {
+			$user = User::factory()->create();
+
+			return $user->fresh();
+		}
+
+		/**
+		 * @return User
+		 * @throws HorusException
+		 */
+		public static function createNormalUser(): User {
 			$user = User::factory()->create();
 			$user->assignRole( Role::findByName( RolesEnum::DEFAULT_USERS, AreasEnum::USER ) );
 
 			return $user->fresh();
 		}
 
-		public static function createAUserWithoutRole(): User {
-			$user = User::factory()->create();
-
-			return $user->fresh();
-		}
-
+		/**
+		 * @return User
+		 * @throws HorusException
+		 * @throws SphinxException
+		 */
 		public static function createNormalUserWithSession(): User {
 			$user = User::factory()->create();
 			$user->assignRole( Role::findByName( RolesEnum::DEFAULT_USERS, AreasEnum::USER ) );
-			$user->sessions()->create( [
-				'ip'       => '127.0.0.' . rand( 0, 255 ),
-				'device'   => 'Nokia 5.3',
-				'platform' => 'Android 11',
-				'secret' => \Illuminate\Support\Str::random( 64 )
-			] );
+			capture_session( $user );
 
 			return $user->fresh();
 		}
 
-		public static function createAccessToken( User $user ): string {
-			return Sphinx::generateTokenFor( $user )->getAccessToken();
+		/**
+		 * @param User $user
+		 *
+		 * @return SphinxService
+		 */
+		public static function generateToken( User $user ): SphinxService {
+			return Sphinx::generateTokenFor( $user );
 		}
 
-		public static function createRefreshToken( User $user ): string {
-			return Sphinx::generateTokenFor( $user )->getRefreshToken();
-		}
 	}
