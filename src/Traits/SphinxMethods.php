@@ -8,6 +8,11 @@
 
 	trait SphinxMethods {
 
+		/**
+		 * Perform any actions required after the model boots.
+		 *
+		 * @return void
+		 */
 		protected static function booted() {
 			static::saved( function( self $model ) {
 				$model->increaseVersion();
@@ -19,6 +24,9 @@
 			} );
 		}
 
+		/**
+		 * @return bool
+		 */
 		public function increaseVersion(): bool {
 			try {
 				$this->forceFill( [ 'version' => $this->getVersion() + 1 ] );
@@ -30,19 +38,36 @@
 			return true;
 		}
 
+		/**
+		 * @return int
+		 */
 		public function getVersion(): int {
-			// TODO: if version was null, this->query()->where(...)->limit(1)->first()->version
-			return $this->version ? : $this->fresh()->version;
+			return $this->version ? : static::query()->find( $this->id, [ 'version' ] )->version;
 		}
 
+		/**
+		 * @return int
+		 */
 		abstract public function getDeviceLimit(): int;
 
+		/**
+		 * @return array
+		 */
 		abstract public function extract(): array;
 
+		/**
+		 * @return string
+		 */
 		abstract public function username(): string;
 
+		/**
+		 * @return array|null
+		 */
 		abstract public function extractRole(): ?array;
 
+		/**
+		 * @return array|null
+		 */
 		abstract public function extractPermissions(): ?array;
 
 	}
