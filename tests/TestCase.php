@@ -24,7 +24,7 @@
 			parent::setUp();
 
 			config()->set(
-				'sphinx.private_key',
+				'sphinx.secrest',
 				'XELnlAjESvqWDS3utBoN9cEA8eF3PlTtyXJ1OmCUIhxfIJKdePkoof8aKCbfucOCqpuygSDv4ZobA4936UXqzshfJrw'
 			);
 			config()->set(

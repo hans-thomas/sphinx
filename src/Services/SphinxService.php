@@ -4,12 +4,12 @@
 	namespace Hans\Sphinx\Services;
 
 
+	use Hans\Sphinx\Drivers\InnerToken;
+	use Hans\Sphinx\Drivers\WrapperToken;
 	use Hans\Sphinx\Exceptions\SphinxErrorCode;
 	use Hans\Sphinx\Exceptions\SphinxException;
 	use Hans\Sphinx\Helpers\Enums\SphinxCache;
 	use Hans\Sphinx\Models\Session;
-	use Hans\Sphinx\Providers\InnerTokenProvider;
-	use Hans\Sphinx\Providers\WrapperTokenProvider;
 	use Illuminate\Contracts\Auth\Authenticatable;
 	use Illuminate\Support\Facades\Cache;
 	use Lcobucci\JWT\UnencryptedToken;
@@ -19,24 +19,24 @@
 	class SphinxService {
 
 		/**
-		 * @var WrapperTokenProvider
+		 * @var WrapperToken
 		 */
-		private WrapperTokenProvider $wrapperAccessTokenProvider;
+		private WrapperToken $wrapperAccessTokenProvider;
 
 		/**
-		 * @var InnerTokenProvider
+		 * @var InnerToken
 		 */
-		private InnerTokenProvider $innerAccessTokenProvider;
+		private InnerToken $innerAccessTokenProvider;
 
 		/**
-		 * @var WrapperTokenProvider
+		 * @var WrapperToken
 		 */
-		private WrapperTokenProvider $wrapperRefreshTokenProvider;
+		private WrapperToken $wrapperRefreshTokenProvider;
 
 		/**
-		 * @var InnerTokenProvider
+		 * @var InnerToken
 		 */
-		private InnerTokenProvider $innerRefreshTokenProvider;
+		private InnerToken $innerRefreshTokenProvider;
 
 		/**
 		 * @var object|null
@@ -47,8 +47,8 @@
 		 * @throws SphinxException
 		 */
 		public function __construct() {
-			$this->wrapperAccessTokenProvider  = new WrapperTokenProvider( sphinx_config( 'private_key' ) );
-			$this->wrapperRefreshTokenProvider = new WrapperTokenProvider( sphinx_config( 'private_key' ) );
+			$this->wrapperAccessTokenProvider  = new WrapperToken( sphinx_config( 'secret' ) );
+			$this->wrapperRefreshTokenProvider = new WrapperToken( sphinx_config( 'secret' ) );
 			$this->guessSession();
 		}
 
@@ -276,42 +276,44 @@
 		 */
 		private function createAccessToken( Authenticatable $user ): void {
 			try {
-				$this->wrapperAccessTokenProvider->encode()
-				                                 ->expiresAt( sphinx_config( 'expired_at' ) )
-				                                 ->header( 'session_id', $this->session->id )
-				                                 ->header( 'user_version', $user->getVersion() )
-				                                 ->headerWhen(
-					                                 isset( $user->extractRole()[ 'id' ] ),
-					                                 'role_id',
-					                                 fn() => $user->extractRole()[ 'id' ]
-				                                 )
-				                                 ->headerWhen(
-					                                 isset( $user->extractRole()[ 'version' ] ),
-					                                 'role_version',
-					                                 fn() => $user->extractRole()[ 'version' ]
-				                                 );
+				$this->wrapperAccessTokenProvider
+					->encode()
+					->expiresAt( sphinx_config( 'access_expired_at' ) )
+					->header( 'session_id', $this->session->id )
+					->header( 'user_version', $user->getVersion() )
+					->headerWhen(
+						isset( $user->extractRole()[ 'id' ] ),
+						'role_id',
+						fn() => $user->extractRole()[ 'id' ]
+					)
+					->headerWhen(
+						isset( $user->extractRole()[ 'version' ] ),
+						'role_version',
+						fn() => $user->extractRole()[ 'version' ]
+					);
 
-				$this->innerAccessTokenProvider->encode()
-				                               ->claim(
-					                               'role',
-					                               collect( $user->extractRole() )->only( 'id', 'name' )
-				                               )
-				                               ->claim(
-					                               'permissions',
-					                               collect( $user->extractPermissions() )
-						                               ->pluck( 'name', 'id' )
-						                               ->toArray()
-				                               )
-				                               ->claim(
-					                               'user',
-					                               array_merge(
-						                               $user->extract(),
-						                               [
-							                               'id'              => $user->id,
-							                               $user->username() => $user->{$user->username()}
-						                               ]
-					                               )
-				                               );
+				$this->innerAccessTokenProvider
+					->encode()
+					->claim(
+						'role',
+						collect( $user->extractRole() )->only( 'id', 'name' )
+					)
+					->claim(
+						'permissions',
+						collect( $user->extractPermissions() )
+							->pluck( 'name', 'id' )
+							->toArray()
+					)
+					->claim(
+						'user',
+						array_merge(
+							$user->extract(),
+							[
+								'id'              => $user->id,
+								$user->username() => $user->{$user->username()}
+							]
+						)
+					);
 			} catch ( Throwable $e ) {
 				throw new SphinxException(
 					'Failed to create token! ' . $e->getMessage(),
@@ -409,8 +411,8 @@
 		 * @return void
 		 */
 		private function initInnerTokensInstance(): void {
-			$this->innerAccessTokenProvider  = new InnerTokenProvider( $this->session->secret );
-			$this->innerRefreshTokenProvider = new InnerTokenProvider( $this->session->secret );
+			$this->innerAccessTokenProvider  = new InnerToken( $this->session->secret );
+			$this->innerRefreshTokenProvider = new InnerToken( $this->session->secret );
 		}
 
 	}
