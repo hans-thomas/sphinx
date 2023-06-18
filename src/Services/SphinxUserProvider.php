@@ -4,6 +4,7 @@
 
 	use Illuminate\Contracts\Auth\Authenticatable;
 	use Illuminate\Contracts\Auth\UserProvider;
+	use Illuminate\Database\Eloquent\Model;
 
 	class SphinxUserProvider implements UserProvider {
 
@@ -63,7 +64,11 @@
 			if ( ! isset( $credentials[ 'id' ] ) and count( $credentials ) > 0 ) {
 				$instance = $model->query()->firstWhere( $credentials );
 			} else {
-				$instance = $this->retrieveById( $credentials[ 'id' ] );
+				/** @var Model $instance */
+				$instance = $this->makeModel();
+				$instance->fill( $credentials );
+				$instance->id     = $credentials[ 'id' ];
+				$instance->exists = true;
 			}
 
 			return $instance;
