@@ -5,16 +5,19 @@
 	use Hans\Sphinx\Exceptions\SphinxErrorCode;
 	use Hans\Sphinx\Exceptions\SphinxException;
 	use Hans\Sphinx\Models\Session;
+	use Illuminate\Contracts\Auth\Authenticatable;
 	use Illuminate\Support\Facades\DB;
 	use Illuminate\Support\Str;
 	use Symfony\Component\HttpFoundation\Response;
 
 	if ( ! function_exists( 'capture_session' ) ) {
 		/**
+		 * @param Authenticatable $user
+		 *
 		 * @return Session
 		 * @throws SphinxException
 		 */
-		function capture_session(): Session {
+		function capture_session( Authenticatable $user ): Session {
 			try {
 				$deviceDetector = new DeviceDetector;
 				$deviceDetector->setUserAgent( request()->userAgent() );
@@ -24,7 +27,6 @@
 				$browser = $deviceDetector->getClient();
 				$os      = $deviceDetector->getOs();
 				$device  = $deviceDetector->getDeviceName();
-				$user    = auth()->user();
 
 				if ( ( $limit = $user->getDeviceLimit() ) <= ( $sessionCount = $user->sessions()->count( 'id' ) ) ) {
 					$ids = $user->sessions()->limit( $sessionCount - ( $limit - 1 ) )->pluck( 'id' )->toArray();
