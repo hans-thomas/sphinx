@@ -8,10 +8,8 @@
 	use Hans\Sphinx\Drivers\WrapperToken;
 	use Hans\Sphinx\Exceptions\SphinxErrorCode;
 	use Hans\Sphinx\Exceptions\SphinxException;
-	use Hans\Sphinx\Helpers\Enums\SphinxCache;
 	use Hans\Sphinx\Models\Session;
 	use Illuminate\Contracts\Auth\Authenticatable;
-	use Illuminate\Support\Facades\Cache;
 	use Lcobucci\JWT\UnencryptedToken;
 	use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 	use Throwable;
@@ -280,7 +278,7 @@
 					->encode()
 					->expiresAt( sphinx_config( 'access_expired_at' ) )
 					->header( 'session_id', $this->session->id )
-					->header( 'user_version', $user->getVersion() )
+					->header( 'sessionable_version', $user->getVersion() )
 					->headerWhen(
 						isset( $user->extractRole()[ 'id' ] ),
 						'role_id',
@@ -371,12 +369,7 @@
 					->get( 'session_id' );
 
 				try {
-					$cachedSession = Cache::rememberForever(
-						SphinxCache::SESSION . $session_id,
-						// TODO: findAndCache method for Session model
-						fn() => Session::query()->findOrFail( $session_id )->getForCache()
-					);
-					$this->session = (object) $cachedSession;
+					$this->session = Session::findAndCache( $session_id );
 				} catch ( Throwable $e ) {
 					throw new SphinxException(
 						'Token expired! probably reached your device count limit.',
@@ -398,11 +391,7 @@
 		 */
 		private function openASessionFor( Authenticatable $user ): void {
 			$capturedSession = capture_session( $user );
-			$cachedSession   = Cache::rememberForever(
-				SphinxCache::SESSION . $capturedSession->id,
-				fn() => $capturedSession->getForCache()
-			);
-			$this->session   = (object) $cachedSession;
+			$this->session   = Session::findAndCache( $capturedSession->id );
 
 			$this->initInnerTokensInstance();
 		}

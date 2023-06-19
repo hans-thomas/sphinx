@@ -7,8 +7,24 @@
 	use Illuminate\Database\Eloquent\Relations\MorphTo;
 	use Illuminate\Support\Facades\Cache;
 
+	/**
+	 * Attributes:
+	 *
+	 * @property int    $id
+	 * @property string $ip
+	 * @property string $device
+	 * @property string $browser
+	 * @property string $os
+	 * @property string $secret
+	 *
+	 */
 	class Session extends Model {
 
+		/**
+		 * The attributes that are mass assignable.
+		 *
+		 * @var array<string>
+		 */
 		protected $fillable = [
 			'ip',
 			'device',
@@ -17,6 +33,11 @@
 			'secret'
 		];
 
+		/**
+		 * Perform any actions required after the model boots.
+		 *
+		 * @return void
+		 */
 		protected static function booted() {
 			self::saved( function( self $model ) {
 				Cache::forget( SphinxCache::SESSION . $model->id );
@@ -27,15 +48,33 @@
 			} );
 		}
 
-		public function getForCache(): array {
-			return array_merge(
-				$this->only( 'id', 'ip', 'device', 'platform', 'secret' ),
-				[ 'user_version' => $this->sessionable->getVersion() ]
+		/**
+		 * @return MorphTo
+		 */
+		public function sessionable(): MorphTo {
+			return $this->morphTo();
+		}
+
+		/**
+		 * @param int $id
+		 *
+		 * @return object
+		 */
+		public static function findAndCache( int $id ): object {
+			return Cache::rememberForever(
+				SphinxCache::SESSION . $id,
+				fn() => Session::query()->findOrFail( $id )->getForCache()
 			);
 		}
 
-		public function sessionable(): MorphTo {
-			return $this->morphTo();
+		/**
+		 * @return object
+		 */
+		public function getForCache(): object {
+			return (object) array_merge(
+				$this->toArray(),
+				[ 'sessionable_version' => $this->sessionable->getVersion() ]
+			);
 		}
 
 	}

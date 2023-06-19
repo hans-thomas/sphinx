@@ -16,10 +16,10 @@
 		protected static function booted() {
 			static::saved( function( self $model ) {
 				$model->increaseVersion();
-				$user_version = $model->getVersion();
-				collect( $model->sessions )->each( function( $session ) use ( $user_version ) {
+				$sessionable_version = $model->getVersion();
+				collect( $model->sessions )->each( function( $session ) use ( $sessionable_version ) {
 					Cache::forget( $key = SphinxCache::SESSION . $session->id );
-					Cache::forever( $key, array_merge( $session->toArray(), compact( 'user_version' ) ) );
+					Cache::forever( $key, array_merge( $session->toArray(), compact( 'sessionable_version' ) ) );
 				} );
 			} );
 		}

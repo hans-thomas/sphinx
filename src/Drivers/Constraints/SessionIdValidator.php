@@ -4,9 +4,7 @@
 
 	use Hans\Sphinx\Exceptions\SphinxErrorCode;
 	use Hans\Sphinx\Exceptions\SphinxException;
-	use Hans\Sphinx\Helpers\Enums\SphinxCache;
 	use Hans\Sphinx\Models\Session;
-	use Illuminate\Support\Facades\Cache;
 	use Lcobucci\JWT\Token;
 	use Lcobucci\JWT\Validation\Constraint;
 	use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -19,8 +17,8 @@
 		 * @throws SphinxException
 		 */
 		public function assert( Token $token ): void {
-			$session_id   = $token->headers()->get( 'session_id', false );
-			$user_version = $token->headers()->get( 'user_version', false );
+			$session_id          = $token->headers()->get( 'session_id', false );
+			$sessionable_version = $token->headers()->get( 'sessionable_version', false );
 
 			if ( ! $session_id ) {
 				throw new SphinxException(
@@ -29,7 +27,7 @@
 					ResponseAlias::HTTP_FORBIDDEN
 				);
 			}
-			if ( ! $user_version ) {
+			if ( ! $sessionable_version ) {
 				throw new SphinxException(
 					"User's version not found in header!",
 					SphinxErrorCode::USERS_VERSION_NOT_FOUND,
@@ -37,12 +35,9 @@
 				);
 			}
 
-			$session = Cache::rememberForever(
-				SphinxCache::SESSION . $session_id,
-				fn() => Session::query()->findOrFail( $session_id )->getForCache()
-			);
+			$session = Session::findAndCache( $session_id );
 
-			if ( $session[ 'user_version' ] != $user_version ) {
+			if ( $session[ 'sessionable_version' ] != $sessionable_version ) {
 				throw new SphinxException(
 					"Token is out-of-date!",
 					SphinxErrorCode::TOKEN_IS_OUT_OF_DATE,
