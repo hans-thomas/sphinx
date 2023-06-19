@@ -139,19 +139,6 @@
 		/**
 		 * @param string $token
 		 *
-		 * @return void
-		 * @throws SphinxException
-		 */
-		public function assertInnerAccessToken( string $token ): void {
-			$token       = $this->wrapperAccessTokenProvider->decode( $token );
-			$insideToken = $token->claims()->get( '_token' );
-
-			$this->innerAccessTokenProvider->assert( $insideToken );
-		}
-
-		/**
-		 * @param string $token
-		 *
 		 * @return bool
 		 * @throws SphinxException
 		 */
@@ -160,6 +147,19 @@
 			$insideToken = $token->claims()->get( '_token' );
 
 			return $this->innerAccessTokenProvider->validate( $insideToken );
+		}
+
+		/**
+		 * @param string $token
+		 *
+		 * @return void
+		 * @throws SphinxException
+		 */
+		public function assertInnerAccessToken( string $token ): void {
+			$token       = $this->wrapperAccessTokenProvider->decode( $token );
+			$insideToken = $token->claims()->get( '_token' );
+
+			$this->innerAccessTokenProvider->assert( $insideToken );
 		}
 
 		/**
@@ -199,19 +199,6 @@
 		/**
 		 * @param string $token
 		 *
-		 * @return void
-		 * @throws SphinxException
-		 */
-		public function assertInnerRefreshToken( string $token ): void {
-			$token       = $this->wrapperRefreshTokenProvider->decode( $token );
-			$insideToken = $token->claims()->get( '_token' );
-
-			$this->innerRefreshTokenProvider->assert( $insideToken );
-		}
-
-		/**
-		 * @param string $token
-		 *
 		 * @return bool
 		 * @throws SphinxException
 		 */
@@ -220,6 +207,19 @@
 			$insideToken = $token->claims()->get( '_token' );
 
 			return $this->innerRefreshTokenProvider->validate( $insideToken );
+		}
+
+		/**
+		 * @param string $token
+		 *
+		 * @return void
+		 * @throws SphinxException
+		 */
+		public function assertInnerRefreshToken( string $token ): void {
+			$token       = $this->wrapperRefreshTokenProvider->decode( $token );
+			$insideToken = $token->claims()->get( '_token' );
+
+			$this->innerRefreshTokenProvider->assert( $insideToken );
 		}
 
 		/**
