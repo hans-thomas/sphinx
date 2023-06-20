@@ -37,7 +37,7 @@
 
 			$session = Session::findAndCache( $session_id );
 
-			if ( $session[ 'sessionable_version' ] != $sessionable_version ) {
+			if ( $session->sessionable_version != $sessionable_version ) {
 				throw new SphinxException(
 					"Token is out-of-date!",
 					SphinxErrorCode::TOKEN_IS_OUT_OF_DATE,

@@ -5,7 +5,7 @@
 	use Hans\Sphinx\Drivers\Constraints\SecretVerificationValidator;
 	use Hans\Sphinx\Drivers\Contracts\JwtToken;
 
-	class InnerToken extends JwtToken {
+	class InnerRefreshToken extends JwtToken {
 
 		/**
 		 * @return array
@@ -15,4 +15,5 @@
 				new SecretVerificationValidator( $this->configuration->signer(), $this->configuration->signingKey() ),
 			];
 		}
+
 	}

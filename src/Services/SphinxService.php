@@ -4,8 +4,10 @@
 	namespace Hans\Sphinx\Services;
 
 
-	use Hans\Sphinx\Drivers\InnerToken;
-	use Hans\Sphinx\Drivers\WrapperToken;
+	use Hans\Sphinx\Drivers\InnerAccessToken;
+	use Hans\Sphinx\Drivers\InnerRefreshToken;
+	use Hans\Sphinx\Drivers\WrapperAccessToken;
+	use Hans\Sphinx\Drivers\WrapperRefreshToken;
 	use Hans\Sphinx\Exceptions\SphinxErrorCode;
 	use Hans\Sphinx\Exceptions\SphinxException;
 	use Hans\Sphinx\Models\Session;
@@ -17,24 +19,24 @@
 	class SphinxService {
 
 		/**
-		 * @var WrapperToken
+		 * @var WrapperAccessToken
 		 */
-		private WrapperToken $wrapperAccessTokenProvider;
+		private WrapperAccessToken $wrapperAccessTokenProvider;
 
 		/**
-		 * @var InnerToken
+		 * @var InnerAccessToken
 		 */
-		private InnerToken $innerAccessTokenProvider;
+		private InnerAccessToken $innerAccessTokenProvider;
 
 		/**
-		 * @var WrapperToken
+		 * @var WrapperRefreshToken
 		 */
-		private WrapperToken $wrapperRefreshTokenProvider;
+		private WrapperRefreshToken $wrapperRefreshTokenProvider;
 
 		/**
-		 * @var InnerToken
+		 * @var InnerRefreshToken
 		 */
-		private InnerToken $innerRefreshTokenProvider;
+		private InnerRefreshToken $innerRefreshTokenProvider;
 
 		/**
 		 * @var object|null
@@ -45,8 +47,8 @@
 		 * @throws SphinxException
 		 */
 		public function __construct() {
-			$this->wrapperAccessTokenProvider  = new WrapperToken( sphinx_config( 'secret' ) );
-			$this->wrapperRefreshTokenProvider = new WrapperToken( sphinx_config( 'secret' ) );
+			$this->wrapperAccessTokenProvider  = new WrapperAccessToken( sphinx_config( 'secret' ) );
+			$this->wrapperRefreshTokenProvider = new WrapperRefreshToken( sphinx_config( 'secret' ) );
 			$this->guessSession();
 		}
 
@@ -120,7 +122,6 @@
 		 * @param string $token
 		 *
 		 * @return bool
-		 * @throws SphinxException
 		 */
 		public function validateWrapperAccessToken( string $token ): bool {
 			return $this->wrapperAccessTokenProvider->validate( $token );
@@ -143,6 +144,9 @@
 		 * @throws SphinxException
 		 */
 		public function validateInnerAccessToken( string $token ): bool {
+			if ( ! $this->validateWrapperAccessToken( $token ) ) {
+				return false;
+			}
 			$token       = $this->wrapperAccessTokenProvider->decode( $token );
 			$insideToken = $token->claims()->get( '_token' );
 
@@ -156,6 +160,7 @@
 		 * @throws SphinxException
 		 */
 		public function assertInnerAccessToken( string $token ): void {
+			$this->assertWrapperAccessToken( $token );
 			$token       = $this->wrapperAccessTokenProvider->decode( $token );
 			$insideToken = $token->claims()->get( '_token' );
 
@@ -180,7 +185,6 @@
 		 * @param string $token
 		 *
 		 * @return bool
-		 * @throws SphinxException
 		 */
 		public function validateWrapperRefreshToken( string $token ): bool {
 			return $this->wrapperRefreshTokenProvider->validate( $token );
@@ -203,6 +207,9 @@
 		 * @throws SphinxException
 		 */
 		public function validateInnerRefreshToken( string $token ): bool {
+			if ( ! $this->validateWrapperRefreshToken( $token ) ) {
+				return false;
+			}
 			$token       = $this->wrapperRefreshTokenProvider->decode( $token );
 			$insideToken = $token->claims()->get( '_token' );
 
@@ -333,8 +340,7 @@
 				$this->wrapperRefreshTokenProvider
 					->encode()
 					->expiresAt( sphinx_config( 'refresh_expired_at' ) )
-					->header( 'refresh', true )
-					->header( 'session_id', $this->session->id );
+					->header( 'refresh', true );
 				$this->innerRefreshTokenProvider
 					->encode()
 					->claim(
@@ -400,8 +406,15 @@
 		 * @return void
 		 */
 		private function initInnerTokensInstance(): void {
-			$this->innerAccessTokenProvider  = new InnerToken( $this->session->secret );
-			$this->innerRefreshTokenProvider = new InnerToken( $this->session->secret );
+			$this->innerAccessTokenProvider  = new InnerAccessToken( $this->session->secret );
+			$this->innerRefreshTokenProvider = new InnerRefreshToken( $this->session->secret );
+		}
+
+		/**
+		 * @return object|null
+		 */
+		public function getSession(): ?object {
+			return $this->session;
 		}
 
 	}

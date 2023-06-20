@@ -8,7 +8,7 @@
 	use Hans\Sphinx\Drivers\Constraints\SessionIdValidator;
 	use Hans\Sphinx\Drivers\Contracts\JwtToken;
 
-	class WrapperToken extends JwtToken {
+	class WrapperAccessToken extends JwtToken {
 
 		/**
 		 * @return array
@@ -16,9 +16,10 @@
 		protected function getAvailableConstrains(): array {
 			return [
 				new SecretVerificationValidator( $this->configuration->signer(), $this->configuration->signingKey() ),
+				new ExpirationValidator(),
 				new SessionIdValidator(),
 				new RoleIdValidator(),
-				new ExpirationValidator()
 			];
 		}
+
 	}

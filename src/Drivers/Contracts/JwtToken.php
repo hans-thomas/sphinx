@@ -214,14 +214,14 @@
 		}
 
 		/**
-		 * @param string $string
+		 * @param string $token
 		 *
 		 * @return UnencryptedToken
 		 * @throws SphinxException
 		 */
-		public function decode( string $string ): UnencryptedToken {
+		public function decode( string $token ): UnencryptedToken {
 			try {
-				$token = $this->configuration->parser()->parse( $string );
+				$decoded = $this->configuration->parser()->parse( $token );
 			} catch ( Throwable $e ) {
 				throw new SphinxException(
 					"Failed to decode the token. " . $e->getMessage(),
@@ -230,7 +230,7 @@
 				);
 			}
 
-			return $token;
+			return $decoded;
 		}
 
 		/**
@@ -248,11 +248,12 @@
 		 * @param string $token
 		 *
 		 * @return bool
-		 * @throws SphinxException
 		 */
 		public function validate( string $token ): bool {
 			$constraints = $this->configuration->validationConstraints();
-			if ( ! $this->configuration->validator()->validate( $this->decode( $token ), ...$constraints ) ) {
+			try {
+				$this->configuration->validator()->validate( $this->decode( $token ), ...$constraints );
+			} catch ( Throwable $e ) {
 				return false;
 			}
 

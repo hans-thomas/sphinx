@@ -49,11 +49,17 @@
 		}
 
 		/**
-		 * @param User $user
+		 * @param User|null $user
 		 *
 		 * @return SphinxService
+		 * @throws HorusException
+		 * @throws SphinxException
 		 */
-		public static function generateToken( User $user ): SphinxService {
+		public static function generateToken( User $user = null ): SphinxService {
+			if ( is_null( $user ) ) {
+				$user = self::createNormalUserWithSession();
+			}
+
 			return Sphinx::generateTokenFor( $user );
 		}
 
