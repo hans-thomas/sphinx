@@ -4,8 +4,6 @@
 	namespace Hans\Sphinx\Services;
 
 
-	use Hans\Sphinx\Exceptions\SphinxErrorCode;
-	use Hans\Sphinx\Exceptions\SphinxException;
 	use Hans\Sphinx\Facades\Sphinx;
 	use Illuminate\Auth\GuardHelpers;
 	use Illuminate\Contracts\Auth\Authenticatable;
@@ -18,28 +16,11 @@
 
 
 		public function __construct(
-			protected $provider,
+			SphinxUserProvider $provider,
 			private readonly Request $request,
 		) {
-
-			if ( $token = $request->bearerToken() and Sphinx::isNotRefreshToken( $token ) ) {
-				Sphinx::assertWrapperAccessToken( $token );
-				$this->user = $this->provider
-					->retrieveByCredentials(
-						$credentials = Sphinx::getInnerAccessToken( $token )
-						                     ->claims()
-						                     ->get( 'user' )
-					);
-				if (
-					! $this->provider->validateCredentials( $this->user, $credentials )
-				) {
-					throw new SphinxException(
-						"Failed to validate given credentials.",
-						SphinxErrorCode::FAILED_TO_VALIDATE_CREDENTIALS
-					);
-				}
-
-			}
+			$this->provider = $provider;
+			$this->loginUsingToken( $request->bearerToken() );
 		}
 
 		/**
@@ -48,7 +29,7 @@
 		 * @return string
 		 */
 		public function getAuthIdentifierName(): string {
-			return 'id';
+			return $this->user->getKeyName();
 		}
 
 		/**
@@ -66,7 +47,11 @@
 		 * @return string
 		 */
 		public function getAuthPassword(): string {
-			return $this->user->password;
+			if ( $password = $this->user->password ) {
+				return $password;
+			}
+
+			return $this->provider->retrieveById( $this->user->getAuthIdentifier() )->getAuthPassword();
 		}
 
 		/**
@@ -85,7 +70,7 @@
 		 *
 		 * @return void
 		 */
-		public function setRememberToken( $value ): void {
+		public function setRememberToken( $value = null ): void {
 			// no action needed
 		}
 
@@ -146,7 +131,8 @@
 		 * @return bool
 		 */
 		public function validate( array $credentials = [] ): bool {
-			if ( $this->provider->retrieveByCredentials( $credentials ) ) {
+			$user = $this->provider->retrieveByCredentials( $credentials );
+			if ( ! is_null( $user ) and $this->provider->validateCredentials( $user, $credentials ) ) {
 				return true;
 			}
 
@@ -162,6 +148,22 @@
 		 */
 		public function login( Authenticatable $user ): void {
 			$this->setUser( $user );
+		}
+
+		/**
+		 * @param string|null $token
+		 *
+		 * @return void
+		 */
+		public function loginUsingToken( ?string $token ): void {
+			if ( $token and Sphinx::isNotRefreshToken( $token ) ) {
+				$this->user = $this->provider
+					->retrieveByJwtToken(
+						Sphinx::getInnerAccessToken( $token )
+						      ->claims()
+						      ->get( 'user' )
+					);
+			}
 		}
 
 	}

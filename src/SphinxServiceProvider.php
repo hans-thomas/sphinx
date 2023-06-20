@@ -24,7 +24,7 @@
 				'SphinxProvider',
 				fn() => app(
 					SphinxUserProvider::class,
-					[ 'config' => $this->app[ 'config' ][ 'auth.providers.sphinx' ] ]
+					[ 'model' => $this->app[ 'config' ][ 'auth.providers.sphinx.model' ] ]
 				)
 			);
 

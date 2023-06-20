@@ -2,16 +2,11 @@
 
 	namespace Hans\Sphinx\Services;
 
+	use Illuminate\Auth\EloquentUserProvider;
 	use Illuminate\Contracts\Auth\Authenticatable;
-	use Illuminate\Contracts\Auth\UserProvider;
 	use Illuminate\Database\Eloquent\Model;
 
-	class SphinxUserProvider implements UserProvider {
-
-		public function __construct(
-			private readonly array $config
-		) {
-		}
+	class SphinxUserProvider extends EloquentUserProvider {
 
 		/**
 		 * Retrieve a user by their unique identifier and "remember me" token.
@@ -21,19 +16,8 @@
 		 *
 		 * @return Authenticatable|null
 		 */
-		public function retrieveByToken( $identifier, $token ): ?Authenticatable {
+		public function retrieveByToken( $identifier, $token = null ): ?Authenticatable {
 			return $this->retrieveById( $identifier );
-		}
-
-		/**
-		 * Retrieve a user by their unique identifier.
-		 *
-		 * @param mixed $identifier
-		 *
-		 * @return Authenticatable|null
-		 */
-		public function retrieveById( $identifier ): ?Authenticatable {
-			return $this->makeModel()->query()->find( $identifier );
 		}
 
 		/**
@@ -49,50 +33,22 @@
 		}
 
 		/**
-		 * Retrieve a user by the given credentials.
-		 *
 		 * @param array $credentials
 		 *
-		 * @return Authenticatable|null
+		 * @return Model|null
 		 */
-		public function retrieveByCredentials( array $credentials ): ?Authenticatable {
-			$model = $this->makeModel();
-			if ( isset( $credentials[ 'password' ] ) ) {
-				unset( $credentials[ 'password' ] );
+		public function retrieveByJwtToken( array $credentials ): ?Model {
+			$instance = $this->createModel();
+			if ( ! isset( $credentials[ $instance->getAuthIdentifierName() ] ) ) {
+				return null;
 			}
 
-			if ( ! isset( $credentials[ 'id' ] ) and count( $credentials ) > 0 ) {
-				$instance = $model->query()->firstWhere( $credentials );
-			} else {
-				/** @var Model $instance */
-				$instance = $this->makeModel();
-				$instance->fill( $credentials );
-				$instance->id     = $credentials[ 'id' ];
-				$instance->exists = true;
-			}
+			$instance->fill( $credentials );
+			$instance->{$instance->getAuthIdentifierName()} = $credentials[ $instance->getAuthIdentifierName() ];
+			$instance->exists                               = true;
 
 			return $instance;
 		}
 
-		/**
-		 * Validate a user against the given credentials.
-		 *
-		 * @param Authenticatable $user
-		 * @param array           $credentials
-		 *
-		 * @return bool
-		 */
-		public function validateCredentials( Authenticatable $user, array $credentials ): bool {
-			return count( array_diff( $credentials, $user->toArray() ) ) == 0;
-		}
-
-		/**
-		 * Make an instance of given authenticatable class
-		 *
-		 * @return Authenticatable
-		 */
-		private function makeModel(): Authenticatable {
-			return app( $this->config[ 'model' ] );
-		}
 
 	}
