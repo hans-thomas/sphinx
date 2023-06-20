@@ -46,7 +46,6 @@
             "@php ./vendor/bin/testbench package:discover --ansi"
         ],
         "testbench": "./vendor/bin/testbench",
-        "test": "./vendor/bin/testbench package:test",
-        "unit": "./vendor/bin/phpunit"
+        "test": "./vendor/bin/phpunit"
     }
 }
