@@ -4,8 +4,6 @@
 
 	use Hans\Sphinx\Exceptions\SphinxErrorCode;
 	use Hans\Sphinx\Exceptions\SphinxException;
-	use Hans\Sphinx\Helpers\Enums\SphinxCache;
-	use Illuminate\Support\Facades\Cache;
 	use Lcobucci\JWT\Token;
 	use Lcobucci\JWT\Validation\Constraint;
 	use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -36,10 +34,7 @@
 				);
 			}
 
-			$role = Cache::rememberForever(
-				SphinxCache::ROLE . $role_id,
-				fn() => app( sphinx_config( 'role_model' ) )->query()->find( $role_id )
-			);
+			$role = app( sphinx_config( 'role_model' ) )->findAndCache( $role_id );
 
 			if ( $role?->getVersion() != $role_version ) {
 				throw new SphinxException(

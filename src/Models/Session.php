@@ -17,6 +17,9 @@
 	 * @property string $os
 	 * @property string $secret
 	 *
+	 *
+	 * @property Model  $sessionable
+	 *
 	 */
 	class Session extends Model {
 
@@ -63,7 +66,7 @@
 		public static function findAndCache( int $id ): object {
 			return Cache::rememberForever(
 				SphinxCache::SESSION . $id,
-				fn() => Session::query()->findOrFail( $id )->getForCache()
+				fn() => self::query()->findOrFail( $id )->getForCache()
 			);
 		}
 

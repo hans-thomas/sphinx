@@ -3,6 +3,7 @@
 	namespace Hans\Sphinx\Traits;
 
 	use Hans\Sphinx\Helpers\Enums\SphinxCache;
+	use Hans\Sphinx\Models\Session;
 	use Illuminate\Support\Facades\Cache;
 	use Throwable;
 
@@ -16,11 +17,6 @@
 		protected static function booted() {
 			static::saved( function( self $model ) {
 				$model->increaseVersion();
-				$sessionable_version = $model->getVersion();
-				collect( $model->sessions )->each( function( $session ) use ( $sessionable_version ) {
-					Cache::forget( $key = SphinxCache::SESSION . $session->id );
-					Cache::forever( $key, array_merge( $session->toArray(), compact( 'sessionable_version' ) ) );
-				} );
 			} );
 		}
 
@@ -31,6 +27,11 @@
 			try {
 				$this->forceFill( [ 'version' => $this->getVersion() + 1 ] );
 				$this->saveQuietly();
+
+				collect( $this->sessions )->each( function( Session $session ) {
+					Cache::forget( $key = SphinxCache::SESSION . $session->id );
+					Cache::forever( $key, $session->getForCache() );
+				} );
 			} catch ( Throwable $e ) {
 				return false;
 			}
