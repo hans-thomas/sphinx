@@ -1,6 +1,6 @@
 <?php
 
-	namespace Hans\Sphinx\Tests\Feature;
+	namespace Hans\Sphinx\Tests\Feature\Services;
 
 	use Hans\Horus\Exceptions\HorusException;
 	use Hans\Sphinx\Exceptions\SphinxException;

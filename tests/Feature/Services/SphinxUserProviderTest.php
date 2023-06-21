@@ -1,6 +1,6 @@
 <?php
 
-	namespace Hans\Sphinx\Tests\Feature;
+	namespace Hans\Sphinx\Tests\Feature\Services;
 
 	use App\Models\User;
 	use Hans\Sphinx\Facades\Sphinx;
