@@ -207,8 +207,7 @@
 		 * @return self
 		 */
 		public function encode(): self {
-			$now = new DateTimeImmutable();
-			$this->instance->issuedAt( $now );
+			$this->instance->issuedAt( new DateTimeImmutable );
 
 			return $this;
 		}
