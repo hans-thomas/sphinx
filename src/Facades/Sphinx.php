@@ -28,6 +28,7 @@
 	 * @method static array getPermissions( string $token )
 	 * @method static bool isRefreshToken( string $token )
 	 * @method static bool isNotRefreshToken( string $token )
+	 * @method static object|null getCurrentSession()
 	 *
 	 * @see SphinxService
 	 */

@@ -409,4 +409,23 @@
 			self::assertFalse( Sphinx::isNotRefreshToken( $refresh ) );
 		}
 
+		/**
+		 * @test
+		 *
+		 * @return void
+		 * @throws HorusException
+		 * @throws SphinxException
+		 */
+		public function getCurrentSessionAndGuessSession(): void {
+			$user   = UserFactory::createNormalUser();
+			$access = ( new SphinxService )->generateTokenFor( $user )->getAccessToken();
+
+			request()->headers->set( 'Authorization', "Bearer $access" );
+
+			self::assertEquals(
+				$user->sessions()->first()->getForCache(),
+				( new SphinxService )->getCurrentSession()
+			);
+		}
+
 	}

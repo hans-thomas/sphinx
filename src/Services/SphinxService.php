@@ -413,7 +413,7 @@
 		/**
 		 * @return object|null
 		 */
-		public function getSession(): ?object {
+		public function getCurrentSession(): ?object {
 			return $this->session;
 		}
 
