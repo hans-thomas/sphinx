@@ -23,12 +23,12 @@
 		/**
 		 * Update the "remember me" token for the given user in storage.
 		 *
-		 * @param Authenticatable $user
-		 * @param string          $token
+		 * @param Authenticatable|null $user
+		 * @param null                 $token
 		 *
 		 * @return void
 		 */
-		public function updateRememberToken( Authenticatable $user, $token ): void {
+		public function updateRememberToken( Authenticatable $user = null, $token = null ): void {
 			// no action needed
 		}
 
@@ -37,7 +37,7 @@
 		 *
 		 * @return Model|null
 		 */
-		public function retrieveByJwtToken( array $credentials ): ?Model {
+		public function retrieveByJwtTokenCredentials( array $credentials ): ?Model {
 			$instance = $this->createModel();
 			if ( ! isset( $credentials[ $instance->getAuthIdentifierName() ] ) ) {
 				return null;

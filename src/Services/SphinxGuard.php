@@ -158,7 +158,7 @@
 		public function loginUsingToken( ?string $token ): void {
 			if ( $token and Sphinx::isNotRefreshToken( $token ) ) {
 				$this->user = $this->provider
-					->retrieveByJwtToken(
+					->retrieveByJwtTokenCredentials(
 						Sphinx::getInnerAccessToken( $token )
 						      ->claims()
 						      ->get( 'user' )
