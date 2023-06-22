@@ -69,6 +69,29 @@
 		 * @test
 		 *
 		 * @return void
+		 * @throws HorusException
+		 * @throws SphinxException
+		 */
+		public function capture_sessionAsSecondSession(): void {
+			$user       = UserFactory::createNormalUser();
+			$sessions[] = capture_session( $user ); // version should be 1
+			$user->update( [ 'name' => fake()->name() ] ); // version has increased
+			$sessions[] = capture_session( $user ); // version should be 2
+
+			self::assertEquals(
+				1,
+				$sessions[ 0 ]->sessionable_version
+			);
+			self::assertEquals(
+				2,
+				$sessions[ 1 ]->sessionable_version
+			);
+		}
+
+		/**
+		 * @test
+		 *
+		 * @return void
 		 */
 		public function sphinx_config(): void {
 			$config  = require __DIR__ . '/../../../config/config.php';

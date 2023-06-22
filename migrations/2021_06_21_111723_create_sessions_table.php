@@ -16,7 +16,7 @@
 				$table->id();
 
 				$table->morphs( 'sessionable' );
-				// TODO: $table->unsignedInteger( 'sessionable_version' );
+				$table->unsignedInteger( 'sessionable_version' )->default( 1 );
 
 				$table->string( 'ip', 100 );
 				$table->string( 'device', 100 );

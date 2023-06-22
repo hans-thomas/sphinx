@@ -25,13 +25,16 @@
 		 */
 		public function increaseVersion(): bool {
 			try {
-				$this->forceFill( [ 'version' => $this->getVersion() + 1 ] );
-				$this->saveQuietly();
+				$sessionIds = $this->sessions()->select( 'id' )->get()->pluck( 'id' );
+				Session::query()
+				       ->whereIn( 'id', $sessionIds )
+				       ->increment( 'sessionable_version' );
 
-				$this->sessions->each( function( Session $session ) {
+				$sessions = Session::query()->findMany( $sessionIds );
+				foreach ( $sessions as $session ) {
 					Cache::forget( $key = SphinxCache::SESSION . $session->id );
-					Cache::forever( $key, $session->getForCache() );
-				} );
+					Cache::forever( $key, $session );
+				}
 			} catch ( Throwable $e ) {
 				return false;
 			}
@@ -43,7 +46,10 @@
 		 * @return int
 		 */
 		public function getVersion(): int {
-			return $this->version ? : static::query()->find( $this->id, [ 'version' ] )->version;
+			return $this->sessions()
+			            ->latest()
+			            ->select( 'id', 'sessionable_version' )
+			            ->first()->sessionable_version ?? 1;
 		}
 
 		/**

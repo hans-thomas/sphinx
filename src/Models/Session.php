@@ -16,6 +16,7 @@
 	 * @property string $browser
 	 * @property string $os
 	 * @property string $secret
+	 * @property int    $sessionable_version
 	 *
 	 *
 	 * @property Model  $sessionable
@@ -33,7 +34,8 @@
 			'device',
 			'browser',
 			'os',
-			'secret'
+			'secret',
+			'sessionable_version'
 		];
 
 		/**
@@ -41,14 +43,12 @@
 		 *
 		 * @return void
 		 */
-		protected static function booted() {
+		protected static function booted(): void {
 			self::saved( function( self $model ) {
 				Cache::forget( SphinxCache::SESSION . $model->id );
-				Cache::forever( SphinxCache::SESSION . $model->id, $model->getForCache() );
+				Cache::forever( SphinxCache::SESSION . $model->id, $model );
 			} );
-			self::deleted( function( self $model ) {
-				Cache::forget( SphinxCache::SESSION . $model->id );
-			} );
+			self::deleted( fn( self $model ) => Cache::forget( SphinxCache::SESSION . $model->id ) );
 		}
 
 		/**
@@ -61,22 +61,12 @@
 		/**
 		 * @param int $id
 		 *
-		 * @return object
+		 * @return Session
 		 */
-		public static function findAndCache( int $id ): object {
+		public static function findAndCache( int $id ): self {
 			return Cache::rememberForever(
 				SphinxCache::SESSION . $id,
-				fn() => self::query()->findOrFail( $id )->getForCache()
-			);
-		}
-
-		/**
-		 * @return object
-		 */
-		public function getForCache(): object {
-			return (object) array_merge(
-				$this->toArray(),
-				[ 'sessionable_version' => $this->sessionable->getVersion() ]
+				fn() => self::query()->findOrFail( $id )
 			);
 		}
 

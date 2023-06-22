@@ -49,24 +49,4 @@
 			Session::findAndCache( $model->id );
 		}
 
-		/**
-		 * @test
-		 *
-		 * @return void
-		 * @throws HorusException
-		 * @throws SphinxException
-		 */
-		public function getForCache(): void {
-			$user  = UserFactory::createNormalUser();
-			$model = capture_session( $user );
-
-			self::assertEquals(
-				(object) array_merge(
-					$model->toArray(),
-					[ 'sessionable_version' => $model->sessionable->getVersion() ]
-				),
-				$model->getForCache()
-			);
-		}
-
 	}

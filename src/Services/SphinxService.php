@@ -39,9 +39,9 @@
 		private InnerRefreshToken $innerRefreshTokenProvider;
 
 		/**
-		 * @var object|null
+		 * @var Session|null
 		 */
-		private ?object $session = null;
+		private ?Session $session = null;
 
 		/**
 		 * @throws SphinxException
@@ -413,7 +413,7 @@
 		/**
 		 * @return object|null
 		 */
-		public function getCurrentSession(): ?object {
+		public function getCurrentSession(): ?Session {
 			return $this->session;
 		}
 

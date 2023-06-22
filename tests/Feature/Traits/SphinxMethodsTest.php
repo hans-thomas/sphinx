@@ -25,7 +25,6 @@
 		 * @test
 		 *
 		 * @return void
-		 * @throws HorusException
 		 */
 		public function increaseVersionUsingNoSession(): void {
 			$version = $this->user->getVersion();
@@ -33,7 +32,7 @@
 			$this->user->update( [ 'name' => fake()->name() ] );
 
 			self::assertEquals(
-				$version + 1,
+				$version, // no change
 				$this->user->getVersion()
 			);
 		}

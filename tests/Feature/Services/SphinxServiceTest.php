@@ -423,8 +423,8 @@
 			request()->headers->set( 'Authorization', "Bearer $access" );
 
 			self::assertEquals(
-				$user->sessions()->first()->getForCache(),
-				( new SphinxService )->getCurrentSession()
+				$user->sessions()->first()->toArray(),
+				( new SphinxService )->getCurrentSession()->toArray()
 			);
 		}
 
