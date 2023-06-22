@@ -14,7 +14,7 @@
 		 *
 		 * @return void
 		 */
-		protected static function booted() {
+		protected static function hooks(): void {
 			static::saved( function( self $model ) {
 				$model->increaseVersion();
 			} );
@@ -28,7 +28,7 @@
 				$this->forceFill( [ 'version' => $this->getVersion() + 1 ] );
 				$this->saveQuietly();
 
-				collect( $this->sessions )->each( function( Session $session ) {
+				$this->sessions->each( function( Session $session ) {
 					Cache::forget( $key = SphinxCache::SESSION . $session->id );
 					Cache::forever( $key, $session->getForCache() );
 				} );

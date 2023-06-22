@@ -15,7 +15,7 @@
         use HasFactory, Notifiable;
 
         use SphinxTrait, SphinxTrait {
-            SphinxTrait::booted as private handleCaching;
+            SphinxTrait::hooks as private handleCaching;
         }
         use HasRoles, HasPermissions, HasRelations;
 

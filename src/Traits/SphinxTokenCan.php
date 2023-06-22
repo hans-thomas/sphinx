@@ -7,6 +7,9 @@
 
 	trait SphinxTokenCan {
 
+		/**
+		 * @var array
+		 */
 		private array $tokenPermissions;
 
 		/**
