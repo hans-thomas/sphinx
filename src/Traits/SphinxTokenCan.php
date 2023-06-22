@@ -65,7 +65,7 @@
 		}
 
 		/**
-		 * Determine if the entity does not have the given abilities.
+		 * Alias for cant method
 		 *
 		 * @param iterable|string $abilities
 		 * @param array|mixed     $arguments

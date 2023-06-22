@@ -49,6 +49,17 @@
 		}
 
 		/**
+		 * @return User
+		 * @throws HorusException
+		 */
+		public static function createAdminUser(): User {
+			$user = User::factory()->create();
+			$user->assignRole( Role::findByName( RolesEnum::DEFAULT_ADMINS, AreasEnum::ADMIN ), true );
+
+			return $user->fresh();
+		}
+
+		/**
 		 * @param User|null $user
 		 *
 		 * @return SphinxService
