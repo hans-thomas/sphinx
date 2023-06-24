@@ -2,6 +2,7 @@
 
 	namespace Hans\Sphinx\Facades;
 
+	use Hans\Sphinx\Models\Session;
 	use Hans\Sphinx\Services\SphinxService;
 	use Illuminate\Contracts\Auth\Authenticatable;
 	use Illuminate\Support\Facades\Facade;
@@ -28,7 +29,7 @@
 	 * @method static array getPermissions( string $token )
 	 * @method static bool isRefreshToken( string $token )
 	 * @method static bool isNotRefreshToken( string $token )
-	 * @method static object|null getCurrentSession()
+	 * @method static Session|null getCurrentSession()
 	 *
 	 * @see SphinxService
 	 */
