@@ -10,7 +10,7 @@
 	trait SphinxMethods {
 
 		/**
-		 * Perform any actions required after the model boots.
+		 * Hooks for increasing version on updates
 		 *
 		 * @return void
 		 */
@@ -21,6 +21,8 @@
 		}
 
 		/**
+		 * Increase the version and update related sessions
+		 *
 		 * @return bool
 		 */
 		public function increaseVersion(): bool {
@@ -43,6 +45,8 @@
 		}
 
 		/**
+		 * Return user version using latest opened session
+		 *
 		 * @return int
 		 */
 		public function getVersion(): int {
@@ -53,26 +57,36 @@
 		}
 
 		/**
+		 * Determine the limitation of logged-in devices using one user credentials
+		 *
 		 * @return int
 		 */
 		abstract public function getDeviceLimit(): int;
 
 		/**
+		 * Extract necessary attributes of user
+		 *
 		 * @return array
 		 */
 		abstract public function extract(): array;
 
 		/**
+		 * Return username column name
+		 *
 		 * @return string
 		 */
 		abstract public function username(): string;
 
 		/**
+		 * Extract attributes of related role
+		 *
 		 * @return array|null
 		 */
 		abstract public function extractRole(): ?array;
 
 		/**
+		 * Extract related permissions attributes
+		 *
 		 * @return array|null
 		 */
 		abstract public function extractPermissions(): ?array;

@@ -65,18 +65,6 @@
 		}
 
 		/**
-		 * Alias for cant method
-		 *
-		 * @param iterable|string $abilities
-		 * @param array|mixed     $arguments
-		 *
-		 * @return bool
-		 */
-		public function cannot( $abilities, $arguments = [] ): bool {
-			return $this->cant( $abilities, $arguments );
-		}
-
-		/**
 		 * Determine if the entity does not have the given abilities.
 		 *
 		 * @param iterable|string $abilities
@@ -89,6 +77,20 @@
 		}
 
 		/**
+		 * Alias for cant method
+		 *
+		 * @param iterable|string $abilities
+		 * @param array|mixed     $arguments
+		 *
+		 * @return bool
+		 */
+		public function cannot( $abilities, $arguments = [] ): bool {
+			return $this->cant( $abilities, $arguments );
+		}
+
+		/**
+		 * Check the token to contains the given ability
+		 *
 		 * @param string|int $ability
 		 *
 		 * @return bool
@@ -97,14 +99,14 @@
 			if ( ! isset( $this->tokenPermissions ) ) {
 				$this->tokenPermissions = Sphinx::getPermissions( request()->bearerToken() );
 			}
-
-			$model = Str::beforeLast( $ability, '-' );
+			$separator = sphinx_config( 'permission_separator' );
+			$model     = Str::beforeLast( $ability, $separator );
 
 			// check for super permissions
-			if ( in_array( "*-*", $this->tokenPermissions ) ) {
+			if ( in_array( "*{$separator}*", $this->tokenPermissions ) ) {
 				return true;
 			}
-			if ( in_array( "$model-*", $this->tokenPermissions ) ) {
+			if ( in_array( "{$model}{$separator}*", $this->tokenPermissions ) ) {
 				return true;
 			}
 

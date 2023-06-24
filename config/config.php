@@ -13,7 +13,7 @@
 		| token.
 		|
 		*/
-		'secret'             => env( 'SPHINX_SECRET_KEY', '' ),
+		'secret'               => env( 'SPHINX_SECRET_KEY', '' ),
 
 		/*
 		|--------------------------------------------------------------------------
@@ -23,7 +23,7 @@
 		| Determine the expiration time of the access token.
 		|
 		*/
-		'access_expired_at'  => '+1 hour',
+		'access_expired_at'    => '+1 hour',
 
 		/*
 		|--------------------------------------------------------------------------
@@ -33,7 +33,7 @@
 		| Determine expiration time of the refresh token.
 		|
 		*/
-		'refresh_expired_at' => '+24 hour',
+		'refresh_expired_at'   => '+24 hour',
 
 		/*
 		|--------------------------------------------------------------------------
@@ -44,5 +44,15 @@
 		| findAndCache method and also, keep up-to-date cached instances.
 		|
 		*/
-		'role_model'         => Model::class,
+		'role_model'           => Model::class,
+
+		/*
+		|--------------------------------------------------------------------------
+		| Permissions separator
+		|--------------------------------------------------------------------------
+		|
+		| Determine the separator for permissions
+		|
+		*/
+		'permission_separator' => '-',
 	];
