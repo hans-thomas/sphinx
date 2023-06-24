@@ -58,7 +58,6 @@
     &:hover {
       text-decoration: underline;
     }
-
     &:visited {
       color: var(--color-visited-link);
     }
@@ -102,7 +101,6 @@
     :first-child {
       margin-top: 0;
     }
-
     :last-child {
       margin-bottom: 0;
     }
@@ -157,7 +155,6 @@
       margin: 0;
       padding-inline-end: 0;
     }
-
     td:nth-child(2) pre {
       margin: 0;
       padding-inline-start: 0;
@@ -183,7 +180,6 @@
 
   figure {
     margin: $padding-16 0;
-
     figcaption p {
       margin-top: 0;
     }
@@ -195,7 +191,6 @@
   > :first-child {
     margin-top: 0;
   }
-
   > :last-child {
     margin-bottom: 0;
   }

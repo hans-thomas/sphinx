@@ -9,7 +9,7 @@ headless: true
 - [Collapsed]({{< relref "/docs/example/collapsed" >}})
   - [3rd]({{< relref "/docs/example/collapsed/3rd-level" >}})
     - [4th]({{< relref "/docs/example/collapsed/3rd-level/4th-level" >}})
-      <br />
+<br />
 
 - **Shortcodes**
 - [Buttons]({{< relref "/docs/shortcodes/buttons" >}})
@@ -19,4 +19,4 @@ headless: true
 - [KaTex]({{< relref "/docs/shortcodes/katex" >}})
 - [Mermaid]({{< relref "/docs/shortcodes/mermaid" >}})
 - [Tabs]({{< relref "/docs/shortcodes/tabs" >}})
-  <br />
+<br />

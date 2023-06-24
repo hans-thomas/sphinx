@@ -1,24 +1,24 @@
 (function () {
-    function select(element) {
-        const selection = window.getSelection();
+  function select(element) {
+    const selection = window.getSelection();
 
-        const range = document.createRange();
-        range.selectNodeContents(element);
+    const range = document.createRange();
+    range.selectNodeContents(element);
 
-        selection.removeAllRanges();
-        selection.addRange(range);
-    }
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
 
-    document.querySelectorAll("pre code").forEach(code => {
-        code.addEventListener("click", function (event) {
-            if (window.getSelection().toString()) {
-                return;
-            }
-            select(code.parentElement);
+  document.querySelectorAll("pre code").forEach(code => {
+    code.addEventListener("click", function (event) {
+      if (window.getSelection().toString()) {
+        return;
+      }
+      select(code.parentElement);
 
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(code.parentElement.textContent);
-            }
-        });
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(code.parentElement.textContent);
+      }
     });
+  });
 })();

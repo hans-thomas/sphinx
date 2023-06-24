@@ -1,7 +1,1 @@
-{
-  "Target": "book.min.862568ed98b0f52592b4c5f9ab6fb02c4b374ddeb4e7399c91d2d98eefdb218b.css",
-  "MediaType": "text/css",
-  "Data": {
-    "Integrity": "sha256-hiVo7Ziw9SWStMX5q2+wLEs3Td605zmckdLZju/bIYs="
-  }
-}
+{"Target":"book.min.862568ed98b0f52592b4c5f9ab6fb02c4b374ddeb4e7399c91d2d98eefdb218b.css","MediaType":"text/css","Data":{"Integrity":"sha256-hiVo7Ziw9SWStMX5q2+wLEs3Td605zmckdLZju/bIYs="}}
