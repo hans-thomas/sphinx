@@ -8,6 +8,8 @@
 	class InnerAccessToken extends JwtToken {
 
 		/**
+		 * Return available constrains for current implementation
+		 *
 		 * @return array
 		 */
 		protected function getAvailableConstrains(): array {

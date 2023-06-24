@@ -20,11 +20,15 @@
 	abstract class JwtToken {
 
 		/**
+		 * Configuration for JWT builder and parser
+		 *
 		 * @var Configuration
 		 */
 		protected Configuration $configuration;
 
 		/**
+		 * JWT builder instance
+		 *
 		 * @var Builder
 		 */
 		protected Builder $instance;
@@ -40,11 +44,15 @@
 		}
 
 		/**
+		 * Return available constrains for current implementation
+		 *
 		 * @return array
 		 */
 		abstract protected function getAvailableConstrains(): array;
 
 		/**
+		 * Determine the token is issued by who
+		 *
 		 * @param string $issuedBy
 		 *
 		 * @return self
@@ -56,6 +64,8 @@
 		}
 
 		/**
+		 * Determine the token is permitted for what
+		 *
 		 * @param string $permittedFor
 		 *
 		 * @return self
@@ -67,6 +77,8 @@
 		}
 
 		/**
+		 * Determine the token is identified by who
+		 *
 		 * @param string $identifiedBy
 		 *
 		 * @return self
@@ -78,6 +90,8 @@
 		}
 
 		/**
+		 * Determine the token can be used after a period
+		 *
 		 * @param string $due
 		 *
 		 * @return self
@@ -90,6 +104,8 @@
 		}
 
 		/**
+		 * Determine the token expires after a period
+		 *
 		 * @param string $due
 		 *
 		 * @return self
@@ -102,6 +118,9 @@
 		}
 
 		/**
+		 *
+		 * Set many claims at once
+		 *
 		 * @param array $claims
 		 *
 		 * @return self
@@ -123,6 +142,8 @@
 		}
 
 		/**
+		 * Set a claim for token
+		 *
 		 * @param string           $key
 		 * @param string|int|array $value
 		 *
@@ -135,6 +156,8 @@
 		}
 
 		/**
+		 * Set a claim if condition is true
+		 *
 		 * @param bool                      $condition
 		 * @param string                    $key
 		 * @param string|int|array|callable $value
@@ -153,6 +176,8 @@
 		}
 
 		/**
+		 * Set many headers at once
+		 *
 		 * @param array $headers
 		 *
 		 * @return self
@@ -174,6 +199,8 @@
 		}
 
 		/**
+		 * Set a header for token
+		 *
 		 * @param string     $key
 		 * @param string|int $value
 		 *
@@ -186,6 +213,8 @@
 		}
 
 		/**
+		 * Set a header if condition is true
+		 *
 		 * @param bool                $condition
 		 * @param string              $key
 		 * @param string|int|callable $value
@@ -204,6 +233,8 @@
 		}
 
 		/**
+		 * Set immutable time to the token as issued time
+		 *
 		 * @return self
 		 */
 		public function encode(): self {
@@ -213,6 +244,8 @@
 		}
 
 		/**
+		 * Decode the given token
+		 *
 		 * @param string $token
 		 *
 		 * @return UnencryptedToken
@@ -233,6 +266,8 @@
 		}
 
 		/**
+		 * Assert the given token with available constraints
+		 *
 		 * @param string $token
 		 *
 		 * @return void
@@ -244,6 +279,8 @@
 		}
 
 		/**
+		 * Validation the given token with available constraints
+		 *
 		 * @param string $token
 		 *
 		 * @return bool
@@ -260,6 +297,8 @@
 		}
 
 		/**
+		 * Return the configured plain token instance
+		 *
 		 * @return Plain
 		 */
 		public function getToken(): Plain {
