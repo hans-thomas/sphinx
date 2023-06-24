@@ -141,7 +141,7 @@
 		}
 
 		/**
-		 * Validate the wrapper access token of given token
+		 * Validate wrapper access token of the given token
 		 *
 		 * @param string $token
 		 *
@@ -152,7 +152,7 @@
 		}
 
 		/**
-		 * Assert the wrapper access token of given token
+		 * Assert wrapper access token of the given token
 		 *
 		 * @param string $token
 		 *
@@ -164,7 +164,7 @@
 		}
 
 		/**
-		 * Validate the inner access token of given token
+		 * Validate inner access token of the given token
 		 *
 		 * @param string $token
 		 *
@@ -182,7 +182,7 @@
 		}
 
 		/**
-		 * Assert the inner access token of given token
+		 * Assert inner access token of the given token
 		 *
 		 * @param string $token
 		 *
@@ -198,7 +198,7 @@
 		}
 
 		/**
-		 * Return inner access token of given token
+		 * Return inner access token of the given token
 		 *
 		 * @param string $token
 		 *
@@ -214,7 +214,7 @@
 		}
 
 		/**
-		 * Validate the wrapper refresh token of given token
+		 * Validate wrapper refresh token of the given token
 		 *
 		 * @param string $token
 		 *
@@ -225,7 +225,7 @@
 		}
 
 		/**
-		 * Assert the wrapper refresh token of given token
+		 * Assert wrapper refresh token of the given token
 		 *
 		 * @param string $token
 		 *
@@ -237,7 +237,7 @@
 		}
 
 		/**
-		 * Validate the inner refresh token of given token
+		 * Validate inner refresh token of the given token
 		 *
 		 * @param string $token
 		 *
@@ -255,7 +255,7 @@
 		}
 
 		/**
-		 * Assert the inner refresh token of given token
+		 * Assert inner refresh token of the given token
 		 *
 		 * @param string $token
 		 *
@@ -270,7 +270,7 @@
 		}
 
 		/**
-		 * Return inner refresh token of given token
+		 * Return inner refresh token of the given token
 		 *
 		 * @param string $token
 		 *
@@ -286,7 +286,7 @@
 		}
 
 		/**
-		 * Get permissions of given token
+		 * Get permissions of the given token
 		 *
 		 * @param string $token
 		 *

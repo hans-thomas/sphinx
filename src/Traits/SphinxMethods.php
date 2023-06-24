@@ -45,7 +45,7 @@
 		}
 
 		/**
-		 * Return user version using latest opened session
+		 * Return user version using the latest opened session
 		 *
 		 * @return int
 		 */
