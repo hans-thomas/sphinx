@@ -28,9 +28,7 @@
 		 *
 		 * @return void
 		 */
-		public function updateRememberToken( Authenticatable $user = null, $token = null ): void {
-			// no action needed
-		}
+		public function updateRememberToken( Authenticatable $user = null, $token = null ): void { }
 
 		/**
 		 * @param array $credentials

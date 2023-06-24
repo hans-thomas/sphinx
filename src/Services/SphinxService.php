@@ -19,26 +19,36 @@
 	class SphinxService {
 
 		/**
+		 * Wrapper access token provider instance
+		 *
 		 * @var WrapperAccessToken
 		 */
 		private WrapperAccessToken $wrapperAccessTokenProvider;
 
 		/**
+		 * Inner access token provider instance
+		 *
 		 * @var InnerAccessToken
 		 */
 		private InnerAccessToken $innerAccessTokenProvider;
 
 		/**
+		 * Wrapper refresh token provider instance
+		 *
 		 * @var WrapperRefreshToken
 		 */
 		private WrapperRefreshToken $wrapperRefreshTokenProvider;
 
 		/**
+		 * Inner refresh token provider instance
+		 *
 		 * @var InnerRefreshToken
 		 */
 		private InnerRefreshToken $innerRefreshTokenProvider;
 
 		/**
+		 * Related session instance
+		 *
 		 * @var Session|null
 		 */
 		private ?Session $session = null;
@@ -53,6 +63,8 @@
 		}
 
 		/**
+		 * Decode the given token
+		 *
 		 * @param string $token
 		 *
 		 * @return UnencryptedToken
@@ -63,6 +75,8 @@
 		}
 
 		/**
+		 * Generate tokens for given user
+		 *
 		 * @throws SphinxException
 		 */
 		public function generateTokenFor( Authenticatable $user ): self {
@@ -75,6 +89,8 @@
 		}
 
 		/**
+		 * Return generated access token
+		 *
 		 * @return string
 		 */
 		public function getAccessToken(): string {
@@ -85,6 +101,8 @@
 		}
 
 		/**
+		 * Return generated refresh token
+		 *
 		 * @return string
 		 */
 		public function getRefreshToken(): string {
@@ -95,6 +113,8 @@
 		}
 
 		/**
+		 * Add a custom claim to the token
+		 *
 		 * @param string           $key
 		 * @param string|int|array $value
 		 *
@@ -107,6 +127,8 @@
 		}
 
 		/**
+		 * Add a custom header to the token
+		 *
 		 * @param string           $key
 		 * @param string|int|array $value
 		 *
@@ -119,6 +141,8 @@
 		}
 
 		/**
+		 * Validate the wrapper access token of given token
+		 *
 		 * @param string $token
 		 *
 		 * @return bool
@@ -128,6 +152,8 @@
 		}
 
 		/**
+		 * Assert the wrapper access token of given token
+		 *
 		 * @param string $token
 		 *
 		 * @return void
@@ -138,6 +164,8 @@
 		}
 
 		/**
+		 * Validate the inner access token of given token
+		 *
 		 * @param string $token
 		 *
 		 * @return bool
@@ -154,6 +182,8 @@
 		}
 
 		/**
+		 * Assert the inner access token of given token
+		 *
 		 * @param string $token
 		 *
 		 * @return void
@@ -168,6 +198,8 @@
 		}
 
 		/**
+		 * Return inner access token of given token
+		 *
 		 * @param string $token
 		 *
 		 * @return UnencryptedToken
@@ -182,6 +214,8 @@
 		}
 
 		/**
+		 * Validate the wrapper refresh token of given token
+		 *
 		 * @param string $token
 		 *
 		 * @return bool
@@ -191,6 +225,8 @@
 		}
 
 		/**
+		 * Assert the wrapper refresh token of given token
+		 *
 		 * @param string $token
 		 *
 		 * @return void
@@ -201,6 +237,8 @@
 		}
 
 		/**
+		 * Validate the inner refresh token of given token
+		 *
 		 * @param string $token
 		 *
 		 * @return bool
@@ -217,6 +255,8 @@
 		}
 
 		/**
+		 * Assert the inner refresh token of given token
+		 *
 		 * @param string $token
 		 *
 		 * @return void
@@ -230,6 +270,8 @@
 		}
 
 		/**
+		 * Return inner refresh token of given token
+		 *
 		 * @param string $token
 		 *
 		 * @return UnencryptedToken
@@ -244,6 +286,8 @@
 		}
 
 		/**
+		 * Get permissions of given token
+		 *
 		 * @param string $token
 		 *
 		 * @return array
@@ -254,6 +298,8 @@
 		}
 
 		/**
+		 * Determine the token is refresh token or not
+		 *
 		 * @param string $token
 		 *
 		 * @return bool
@@ -264,6 +310,8 @@
 		}
 
 		/**
+		 * Determine the token is not a refresh token
+		 *
 		 * @param string $token
 		 *
 		 * @return bool
@@ -274,6 +322,17 @@
 		}
 
 		/**
+		 * Return current selected session
+		 *
+		 * @return Session|null
+		 */
+		public function getCurrentSession(): ?Session {
+			return $this->session;
+		}
+
+		/**
+		 * Configure wrapper and inner access token instances
+		 *
 		 * @param Authenticatable $user
 		 *
 		 * @return void
@@ -330,6 +389,8 @@
 		}
 
 		/**
+		 * Configure wrapper and inner refresh token instances
+		 *
 		 * @param Authenticatable $user
 		 *
 		 * @return void
@@ -364,6 +425,8 @@
 		}
 
 		/**
+		 * Guess the related session using authorization token
+		 *
 		 * @return void
 		 * @throws SphinxException
 		 */
@@ -390,6 +453,8 @@
 		}
 
 		/**
+		 * Open a new session for given user
+		 *
 		 * @param Authenticatable $user
 		 *
 		 * @return void
@@ -403,18 +468,13 @@
 		}
 
 		/**
+		 * Initialize the inner access tokens
+		 *
 		 * @return void
 		 */
 		private function initInnerTokensInstance(): void {
 			$this->innerAccessTokenProvider  = new InnerAccessToken( $this->session->secret );
 			$this->innerRefreshTokenProvider = new InnerRefreshToken( $this->session->secret );
-		}
-
-		/**
-		 * @return object|null
-		 */
-		public function getCurrentSession(): ?Session {
-			return $this->session;
 		}
 
 	}

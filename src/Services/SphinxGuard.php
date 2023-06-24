@@ -12,8 +12,8 @@
 	use Illuminate\Support\Traits\Macroable;
 
 	class SphinxGuard implements Authenticatable, Guard {
-		use GuardHelpers, Macroable;
 
+		use GuardHelpers, Macroable;
 
 		public function __construct(
 			SphinxUserProvider $provider,
@@ -151,6 +151,8 @@
 		}
 
 		/**
+		 * Create the user instance using validated jwt token
+		 *
 		 * @param string|null $token
 		 *
 		 * @return void
