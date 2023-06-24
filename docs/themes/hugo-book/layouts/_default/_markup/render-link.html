@@ -20,8 +20,6 @@
       {{- end }}
     {{- else if fileExists (print .Page.File.Dir .Destination) }}
       <!-- Nothing -->
-    {{- else -}}
-      {{- warnf "Page '%s' not found in '%s'" .Destination .Page.File }}
     {{- end }}
   {{- end }}
   <a href="{{ $destination | safeURL }}"{{ with .Title}} title="{{ . }}"{{ end }}>{{ .Text | safeHTML }}</a>
