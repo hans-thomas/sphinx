@@ -11,9 +11,9 @@
     {{- if strings.HasPrefix .Destination "/" }}
       {{- $path = print "/static" .Destination }}
     {{- end }}
-    {{- if not (fileExists $path) }}
-      {{- warnf "Image '%s' not found in '%s'" .Destination .Page.File }}
-    {{- end }}
+<!--    {{- if not (fileExists $path) }}-->
+<!--      {{- warnf "Image '%s' not found in '%s'" .Destination .Page.File }}-->
+<!--    {{- end }}-->
   {{- end }}
   <img src="{{ .Destination | safeURL }}" alt="{{ .Text }}" {{ with .Title }}title="{{ . }}"{{ end }}/>
 {{- end -}}
