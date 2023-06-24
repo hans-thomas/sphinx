@@ -18,6 +18,7 @@
 	 * @property string $secret
 	 * @property int    $sessionable_version
 	 *
+	 * Relationships:
 	 *
 	 * @property Model  $sessionable
 	 *
@@ -52,6 +53,8 @@
 		}
 
 		/**
+		 * Sessionable relationship
+		 *
 		 * @return MorphTo
 		 */
 		public function sessionable(): MorphTo {
@@ -59,6 +62,8 @@
 		}
 
 		/**
+		 * Find the given id and cache the result
+		 *
 		 * @param int $id
 		 *
 		 * @return Session
