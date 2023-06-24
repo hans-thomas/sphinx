@@ -12,6 +12,8 @@
 
 	if ( ! function_exists( 'capture_session' ) ) {
 		/**
+		 * Capture a session for given user
+		 *
 		 * @param Authenticatable $user
 		 *
 		 * @return Session
@@ -57,6 +59,8 @@
 
 	if ( ! function_exists( 'sphinx_config' ) ) {
 		/**
+		 * Make it easy to access sphinx configs
+		 *
 		 * @param string     $key
 		 * @param mixed|null $default
 		 *
@@ -70,6 +74,8 @@
 
 	if ( ! function_exists( 'generate_secret_key' ) ) {
 		/**
+		 * Generate a random secret key
+		 *
 		 * @return mixed
 		 */
 		function generate_secret_key(): string {
