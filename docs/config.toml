@@ -1,3 +1,21 @@
-baseURL = 'http://example.org/'
-languageCode = 'en-us'
-title = 'My New Hugo Site'
+baseURL = "/"
+languageCode = "en-us"
+title = "Sphinx"
+theme = "kube"
+description = "Sphinx is a feature reach JWT-based authentication system that make zero queries to database during authorization."
+Paginate = 4
+[Params]
+  RSSLink = "/index.xml"
+  author = "Mortazavi" # add your company name
+  github = "https://github.com/hans-thomas/sphinx" # add your github profile name
+  twitter = "" # add your twitter profile
+  email = "s.mohammad027@live.com"
+
+[[menu.main]]
+    name = "Home"
+    weight = 1
+    url = "/"
+[[menu.main]]
+    name = "Docs"
+    weight = 2
+    url = "/docs/"

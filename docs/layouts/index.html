@@ -1,0 +1,55 @@
+{{ define "title"}} {{ .Site.Title}} {{end}}
+{{ define "header"}} {{ partial "header" .}} {{end}}
+{{ define "main"}}
+
+<div id="main">
+    <div id="hero">
+        <h1>{{.Title}}</h1>
+        <p>{{.Description}}</p>
+    </div>
+    <div id="action-buttons">
+        <a class="button primary big" href="/docs">Documentation</a>
+        <a class="button outline big" href="https://github.com/hans-thomas/sphinx"
+           onclick="_gaq.push(['_trackEvent', 'sphinx', 'github']);">View on Github</a>
+    </div>
+    <div id="kube-features">
+        <div class="row gutters">
+            <div class="col col-4 item">
+                <h3 style="color: black">Based on Jwt</h3>
+                <p>It allows you to authorize the user without make any queries.</p>
+            </div>
+            <div class="col col-4 item">
+                <h3 style="color: black">
+                    <a href="https://github.com/hans-thomas/horus"
+                       onclick="_gaq.push(['_trackEvent', 'Horus', 'github']);">
+                        Horus integration
+                    </a>
+                </h3>
+                <p>You can integrate Sphinx with Horus to avoid any conflicts.</p>
+            </div>
+            <div class="col col-4 item">
+                <h3 style="color: black">Two layers of encryption</h3>
+                <p>Sphinx encrypts the first layer using a static secret key and second layer using a random key that
+                    will store in related session on the database.</p>
+            </div>
+        </div>
+        <div class="row gutters">
+            <div class="col col-4 item">
+                <h4>Refresh token support</h4>
+                <p>After access token expiration, you can automatically get a new access token for logged-in user using
+                    refresh token.</p>
+            </div>
+            <div class="col col-4 item">
+                <h4>Sessions</h4>
+                <p>After each successful login, a session will open for users and hold some data such as os, browser and
+                    ip etc.</p>
+            </div>
+            <div class="col col-4 item">
+                <h4>Limited logged-in users</h4>
+                <p>You can limit the logged-in users using one account.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{{ end }}
+{{ define "footer"}} {{ partial "footer" .}} {{end}}
