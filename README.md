@@ -9,10 +9,10 @@ Sphinx is a feature reach JWT-based authentication system that make zero queries
 - Refresh token support
 - Logged-in users in one account limitation
 
-Read more about Sphinx in [documentation]() website.
+Read more about Sphinx in [documentation](https://docs-sphinx.vercel.app/) website.
 
 Support
 -------
 
-- [Documentation]()
+- [Documentation](https://docs-sphinx.vercel.app/)
 - [Report bugs](https://github.com/hans-thomas/sphinx)
