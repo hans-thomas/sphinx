@@ -44,22 +44,22 @@ First of all, define the provider.
 ```
 'providers' => [
     // ...
-    'sphinx' => [
-        'driver' => 'SphinxProvider',
+    'sphinxUsers' => [
+        'driver' => 'sphinx',
         'model'  => App\Models\User::class,
     ],
     // ...
 ],
 ```
 
-Then, add the guard.
+Then, add your guard.
 
 ```
 'guards' => [
     // ...
     'jwt' => [
-        'driver'   => 'SphinxDriver',
-        'provider' => 'SphinxProvider',
+        'driver'   => 'sphinxJwt',
+        'provider' => 'sphinxUsers',
     ],
     // ...
 ],
