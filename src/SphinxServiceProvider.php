@@ -21,21 +21,20 @@
 			$this->app->bind( 'sphinx-service', SphinxService::class );
 
 			Auth::extend( 'sphinxJwt', function( Application $app, $name, array $config ) {
-				if ( $this->app[ 'config' ][ "auth.providers.{$config['provider']}.driver" ] == 'sphinx' ) {
-					$userProvider = app(
+				Auth::provider(
+					'sphinx',
+					fn() => $app->makeWith(
 						SphinxUserProvider::class,
 						[ 'model' => $this->app[ 'config' ][ "auth.providers.{$config['provider']}.model" ] ]
-					);
-				} else {
-					$userProvider = Auth::createUserProvider(
-						$this->app[ 'config' ][ "auth.providers.{$config['provider']}.driver" ]
-					);
-				}
+					)
+				);
 
 				return $app->makeWith(
 					SphinxGuard::class,
 					[
-						'provider' => $userProvider
+						'provider' => Auth::createUserProvider(
+							$this->app[ 'config' ][ "auth.providers.{$config['provider']}.driver" ]
+						)
 					]
 				);
 			} );
