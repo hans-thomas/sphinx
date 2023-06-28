@@ -41,8 +41,8 @@ return [
             'provider' => 'users',
         ],
         'jwt' => [
-            'driver'   => 'SphinxDriver',
-            'provider' => 'SphinxProvider',
+            'driver'   => 'sphinxJwt',
+            'provider' => 'sphinxUsers',
         ],
     ],
 
@@ -68,8 +68,8 @@ return [
             'driver' => 'eloquent',
             'model'  => App\Models\User::class,
         ],
-        'sphinx' => [
-            'driver' => 'SphinxProvider',
+        'sphinxUsers' => [
+            'driver' => 'sphinx',
             'model'  => App\Models\User::class,
         ],
 

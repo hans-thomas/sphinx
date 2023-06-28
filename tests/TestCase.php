@@ -134,7 +134,6 @@
 			$router->get( '/me', function() {
 				return auth()->user();
 			} )
-			       ->middleware( 'auth:jwt' )
 			       ->name( 'test.me' );
 		}
 

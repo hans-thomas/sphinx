@@ -1,10 +1,10 @@
 # Sphinx
 
-Sphinx is a feature reach JWT-based authentication system that make zero queries to database during authorization.
+Sphinx is a feature reach Jwt-based authentication system that make zero queries to database during authorization.
 
 - Customizable
-- Integrated support with [Horus](https://github.com/hans-thomas/horus)
-- Based on JWT
+- Integration support with [Horus](https://github.com/hans-thomas/horus)
+- Based on Jwt
 - Two layers of encryption
 - Refresh token support
 - Logged-in users in one account limitation

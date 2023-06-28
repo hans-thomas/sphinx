@@ -20,19 +20,22 @@
 		public function register(): void {
 			$this->app->bind( 'sphinx-service', SphinxService::class );
 
-			Auth::provider(
-				'SphinxProvider',
-				fn() => app(
-					SphinxUserProvider::class,
-					[ 'model' => $this->app[ 'config' ][ 'auth.providers.sphinx.model' ] ]
-				)
-			);
+			Auth::extend( 'sphinxJwt', function( Application $app, $name, array $config ) {
+				if ( $this->app[ 'config' ][ "auth.providers.{$config['provider']}.driver" ] == 'sphinx' ) {
+					$userProvider = app(
+						SphinxUserProvider::class,
+						[ 'model' => $this->app[ 'config' ][ "auth.providers.{$config['provider']}.model" ] ]
+					);
+				} else {
+					$userProvider = Auth::createUserProvider(
+						$this->app[ 'config' ][ "auth.providers.{$config['provider']}.driver" ]
+					);
+				}
 
-			Auth::extend( 'SphinxDriver', function( Application $app, $name, array $config ) {
 				return $app->makeWith(
 					SphinxGuard::class,
 					[
-						'provider' => Auth::createUserProvider( 'sphinx' )
+						'provider' => $userProvider
 					]
 				);
 			} );

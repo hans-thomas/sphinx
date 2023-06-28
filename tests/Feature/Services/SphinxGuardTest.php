@@ -5,10 +5,10 @@
 	use Hans\Horus\Exceptions\HorusException;
 	use Hans\Sphinx\Facades\Sphinx;
 	use Hans\Sphinx\Services\SphinxGuard;
+	use Hans\Sphinx\Services\SphinxUserProvider;
 	use Hans\Sphinx\Tests\Factories\UserFactory;
 	use Hans\Sphinx\Tests\TestCase;
 	use Illuminate\Database\Eloquent\Model;
-	use Illuminate\Support\Facades\Auth;
 
 	class SphinxGuardTest extends TestCase {
 
@@ -24,7 +24,10 @@
 					'Bearer ' . Sphinx::generateTokenFor( $this->user )->getAccessToken()
 				);
 			$this->guard = app( SphinxGuard::class, [
-				'provider' => Auth::createUserProvider( 'sphinx' )
+				'provider' => app(
+					SphinxUserProvider::class,
+					[ 'model' => $this->app[ 'config' ][ "auth.providers.sphinxUsers.model" ] ]
+				)
 			] );
 		}
 
