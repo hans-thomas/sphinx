@@ -9,6 +9,7 @@
 	use Throwable;
 
 	class SphinxException extends Exception {
+
 		private int $errorCode;
 
 		public function __construct( string $message, int $errorCode, int $responseCode = 500, Throwable $previous = null ) {
@@ -18,7 +19,6 @@
 
 		/**
 		 * Render the exception into an HTTP response.
-		 *
 		 *
 		 * @return JsonResponse
 		 */
@@ -33,4 +33,5 @@
 		public function getErrorCode(): int {
 			return $this->errorCode;
 		}
+
 	}
