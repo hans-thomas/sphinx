@@ -2,22 +2,19 @@
 
     namespace App\Models;
 
-    // use Illuminate\Contracts\Auth\MustVerifyEmail;
-    use Hans\Horus\HasPermissions;
-    use Hans\Horus\HasRoles;
-    use Hans\Horus\Models\Traits\HasRelations;
     use Hans\Sphinx\Traits\SphinxTrait;
     use Illuminate\Database\Eloquent\Factories\HasFactory;
     use Illuminate\Foundation\Auth\User as Authenticatable;
     use Illuminate\Notifications\Notifiable;
+    use Spatie\Permission\Models\Role;
+    use Spatie\Permission\Traits\HasRoles;
 
     class User extends Authenticatable {
         use HasFactory, Notifiable;
-
         use SphinxTrait, SphinxTrait {
             SphinxTrait::hooks as private handleCaching;
         }
-        use HasRoles, HasPermissions, HasRelations;
+        use HasRoles;
 
         /**
          * The attributes that are mass assignable.
@@ -55,6 +52,9 @@
             self::handleCaching();
         }
 
+        public function getRole(): ?Role {
+            return $this->roles()->first();
+        }
 
         public function getDeviceLimit(): int {
             return 2;

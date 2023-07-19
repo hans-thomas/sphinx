@@ -3,12 +3,11 @@
 	namespace Hans\Sphinx\Tests\Feature\Traits;
 
 	use App\Models\User;
-	use AreasEnum;
 	use Hans\Horus\Exceptions\HorusException;
-	use Hans\Horus\Models\Permission;
 	use Hans\Sphinx\Facades\Sphinx;
 	use Hans\Sphinx\Tests\Factories\UserFactory;
 	use Hans\Sphinx\Tests\TestCase;
+	use Spatie\Permission\Models\Permission;
 
 	class SphinxTokenCanTest extends TestCase {
 
@@ -26,17 +25,16 @@
 		 * @test
 		 *
 		 * @return void
-		 * @throws HorusException
 		 */
 		public function can(): void {
 			self::assertTrue(
-				$this->user->can( 'models-user-view' )
+				$this->user->can( 'user-view' )
 			);
 			self::assertTrue(
-				$this->user->can( Permission::findByName( 'models-user-view', AreasEnum::ADMIN )->id )
+				$this->user->can( Permission::findByName( 'user-view' )->id )
 			);
 			self::assertTrue(
-				$this->user->can( 'models-user-*' )
+				$this->user->can( 'user-*' )
 			);
 
 			self::assertFalse(
@@ -48,17 +46,16 @@
 		 * @test
 		 *
 		 * @return void
-		 * @throws HorusException
 		 */
 		public function canAny(): void {
 			self::assertTrue(
-				$this->user->canAny( [ 'wrong-update', 'models-user-view', 'wrong-view' ] )
+				$this->user->canAny( [ 'wrong-update', 'user-view', 'wrong-view' ] )
 			);
 			self::assertTrue(
-				$this->user->canAny( [ 'wrong-update', 'models-user-*', 'wrong-view' ] )
+				$this->user->canAny( [ 'wrong-update', 'user-*', 'wrong-view' ] )
 			);
 			self::assertTrue(
-				$this->user->canAny( Permission::findByName( 'models-user-view', AreasEnum::ADMIN )->id )
+				$this->user->canAny( Permission::findByName( 'user-view' )->id )
 			);
 
 			self::assertFalse(
@@ -80,13 +77,13 @@
 			);
 
 			self::assertFalse(
-				$this->user->cannot( 'models-user-view' )
+				$this->user->cannot( 'user-view' )
 			);
 			self::assertFalse(
-				$this->user->cannot( 'models-user-*' )
+				$this->user->cannot( 'user-*' )
 			);
 			self::assertFalse(
-				$this->user->cannot( [ 'models-user-view', 'models-user-*' ] )
+				$this->user->cannot( [ 'user-view', 'user-*' ] )
 			);
 		}
 
@@ -104,13 +101,13 @@
 			);
 
 			self::assertFalse(
-				$this->user->cant( 'models-user-view' )
+				$this->user->cant( 'user-view' )
 			);
 			self::assertFalse(
-				$this->user->cant( 'models-user-*' )
+				$this->user->cant( 'user-*' )
 			);
 			self::assertFalse(
-				$this->user->cant( [ 'models-user-view', 'models-user-*' ] )
+				$this->user->cant( [ 'user-view', 'user-*' ] )
 			);
 		}
 

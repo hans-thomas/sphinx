@@ -2,71 +2,65 @@
 
 	namespace Hans\Sphinx\Tests;
 
+	use App\Models\RoleDelegate;
 	use App\Models\User;
-	use AreasEnum;
-	use Hans\Horus\Facades\HorusSeeder as Horus;
+	use Hans\Horus\Facades\Horus;
 	use Hans\Horus\HorusServiceProvider;
-	use Hans\Horus\Models\Role;
 	use Hans\Sphinx\SphinxServiceProvider;
 	use Illuminate\Foundation\Application;
 	use Illuminate\Foundation\Testing\RefreshDatabase;
 	use Illuminate\Routing\Router;
 	use Orchestra\Testbench\TestCase as BaseTestCase;
-	use RolesEnum;
+	use Spatie\Permission\Models\Permission;
+	use Spatie\Permission\PermissionServiceProvider;
 
 	class TestCase extends BaseTestCase {
 		use RefreshDatabase;
+
+		const ADMIN_AREA = 'employees';
+		const DEFAULT_ADMINS = 'admin';
+
+		const USER_AREA = 'customers';
+		const DEFAULT_USERS = 'user';
 
 		/**
 		 * Setup the test environment.
 		 */
 		protected function setUp(): void {
 			parent::setUp();
-
+			config()->set( 'cache.default', 'array' );
 			config()->set(
 				'sphinx.secret',
 				'XELnlAjESvqWDS3utBoN9cEA8eF3PlTtyXJ1OmCUIhxfIJKdePkoof8aKCbfucOCqpuygSDv4ZobA4936UXqzshfJrw'
 			);
 			config()->set(
 				'sphinx.role_model',
-				Role::class
+				RoleDelegate::class
 			);
 
 			$this->seedHorus();
 		}
 
 		private function seedHorus(): void {
-			Horus::createPermissions( [
-				User::class => '*',
-			], AreasEnum::ADMIN );
+			Horus::createPermissions( [ User::class ] );
 
-			Horus::createPermissions( [
-				User::class => [ 'view' ]
-			], AreasEnum::USER );
+			Horus::createSuperPermissions( [ User::class ] );
 
-			Horus::createRoles( [ RolesEnum::DEFAULT_ADMINS ], AreasEnum::ADMIN );
+			Horus::createRoles( [ self::DEFAULT_ADMINS, self::DEFAULT_USERS ] );
 
-			Horus::createRoles( [ RolesEnum::DEFAULT_USERS ], AreasEnum::USER );
-
-			Horus::assignPermissionsToRole( Role::findByName( RolesEnum::DEFAULT_ADMINS, AreasEnum::ADMIN ), [
-				User::class => [
-					'view',
-					'update'
+			Horus::assignPermissionsToRole(
+				self::DEFAULT_ADMINS,
+				[
+					User::class => [
+						'view',
+						'update'
+					]
 				]
-			], AreasEnum::ADMIN );
+			);
 
-			Horus::assignPermissionsToRole( Role::findByName( RolesEnum::DEFAULT_USERS, AreasEnum::USER ), [
-				User::class => [ 'view' ],
-			], AreasEnum::USER );
+			Horus::assignPermissionsToRole( self::DEFAULT_USERS, [ User::class => [ 'view' ], ] );
 
-
-			Horus::createSuperPermissions( [
-				User::class => '*',
-			], AreasEnum::ADMIN );
-
-			Horus::assignSuperPermissionsToRole( Role::findByName( RolesEnum::DEFAULT_ADMINS, AreasEnum::ADMIN ), [
-				User::class
-			] );
+			Horus::assignSuperPermissionsToRole( self::DEFAULT_ADMINS, [ User::class ] );
 		}
 
 		/**
@@ -76,7 +70,7 @@
 		 *
 		 * @return string|null
 		 */
-		protected function getApplicationTimezone( $app ) {
+		protected function getApplicationTimezone( $app ): ?string {
 			return 'UTC';
 		}
 
@@ -87,10 +81,11 @@
 		 *
 		 * @return array
 		 */
-		protected function getPackageProviders( $app ) {
+		protected function getPackageProviders( $app ): array {
 			return [
 				SphinxServiceProvider::class,
-				HorusServiceProvider::class
+				HorusServiceProvider::class,
+				PermissionServiceProvider::class,
 			];
 		}
 
@@ -101,7 +96,7 @@
 		 *
 		 * @return array
 		 */
-		protected function getPackageAliases( $app ) {
+		protected function getPackageAliases( $app ): array {
 			return [//	'Acme' => 'Acme\Facade',
 			];
 		}
@@ -113,7 +108,7 @@
 		 *
 		 * @return void
 		 */
-		protected function defineEnvironment( $app ) {
+		protected function defineEnvironment( $app ): void {
 			// Setup default database to use sqlite :memory:
 			$app[ 'config' ]->set( 'database.default', 'testbench' );
 			$app[ 'config' ]->set( 'database.connections.testbench', [
@@ -130,7 +125,7 @@
 		 *
 		 * @return void
 		 */
-		protected function defineRoutes( $router ) {
+		protected function defineRoutes( $router ): void {
 			$router->get( '/me', function() {
 				return auth()->user();
 			} )
@@ -142,7 +137,7 @@
 		 *
 		 * @return void
 		 */
-		protected function defineDatabaseMigrations() {
+		protected function defineDatabaseMigrations(): void {
 			$this->loadLaravelMigrations();
 		}
 
@@ -151,7 +146,7 @@
 		 *
 		 * @return string
 		 */
-		protected function getBasePath() {
+		protected function getBasePath(): string {
 			return __DIR__ . '/skeleton/laravel-10.x';
 		}
 	}

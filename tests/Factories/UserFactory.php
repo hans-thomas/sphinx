@@ -5,13 +5,11 @@
 
 
 	use App\Models\User;
-	use AreasEnum;
 	use Hans\Horus\Exceptions\HorusException;
-	use Hans\Horus\Models\Role;
 	use Hans\Sphinx\Exceptions\SphinxException;
 	use Hans\Sphinx\Facades\Sphinx;
 	use Hans\Sphinx\Services\SphinxService;
-	use RolesEnum;
+	use Hans\Sphinx\Tests\TestCase;
 
 	class UserFactory {
 
@@ -30,7 +28,7 @@
 		 */
 		public static function createNormalUser(): User {
 			$user = User::factory()->create();
-			$user->assignRole( Role::findByName( RolesEnum::DEFAULT_USERS, AreasEnum::USER ) );
+			$user->assignRole( TestCase::DEFAULT_USERS );
 
 			return $user->fresh();
 		}
@@ -42,7 +40,7 @@
 		 */
 		public static function createNormalUserWithSession(): User {
 			$user = User::factory()->create();
-			$user->assignRole( Role::findByName( RolesEnum::DEFAULT_USERS, AreasEnum::USER ) );
+			$user->assignRole( TestCase::DEFAULT_USERS );
 			capture_session( $user );
 
 			return $user->fresh();
@@ -54,7 +52,7 @@
 		 */
 		public static function createAdminUser(): User {
 			$user = User::factory()->create();
-			$user->assignRole( Role::findByName( RolesEnum::DEFAULT_ADMINS, AreasEnum::ADMIN ), true );
+			$user->assignRole( TestCase::DEFAULT_ADMINS );
 
 			return $user->fresh();
 		}
