@@ -36,7 +36,7 @@
 
 			$role = app( sphinx_config( 'role_model' ) )->findAndCache( $role_id );
 
-			if ( $role?->getVersion() != $role_version ) {
+			if ( $role->getVersion() != $role_version ) {
 				throw new SphinxException(
 					'User\'s token is out-of-date!',
 					SphinxErrorCode::TOKEN_IS_OUT_OF_DATE,
