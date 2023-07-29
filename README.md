@@ -1,6 +1,6 @@
 # Sphinx
 
-<p align="center"><img alt="Valravn Logo" src="assets/sphinx-banner.png"></p>
+<p align="center"><img alt="sphinx Logo" src="assets/sphinx-banner.png"></p>
 
 [![codecov](https://codecov.io/gh/hans-thomas/sphinx/branch/master/graph/badge.svg?token=X1D6I0JLSZ)](https://codecov.io/gh/hans-thomas/sphinx)
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/hans-thomas/sphinx/php.yml)
