@@ -1,6 +1,6 @@
 <?php
 
-    namespace App\Models;
+namespace App\Models;
 
     use Hans\Sphinx\Traits\SphinxTrait;
     use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,8 +9,10 @@
     use Spatie\Permission\Models\Role;
     use Spatie\Permission\Traits\HasRoles;
 
-    class User extends Authenticatable {
-        use HasFactory, Notifiable;
+    class User extends Authenticatable
+    {
+        use HasFactory;
+        use Notifiable;
         use SphinxTrait, SphinxTrait {
             SphinxTrait::hooks as private handleCaching;
         }
@@ -48,19 +50,23 @@
             'password'          => 'encrypted',
         ];
 
-        protected static function booted() {
+        protected static function booted()
+        {
             self::handleCaching();
         }
 
-        public function getRole(): ?Role {
+        public function getRole(): ?Role
+        {
             return $this->roles()->first();
         }
 
-        public function getDeviceLimit(): int {
+        public function getDeviceLimit(): int
+        {
             return 2;
         }
 
-        public function extract(): array {
+        public function extract(): array
+        {
             return [
                 'name'    => $this->name,
                 'email'   => $this->email,
@@ -68,15 +74,18 @@
             ];
         }
 
-        public function username(): string {
+        public function username(): string
+        {
             return 'email';
         }
 
-        public function extractRole(): ?array {
+        public function extractRole(): ?array
+        {
             return $this->roles()->first()?->toArray();
         }
 
-        public function extractPermissions(): array {
+        public function extractPermissions(): array
+        {
             return $this->getAllPermissions()->toArray();
         }
     }

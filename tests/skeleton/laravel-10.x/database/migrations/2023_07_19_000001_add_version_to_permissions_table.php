@@ -4,17 +4,17 @@
     use Illuminate\Database\Schema\Blueprint;
     use Illuminate\Support\Facades\Schema;
 
-    return new class extends Migration {
-
+    return new class() extends Migration {
         /**
          * Run the migrations.
          */
-        public function up(): void {
+        public function up(): void
+        {
             Schema::table(
-                $tableName = config( 'permission.table_names.roles' ),
-                function( Blueprint $table ) use ( $tableName ) {
-                    if ( ! Schema::hasColumn( $tableName, 'version' ) ) {
-                        $table->unsignedInteger( 'version' )->default( 1 );
+                $tableName = config('permission.table_names.roles'),
+                function (Blueprint $table) use ($tableName) {
+                    if (!Schema::hasColumn($tableName, 'version')) {
+                        $table->unsignedInteger('version')->default(1);
                     }
                 }
             );
@@ -23,15 +23,15 @@
         /**
          * Reverse the migrations.
          */
-        public function down(): void {
+        public function down(): void
+        {
             Schema::table(
-                $tableName = config( 'permission.table_names.roles' ),
-                function( Blueprint $table ) use ( $tableName ) {
-                    if ( Schema::hasColumn( $tableName, 'version' ) ) {
-                        $table->dropColumn( 'version' );
+                $tableName = config('permission.table_names.roles'),
+                function (Blueprint $table) use ($tableName) {
+                    if (Schema::hasColumn($tableName, 'version')) {
+                        $table->dropColumn('version');
                     }
                 }
             );
         }
-
     };
