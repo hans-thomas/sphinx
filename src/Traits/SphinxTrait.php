@@ -1,7 +1,10 @@
 <?php
 
-	namespace Hans\Sphinx\Traits;
+namespace Hans\Sphinx\Traits;
 
-	trait SphinxTrait {
-		use SphinxTokenCan, SphinxRelationHandler, SphinxMethods;
-	}
+    trait SphinxTrait
+    {
+        use SphinxTokenCan;
+        use SphinxRelationHandler;
+        use SphinxMethods;
+    }

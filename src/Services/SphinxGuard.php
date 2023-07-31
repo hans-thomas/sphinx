@@ -1,171 +1,181 @@
 <?php
 
+namespace Hans\Sphinx\Services;
 
-	namespace Hans\Sphinx\Services;
+    use Hans\Sphinx\Facades\Sphinx;
+    use Illuminate\Auth\GuardHelpers;
+    use Illuminate\Contracts\Auth\Authenticatable;
+    use Illuminate\Contracts\Auth\Guard;
+    use Illuminate\Http\Request;
+    use Illuminate\Support\Traits\Macroable;
 
+    class SphinxGuard implements Authenticatable, Guard
+    {
+        use GuardHelpers;
+        use Macroable;
 
-	use Hans\Sphinx\Facades\Sphinx;
-	use Illuminate\Auth\GuardHelpers;
-	use Illuminate\Contracts\Auth\Authenticatable;
-	use Illuminate\Contracts\Auth\Guard;
-	use Illuminate\Http\Request;
-	use Illuminate\Support\Traits\Macroable;
+        public function __construct(
+            SphinxUserProvider $provider,
+            private readonly Request $request,
+        ) {
+            $this->provider = $provider;
+            $this->loginUsingToken($request->bearerToken());
+        }
 
-	class SphinxGuard implements Authenticatable, Guard {
+        /**
+         * Get the name of the unique identifier for the user.
+         *
+         * @return string
+         */
+        public function getAuthIdentifierName(): string
+        {
+            return $this->user->getKeyName();
+        }
 
-		use GuardHelpers, Macroable;
+        /**
+         * Get the unique identifier for the user.
+         *
+         * @return mixed
+         */
+        public function getAuthIdentifier(): mixed
+        {
+            return $this->user->{$this->getAuthIdentifierName()};
+        }
 
-		public function __construct(
-			SphinxUserProvider $provider,
-			private readonly Request $request,
-		) {
-			$this->provider = $provider;
-			$this->loginUsingToken( $request->bearerToken() );
-		}
+        /**
+         * Get the password for the user.
+         *
+         * @return string
+         */
+        public function getAuthPassword(): string
+        {
+            if ($password = $this->user->password) {
+                return $password;
+            }
 
-		/**
-		 * Get the name of the unique identifier for the user.
-		 *
-		 * @return string
-		 */
-		public function getAuthIdentifierName(): string {
-			return $this->user->getKeyName();
-		}
+            return $this->provider->retrieveById($this->user->getAuthIdentifier())->getAuthPassword();
+        }
 
-		/**
-		 * Get the unique identifier for the user.
-		 *
-		 * @return mixed
-		 */
-		public function getAuthIdentifier(): mixed {
-			return $this->user->{$this->getAuthIdentifierName()};
-		}
+        /**
+         * Get the token value for the "remember me" session.
+         *
+         * @return void
+         */
+        public function getRememberToken(): void
+        {
+            // no action needed
+        }
 
-		/**
-		 * Get the password for the user.
-		 *
-		 * @return string
-		 */
-		public function getAuthPassword(): string {
-			if ( $password = $this->user->password ) {
-				return $password;
-			}
+        /**
+         * Set the token value for the "remember me" session.
+         *
+         * @param string $value
+         *
+         * @return void
+         */
+        public function setRememberToken($value = null): void
+        {
+            // no action needed
+        }
 
-			return $this->provider->retrieveById( $this->user->getAuthIdentifier() )->getAuthPassword();
-		}
+        /**
+         * Get the column name for the "remember me" token.
+         *
+         * @return void
+         */
+        public function getRememberTokenName(): void
+        {
+            // no action needed
+        }
 
-		/**
-		 * Get the token value for the "remember me" session.
-		 *
-		 * @return void
-		 */
-		public function getRememberToken(): void {
-			// no action needed
-		}
+        /**
+         * Get the currently authenticated user.
+         *
+         * @return Authenticatable|null
+         */
+        public function user(): ?Authenticatable
+        {
+            return $this->user ?? null;
+        }
 
-		/**
-		 * Set the token value for the "remember me" session.
-		 *
-		 * @param string $value
-		 *
-		 * @return void
-		 */
-		public function setRememberToken( $value = null ): void {
-			// no action needed
-		}
+        /**
+         * Attempt to authenticate a user using the given credentials.
+         *
+         * @param array $credentials
+         *
+         * @return bool
+         */
+        public function attempt(array $credentials): bool
+        {
+            $user = $this->provider->retrieveByCredentials($credentials);
+            if (!is_null($user) and $this->provider->validateCredentials($user, $credentials)) {
+                $this->login($user);
 
-		/**
-		 * Get the column name for the "remember me" token.
-		 *
-		 * @return void
-		 */
-		public function getRememberTokenName(): void {
-			// no action needed
-		}
+                return true;
+            }
 
-		/**
-		 * Get the currently authenticated user.
-		 *
-		 * @return Authenticatable|null
-		 */
-		public function user(): ?Authenticatable {
-			return $this->user ?? null;
-		}
+            return false;
+        }
 
-		/**
-		 * Attempt to authenticate a user using the given credentials.
-		 *
-		 * @param array $credentials
-		 *
-		 * @return bool
-		 */
-		public function attempt( array $credentials ): bool {
-			$user = $this->provider->retrieveByCredentials( $credentials );
-			if ( ! is_null( $user ) and $this->provider->validateCredentials( $user, $credentials ) ) {
-				$this->login( $user );
+        /**
+         * Log the given user ID into the application.
+         *
+         * @param int $id
+         *
+         * @return Authenticatable|null
+         */
+        public function loginUsingId(int $id): ?Authenticatable
+        {
+            $this->user = $this->provider->retrieveById($id);
 
-				return true;
-			}
+            return $this->user;
+        }
 
-			return false;
-		}
+        /**
+         * Validate a user's credentials.
+         *
+         * @param array $credentials
+         *
+         * @return bool
+         */
+        public function validate(array $credentials = []): bool
+        {
+            $user = $this->provider->retrieveByCredentials($credentials);
+            if (!is_null($user) and $this->provider->validateCredentials($user, $credentials)) {
+                return true;
+            }
 
-		/**
-		 * Log the given user ID into the application.
-		 *
-		 * @param int $id
-		 *
-		 * @return Authenticatable|null
-		 */
-		public function loginUsingId( int $id ): ?Authenticatable {
-			$this->user = $this->provider->retrieveById( $id );
+            return false;
+        }
 
-			return $this->user;
-		}
+        /**
+         * Log a user into the application.
+         *
+         * @param Authenticatable $user
+         *
+         * @return void
+         */
+        public function login(Authenticatable $user): void
+        {
+            $this->setUser($user);
+        }
 
-		/**
-		 * Validate a user's credentials.
-		 *
-		 * @param array $credentials
-		 *
-		 * @return bool
-		 */
-		public function validate( array $credentials = [] ): bool {
-			$user = $this->provider->retrieveByCredentials( $credentials );
-			if ( ! is_null( $user ) and $this->provider->validateCredentials( $user, $credentials ) ) {
-				return true;
-			}
-
-			return false;
-		}
-
-		/**
-		 * Log a user into the application.
-		 *
-		 * @param Authenticatable $user
-		 *
-		 * @return void
-		 */
-		public function login( Authenticatable $user ): void {
-			$this->setUser( $user );
-		}
-
-		/**
-		 * Create the user instance using validated jwt token
-		 *
-		 * @param string|null $token
-		 *
-		 * @return void
-		 */
-		public function loginUsingToken( ?string $token ): void {
-			if ( $token and Sphinx::isNotRefreshToken( $token ) ) {
-				$this->user = $this->provider
-					->retrieveByJwtTokenCredentials(
-						Sphinx::getInnerAccessToken( $token )
-						      ->claims()
-						      ->get( 'user' )
-					);
-			}
-		}
-
-	}
+        /**
+         * Create the user instance using validated jwt token.
+         *
+         * @param string|null $token
+         *
+         * @return void
+         */
+        public function loginUsingToken(?string $token): void
+        {
+            if ($token and Sphinx::isNotRefreshToken($token)) {
+                $this->user = $this->provider
+                    ->retrieveByJwtTokenCredentials(
+                        Sphinx::getInnerAccessToken($token)
+                              ->claims()
+                              ->get('user')
+                    );
+            }
+        }
+    }
