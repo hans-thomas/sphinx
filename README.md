@@ -6,6 +6,7 @@
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/hans-thomas/sphinx/php.yml)
 ![GitHub top language](https://img.shields.io/github/languages/top/hans-thomas/sphinx)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/hans-thomas/sphinx)
+![StyleCi](https://github.styleci.io/repos/464496173/shield?style=plastic)
 
 Sphinx is a feature reach Jwt-based authentication system that make zero queries to database during authorization.
 
