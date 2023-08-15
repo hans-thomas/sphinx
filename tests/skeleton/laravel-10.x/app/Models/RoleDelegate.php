@@ -3,12 +3,12 @@
 namespace App\Models;
 
 use Hans\Horus\Helpers\Enums\CacheEnum;
+use Hans\Sphinx\Models\Contracts\Role as RoleContract;
 use Illuminate\Support\Facades\Cache;
 use Spatie\Permission\Models\Role;
 use Throwable;
 
-// TODO: not documented in horus
-class RoleDelegate extends Role
+class RoleDelegate extends Role implements RoleContract
 {
     /**
      * @param int $id
@@ -49,6 +49,8 @@ class RoleDelegate extends Role
     }
 
     /**
+     * Make the unique key for caching the instance
+     *
      * @param int $id
      *
      * @return string
