@@ -17,4 +17,5 @@ class SphinxErrorCode
     public const FAILED_TO_SET_HEADER = 1013;
     public const FAILED_TO_CREATE_TOKEN = 1014;
     public const FAILED_TO_CREATE_REFRESH_TOKEN = 1015;
+    public const MUST_IMPLEMENT_ROLE_CONTRACT = 1016;
 }

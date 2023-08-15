@@ -4,6 +4,7 @@ namespace Hans\Sphinx\Drivers\Constraints;
 
 use Hans\Sphinx\Exceptions\SphinxErrorCode;
 use Hans\Sphinx\Exceptions\SphinxException;
+use Hans\Sphinx\Models\Contracts\Role as RoleContract;
 use Lcobucci\JWT\Token;
 use Lcobucci\JWT\Validation\Constraint;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -35,7 +36,15 @@ final class RoleIdValidator implements Constraint
             );
         }
 
-        $role = app(sphinx_config('role_model'))->findAndCache($role_id);
+	    $model = app( sphinx_config( 'role_model' ) );
+		if ( ! $model instanceof RoleContract ){
+			$modelClass = get_class( $model );
+			throw new SphinxException(
+				"Role model [$modelClass] must implement the ".RoleContract::class." contract.",
+				SphinxErrorCode::MUST_IMPLEMENT_ROLE_CONTRACT,
+			);
+		}
+        $role = $model->findAndCache($role_id);
 
         if ($role->getVersion() != $role_version) {
             throw new SphinxException(
