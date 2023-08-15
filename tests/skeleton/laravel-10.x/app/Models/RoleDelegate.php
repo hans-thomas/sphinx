@@ -49,7 +49,7 @@ class RoleDelegate extends Role implements RoleContract
     }
 
     /**
-     * Make the unique key for caching the instance
+     * Make the unique key for caching the instance.
      *
      * @param int $id
      *
