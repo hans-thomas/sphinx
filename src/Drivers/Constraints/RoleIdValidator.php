@@ -36,14 +36,15 @@ final class RoleIdValidator implements Constraint
             );
         }
 
-	    $model = app( sphinx_config( 'role_model' ) );
-		if ( ! $model instanceof RoleContract ){
-			$modelClass = get_class( $model );
-			throw new SphinxException(
-				"Role model [$modelClass] must implement the ".RoleContract::class." contract.",
-				SphinxErrorCode::MUST_IMPLEMENT_ROLE_CONTRACT,
-			);
-		}
+        $model = app(sphinx_config('role_model'));
+        if (!$model instanceof RoleContract) {
+            $modelClass = get_class($model);
+
+            throw new SphinxException(
+                "Role model [$modelClass] must implement the ".RoleContract::class.' contract.',
+                SphinxErrorCode::MUST_IMPLEMENT_ROLE_CONTRACT,
+            );
+        }
         $role = $model->findAndCache($role_id);
 
         if ($role->getVersion() != $role_version) {
