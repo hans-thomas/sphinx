@@ -6,14 +6,7 @@ use-tabs: false
 finder:
   exclude:
     - "docs"
-    - "modules"
-    - "node_modules"
-    - "nova"
-    - "nova-components"
-    - "storage"
-    - "spark"
     - "vendor"
   name: "*.php"
   not-name:
-    - "*.blade.php"
     - "_ide_helper.php"

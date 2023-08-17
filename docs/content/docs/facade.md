@@ -4,7 +4,7 @@ draft = false
 weight = 10
 description = "To make it easy to use Sphinx."
 title = "Facade"
-bref= "There is a facade class to make working easier. this facade contains several methods that we will introduce in continue."
+bref= "There is a facade class to make working easier. this facade contains several methods that we will introduce in continue"
 toc = false
 +++
 
