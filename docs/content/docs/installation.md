@@ -85,4 +85,23 @@ And finally, you can set the `jwt` guard as default.
 ],
 ```
 
-All sets. enjoy!
+All sets.
+
+## Role model
+
+Sphinx expects the role model of your project, contains requested method
+on `Hans\Sphinx\Models\Contracts\RoleMethods` interface class. So, you should implement this contract and for your
+convenient, there is the `Hans\Sphinx\Models\Traits\RoleMethods` trait class that contains all the methods that you must
+implement.
+
+```
+use Hans\Sphinx\Models\Contracts\RoleMethods as RoleContract;
+use Hans\Sphinx\Models\Traits\RoleMethods;
+use Spatie\Permission\Models\Role;
+
+class RoleDelegate extends Role implements RoleContract {
+use RoleMethods;
+
+// ...
+}
+```
