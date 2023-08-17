@@ -4,7 +4,7 @@ draft = false
 weight = 20
 description = "A bunch of useful and handy methods."
 title = "Trait"
-bref= "Sphinx adds some useful and necessary methods through the trait. there is the list of available methods."
+bref= "Sphinx adds some useful and necessary methods through the trait. there is the list of available methods"
 toc = false
 +++
 

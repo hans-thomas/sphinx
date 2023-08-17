@@ -4,7 +4,7 @@ draft = false
 weight = 9
 description = "Installation guidance to install and setup Sphinx."
 title = "Installation"
-bref= "To install Sphinx, follow the below steps."
+bref= "To install Sphinx, follow the below steps"
 toc = false
 +++
 
