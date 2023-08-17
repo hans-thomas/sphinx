@@ -8,5 +8,5 @@ use Spatie\Permission\Models\Role;
 
 class RoleDelegate extends Role implements RoleContract
 {
-use RoleMethods;
+    use RoleMethods;
 }
