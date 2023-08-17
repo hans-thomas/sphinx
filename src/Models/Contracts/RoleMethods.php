@@ -2,7 +2,7 @@
 
 namespace Hans\Sphinx\Models\Contracts;
 
-    interface Role
+    interface RoleMethods
     {
         /**
          * Find the given id and cache the result.

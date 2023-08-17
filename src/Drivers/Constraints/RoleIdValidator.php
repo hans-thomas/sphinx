@@ -4,7 +4,7 @@ namespace Hans\Sphinx\Drivers\Constraints;
 
 use Hans\Sphinx\Exceptions\SphinxErrorCode;
 use Hans\Sphinx\Exceptions\SphinxException;
-use Hans\Sphinx\Models\Contracts\Role as RoleContract;
+use Hans\Sphinx\Models\Contracts\RoleMethods as RoleContract;
 use Lcobucci\JWT\Token;
 use Lcobucci\JWT\Validation\Constraint;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
