@@ -34,9 +34,21 @@ class PerformanceTest extends TestCase
                 'Authorization' => "Bearer $token",
             ]
         );
+        $this->getJson(
+            uri: route('test.me'),
+            headers: [
+                'Authorization' => "Bearer $token",
+            ]
+        );
+        $this->getJson(
+            uri: route('test.me'),
+            headers: [
+                'Authorization' => "Bearer $token",
+            ]
+        );
 
         self::assertCount(
-            0,
+            1, // Query for the user's role on the first request, then it caches the role
             DB::getQueryLog()
         );
     }

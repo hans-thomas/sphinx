@@ -10,6 +10,7 @@ use Hans\Sphinx\SphinxServiceProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Cache;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use Spatie\Permission\PermissionServiceProvider;
 
@@ -29,7 +30,7 @@ class TestCase extends BaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        config()->set('cache.default', 'array');
+        config()->set('cache.default', 'file');
         config()->set(
             'sphinx.secret',
             'XELnlAjESvqWDS3utBoN9cEA8eF3PlTtyXJ1OmCUIhxfIJKdePkoof8aKCbfucOCqpuygSDv4ZobA4936UXqzshfJrw'
@@ -40,6 +41,8 @@ class TestCase extends BaseTestCase
         );
 
         $this->seedHorus();
+
+        Cache::clear();
     }
 
     private function seedHorus(): void

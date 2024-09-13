@@ -11,7 +11,7 @@ interface RoleMethods
      *
      * @return static
      */
-    public static function findAndCache(int $id): self;
+    public static function findAndCache(int $id): static;
 
     /**
      * Return version of the current instance.

@@ -33,7 +33,7 @@ class SphinxServiceProvider extends ServiceProvider
                 SphinxGuard::class,
                 [
                     'provider' => Auth::createUserProvider(
-                        $this->app['config']["auth.providers.{$config['provider']}.driver"]
+                        $config['provider']
                     ),
                 ]
             );
