@@ -345,7 +345,7 @@ class JwtTokenTest extends TestCase
         );
         self::assertEquals(
             0,
-            ( new DateTimeImmutable() )->diff($this->instance->getToken()->claims()->get('iat'))->s
+            (new DateTimeImmutable())->diff($this->instance->getToken()->claims()->get('iat'))->s
         );
     }
 

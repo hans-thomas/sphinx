@@ -458,13 +458,13 @@ class SphinxServiceTest extends TestCase
     public function getCurrentSessionAndGuessSession(): void
     {
         $user = UserFactory::createNormalUser();
-        $access = ( new SphinxService() )->generateTokenFor($user)->getAccessToken();
+        $access = (new SphinxService())->generateTokenFor($user)->getAccessToken();
 
         request()->headers->set('Authorization', "Bearer $access");
 
         self::assertEquals(
             $user->sessions()->first()->toArray(),
-            ( new SphinxService() )->getCurrentSession()->toArray()
+            (new SphinxService())->getCurrentSession()->toArray()
         );
     }
 }
