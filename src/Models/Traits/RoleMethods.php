@@ -12,7 +12,7 @@ trait RoleMethods
      *
      * @return static
      */
-    public static function findAndCache(int $id): self
+    public static function findAndCache(int $id): static
     {
         return Cache::rememberForever(
             static::cacheKey($id),

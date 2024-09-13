@@ -18,7 +18,7 @@ final class ExpirationValidator implements Constraint
      */
     public function assert(Token $token): void
     {
-        $diff = ( new DateTimeImmutable('UTC') )->diff($token->claims()->get('exp'));
+        $diff = (new DateTimeImmutable('UTC'))->diff($token->claims()->get('exp'));
         if ('-' == $diff->format('%R')) {
             throw new SphinxException(
                 'Token expired!',
