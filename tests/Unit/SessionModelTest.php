@@ -24,6 +24,7 @@ class SessionModelTest extends TestCase
      */
     public function create(): void
     {
+        request()->headers->set('User-Agent','Mozilla/5.0 (X11; Linux x86_64; rv:130.0) Gecko/20100101 Firefox/130.0');
         $user = UserFactory::createNormalUser();
         $model = capture_session($user);
 
