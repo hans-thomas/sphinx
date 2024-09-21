@@ -31,10 +31,10 @@
                 $client = $deviceDetector->getClient();
                 $browser = '';
                 if (is_array($client) && array_key_exists('name', $client)) {
-                    $browser.=$client['name'];
+                    $browser .= $client['name'];
                 }
                 if (is_array($client) && array_key_exists('version', $client)) {
-                    $browser.=' '.$client['version'];
+                    $browser .= ' '.$client['version'];
                 }
 
                 $os = $deviceDetector->getOs();
