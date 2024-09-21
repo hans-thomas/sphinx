@@ -28,7 +28,15 @@
                 $deviceDetector->setClientHints(ClientHints::factory($_SERVER));
                 $deviceDetector->parse();
 
-                $browser = $deviceDetector->getClient();
+                $client = $deviceDetector->getClient();
+                $browser = '';
+                if (is_array($client) && array_key_exists('name', $client)) {
+                    $browser.=$client['name'];
+                }
+                if (is_array($client) && array_key_exists('version', $client)) {
+                    $browser.=' '.$client['version'];
+                }
+
                 $os = $deviceDetector->getOs();
                 $device = $deviceDetector->getDeviceName();
 
