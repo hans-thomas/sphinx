@@ -1,6 +1,14 @@
 {
     "name": "hans-thomas/sphinx",
-    "description": "Json web token driver for laravel",
+    "description": "JSON web token driver for laravel",
+    "keywords": [
+        "laravel",
+        "laravel-package",
+        "jwt",
+        "jwt-token",
+        "jwt-authentication",
+        "jwt-authorization"
+    ],
     "type": "library",
     "license": "MIT",
     "authors": [
