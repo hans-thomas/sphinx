@@ -11,8 +11,8 @@ class SphinxUserProvider extends EloquentUserProvider
     /**
      * Retrieve a user by their unique identifier and "remember me" token.
      *
-     * @param  mixed   $identifier
-     * @param  string  $token
+     * @param mixed  $identifier
+     * @param string $token
      *
      * @return Authenticatable|null
      */
@@ -24,8 +24,8 @@ class SphinxUserProvider extends EloquentUserProvider
     /**
      * Update the "remember me" token for the given user in storage.
      *
-     * @param  Authenticatable|null  $user
-     * @param  null                  $token
+     * @param Authenticatable|null $user
+     * @param null                 $token
      *
      * @return void
      */
@@ -34,7 +34,7 @@ class SphinxUserProvider extends EloquentUserProvider
     }
 
     /**
-     * @param  array  $credentials
+     * @param array $credentials
      *
      * @return Model|null
      */
