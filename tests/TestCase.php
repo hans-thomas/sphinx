@@ -4,8 +4,10 @@ namespace Hans\Sphinx\Tests;
 
 use App\Models\RoleDelegate;
 use App\Models\User;
+use Exception;
 use Hans\Horus\Facades\Horus;
 use Hans\Horus\HorusServiceProvider;
+use Hans\Sphinx\Models\Session;
 use Hans\Sphinx\SphinxServiceProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -30,15 +32,14 @@ class TestCase extends BaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         config()->set('cache.default', 'file');
         config()->set(
             'sphinx.secret',
             'XELnlAjESvqWDS3utBoN9cEA8eF3PlTtyXJ1OmCUIhxfIJKdePkoof8aKCbfucOCqpuygSDv4ZobA4936UXqzshfJrw'
         );
-        config()->set(
-            'sphinx.role_model',
-            RoleDelegate::class
-        );
+        config()->set('sphinx.role_model', RoleDelegate::class);
+        config()->set('permission.models.role', RoleDelegate::class);
 
         $this->seedHorus();
 
@@ -71,7 +72,7 @@ class TestCase extends BaseTestCase
     /**
      * Get application timezone.
      *
-     * @param Application $app
+     * @param  Application  $app
      *
      * @return string|null
      */
@@ -83,7 +84,7 @@ class TestCase extends BaseTestCase
     /**
      * Get package providers.
      *
-     * @param Application $app
+     * @param  Application  $app
      *
      * @return array
      */
@@ -97,22 +98,9 @@ class TestCase extends BaseTestCase
     }
 
     /**
-     * Override application aliases.
-     *
-     * @param Application $app
-     *
-     * @return array
-     */
-    protected function getPackageAliases($app): array
-    {
-        return [//	'Acme' => 'Acme\Facade',
-        ];
-    }
-
-    /**
      * Define environment setup.
      *
-     * @param Application $app
+     * @param  Application  $app
      *
      * @return void
      */
@@ -130,7 +118,7 @@ class TestCase extends BaseTestCase
     /**
      * Define routes setup.
      *
-     * @param Router $router
+     * @param  Router  $router
      *
      * @return void
      */
@@ -149,16 +137,58 @@ class TestCase extends BaseTestCase
      */
     protected function defineDatabaseMigrations(): void
     {
-        $this->loadLaravelMigrations();
+        $version = $this->getPackageVersion('orchestra/testbench');
+        if (version_compare($version, '9.0', '>=')) {
+            $this->loadMigrationsFrom(__DIR__.'/skeleton/laravel-11.x/database/migrations');
+        } elseif (version_compare($version, '8.0', '>=')) {
+            $this->loadMigrationsFrom(__DIR__.'/skeleton/laravel-10.x/migrations');
+        }else{
+            $this->loadLaravelMigrations();
+        }
     }
 
     /**
      * Get base path.
      *
      * @return string
+     * @throws Exception
      */
     protected function getBasePath(): string
     {
-        return __DIR__.'/skeleton/laravel-10.x';
+        $version = $this->getPackageVersion('orchestra/testbench');
+
+        if (version_compare($version, '9.0', '>=')) {
+            return __DIR__.'/skeleton/laravel-11.x';
+        } elseif (version_compare($version, '8.0', '>=')) {
+            return __DIR__.'/skeleton/laravel-10.x';
+        }
+
+        return parent::getBasePath();
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getPackageVersion(string $name): string
+    {
+        $version = null;
+        $lockFileContent = json_decode(file_get_contents(__DIR__.'/../composer.lock'), true);
+
+        foreach ($lockFileContent['packages'] as $package) {
+            if ($package['name'] === $name) {
+                $version = $package['version'];
+            }
+        }
+
+        foreach ($lockFileContent['packages-dev'] as $package) {
+            if ($package['name'] === $name) {
+                $version = $package['version'];
+            }
+        }
+
+        if ($version !== null) {
+            return str_replace('v', '', $version);
+        }
+        throw new Exception('Package '.$name.' not installed');
     }
 }

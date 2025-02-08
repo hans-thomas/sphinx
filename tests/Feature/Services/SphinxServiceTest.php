@@ -360,7 +360,7 @@ class SphinxServiceTest extends TestCase
         $index = rand(0, strlen($token) - 1);
         do {
             $randomAlphabet = fake()->word()[0];
-        } while ($token[$index] == $randomAlphabet);
+        } while ($token[$index] === $randomAlphabet);
         $token[$index] = $randomAlphabet;
 
         $this->expectException(SphinxException::class);
