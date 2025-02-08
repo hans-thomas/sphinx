@@ -4,6 +4,7 @@ namespace Hans\Sphinx\Tests;
 
 use App\Models\RoleDelegate;
 use App\Models\User;
+use Exception;
 use Hans\Horus\Facades\Horus;
 use Hans\Horus\HorusServiceProvider;
 use Hans\Sphinx\SphinxServiceProvider;
@@ -30,15 +31,14 @@ class TestCase extends BaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         config()->set('cache.default', 'file');
         config()->set(
             'sphinx.secret',
             'XELnlAjESvqWDS3utBoN9cEA8eF3PlTtyXJ1OmCUIhxfIJKdePkoof8aKCbfucOCqpuygSDv4ZobA4936UXqzshfJrw'
         );
-        config()->set(
-            'sphinx.role_model',
-            RoleDelegate::class
-        );
+        config()->set('sphinx.role_model', RoleDelegate::class);
+        config()->set('permission.models.role', RoleDelegate::class);
 
         $this->seedHorus();
 
@@ -97,19 +97,6 @@ class TestCase extends BaseTestCase
     }
 
     /**
-     * Override application aliases.
-     *
-     * @param Application $app
-     *
-     * @return array
-     */
-    protected function getPackageAliases($app): array
-    {
-        return [//	'Acme' => 'Acme\Facade',
-        ];
-    }
-
-    /**
      * Define environment setup.
      *
      * @param Application $app
@@ -149,16 +136,18 @@ class TestCase extends BaseTestCase
      */
     protected function defineDatabaseMigrations(): void
     {
-        $this->loadLaravelMigrations();
+        $this->loadMigrationsFrom(__DIR__.'/skeleton/laravel-11.x/database/migrations');
     }
 
     /**
      * Get base path.
      *
+     * @throws Exception
+     *
      * @return string
      */
     protected function getBasePath(): string
     {
-        return __DIR__.'/skeleton/laravel-10.x';
+        return __DIR__.'/skeleton/laravel-11.x';
     }
 }

@@ -12,7 +12,7 @@
          */
         public function up(): void
         {
-            Schema::create('sessions', function (Blueprint $table) {
+            Schema::create('sphinx_sessions', function (Blueprint $table) {
                 $table->id();
 
                 $table->morphs('sessionable');
@@ -35,6 +35,6 @@
          */
         public function down(): void
         {
-            Schema::dropIfExists('sessions');
+            Schema::dropIfExists('sphinx_sessions');
         }
     };

@@ -23,11 +23,7 @@ use Illuminate\Support\Facades\Cache;
  */
 class Session extends Model
 {
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<string>
-     */
+    protected $table = 'sphinx_sessions';
     protected $fillable = [
         'ip',
         'device',

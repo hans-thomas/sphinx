@@ -18,12 +18,14 @@ class SphinxGuardTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->user = UserFactory::createNormalUser();
         request()->headers
             ->set(
                 'Authorization',
                 'Bearer '.Sphinx::generateTokenFor($this->user)->getAccessToken()
             );
+
         $this->guard = app(SphinxGuard::class, [
             'provider' => app(
                 SphinxUserProvider::class,

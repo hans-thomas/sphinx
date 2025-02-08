@@ -49,6 +49,10 @@ class SphinxUserProvider extends EloquentUserProvider
         $instance->{$instance->getAuthIdentifierName()} = $credentials[$instance->getAuthIdentifierName()];
         $instance->exists = true;
 
+        if (isset($credentials['version'])) {
+            $instance->forceFill(['version' => $credentials['version']]);
+        }
+
         return $instance;
     }
 }

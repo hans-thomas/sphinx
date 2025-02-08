@@ -4,6 +4,7 @@ namespace Hans\Sphinx\Traits;
 
 use Hans\Sphinx\Helpers\Enums\SphinxCache;
 use Hans\Sphinx\Models\Session;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Cache;
 use Throwable;
 
@@ -36,9 +37,11 @@ trait SphinxMethods
 
             $sessions = Session::query()->findMany($sessionIds);
             foreach ($sessions as $session) {
-                Cache::forget($key = SphinxCache::SESSION.$session->id);
-                Cache::forever($key, $session);
+                Cache::forget($sessionKey = SphinxCache::SESSION.$session->id);
+                Cache::forever($sessionKey, $session);
             }
+            Cache::forget($VersionKey = SphinxCache::VERSION.$this->id);
+            Cache::forever($VersionKey, $sessions->last()->version);
         } catch (Throwable $e) {
             return false;
         }
@@ -53,10 +56,19 @@ trait SphinxMethods
      */
     public function getVersion(): int
     {
-        return $this->sessions()
-                    ->latest()
-                    ->select('id', 'sessionable_version')
-                    ->first()->sessionable_version ?? 1;
+        return Cache::rememberForever(
+            SphinxCache::VERSION.$this->id,
+            fn () => $this->sessions()
+                          ->latest()
+                          ->limit(1)
+                          ->select('id', 'sessionable_version')
+                          ->first()?->sessionable_version
+        ) ?? 1;
+    }
+
+    protected function version(): Attribute
+    {
+        return new Attribute(get: fn () => $this->getVersion());
     }
 
     /**

@@ -3,15 +3,17 @@
 namespace Hans\Sphinx\Services;
 
 use Hans\Sphinx\Facades\Sphinx;
+use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\GuardHelpers;
-use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Traits\Macroable;
 
-class SphinxGuard implements Authenticatable, Guard
+class SphinxGuard implements AuthenticatableContract, Guard
 {
     use GuardHelpers;
+    use Authenticatable;
     use Macroable;
 
     public function __construct(
@@ -49,7 +51,7 @@ class SphinxGuard implements Authenticatable, Guard
      */
     public function getAuthPassword(): string
     {
-        if ($password = $this->user->password) {
+        if ($password = $this->user->{$this->getAuthPasswordName()}) {
             return $password;
         }
 
@@ -91,9 +93,9 @@ class SphinxGuard implements Authenticatable, Guard
     /**
      * Get the currently authenticated user.
      *
-     * @return Authenticatable|null
+     * @return AuthenticatableContract|null
      */
-    public function user(): ?Authenticatable
+    public function user(): ?AuthenticatableContract
     {
         return $this->user ?? null;
     }
@@ -108,7 +110,7 @@ class SphinxGuard implements Authenticatable, Guard
     public function attempt(array $credentials): bool
     {
         $user = $this->provider->retrieveByCredentials($credentials);
-        if (!is_null($user) and $this->provider->validateCredentials($user, $credentials)) {
+        if (!is_null($user) && $this->provider->validateCredentials($user, $credentials)) {
             $this->login($user);
 
             return true;
@@ -122,9 +124,9 @@ class SphinxGuard implements Authenticatable, Guard
      *
      * @param int $id
      *
-     * @return Authenticatable|null
+     * @return AuthenticatableContract|null
      */
-    public function loginUsingId(int $id): ?Authenticatable
+    public function loginUsingId(int $id): ?AuthenticatableContract
     {
         $this->user = $this->provider->retrieveById($id);
 
@@ -151,11 +153,11 @@ class SphinxGuard implements Authenticatable, Guard
     /**
      * Log a user into the application.
      *
-     * @param Authenticatable $user
+     * @param AuthenticatableContract $user
      *
      * @return void
      */
-    public function login(Authenticatable $user): void
+    public function login(AuthenticatableContract $user): void
     {
         $this->setUser($user);
     }
@@ -169,7 +171,7 @@ class SphinxGuard implements Authenticatable, Guard
      */
     public function loginUsingToken(?string $token): void
     {
-        if ($token and Sphinx::isNotRefreshToken($token)) {
+        if ($token && Sphinx::isNotRefreshToken($token)) {
             $this->user = $this->provider
                 ->retrieveByJwtTokenCredentials(
                     Sphinx::getInnerAccessToken($token)

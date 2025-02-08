@@ -23,9 +23,9 @@
         "lcobucci/jwt": "^4.1"
     },
     "require-dev": {
-        "orchestra/testbench": "^8.0",
-        "nunomaduro/collision": "^7.0",
-        "hans-thomas/horus": "^1.0"
+        "orchestra/testbench": "^9.0",
+        "nunomaduro/collision": "^8.0",
+        "hans-thomas/horus": "^v2.0"
     },
     "autoload": {
         "psr-4": {
@@ -38,8 +38,8 @@
     "autoload-dev": {
         "psr-4": {
             "Hans\\Sphinx\\Tests\\": "tests/",
-            "App\\": "tests/skeleton/laravel-10.x/app",
-            "Database\\Factories\\": "tests/skeleton/laravel-10.x/database/factories"
+            "App\\": "tests/skeleton/laravel-11.x/app",
+            "Database\\Factories\\": "tests/skeleton/laravel-11.x/database/factories"
         }
     },
     "extra": {
