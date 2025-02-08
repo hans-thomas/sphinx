@@ -12,7 +12,8 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory;
+    use Notifiable;
     use SphinxTrait, SphinxTrait {
         SphinxTrait::hooks as private handleCaching;
     }
@@ -48,7 +49,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'          => 'hashed',
         ];
     }
 
@@ -56,6 +57,7 @@ class User extends Authenticatable
     {
         self::handleCaching();
     }
+
     public function getDeviceLimit(): int
     {
         return 2;

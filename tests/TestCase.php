@@ -7,7 +7,6 @@ use App\Models\User;
 use Exception;
 use Hans\Horus\Facades\Horus;
 use Hans\Horus\HorusServiceProvider;
-use Hans\Sphinx\Models\Session;
 use Hans\Sphinx\SphinxServiceProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -72,7 +71,7 @@ class TestCase extends BaseTestCase
     /**
      * Get application timezone.
      *
-     * @param  Application  $app
+     * @param Application $app
      *
      * @return string|null
      */
@@ -84,7 +83,7 @@ class TestCase extends BaseTestCase
     /**
      * Get package providers.
      *
-     * @param  Application  $app
+     * @param Application $app
      *
      * @return array
      */
@@ -100,7 +99,7 @@ class TestCase extends BaseTestCase
     /**
      * Define environment setup.
      *
-     * @param  Application  $app
+     * @param Application $app
      *
      * @return void
      */
@@ -118,7 +117,7 @@ class TestCase extends BaseTestCase
     /**
      * Define routes setup.
      *
-     * @param  Router  $router
+     * @param Router $router
      *
      * @return void
      */
@@ -142,7 +141,7 @@ class TestCase extends BaseTestCase
             $this->loadMigrationsFrom(__DIR__.'/skeleton/laravel-11.x/database/migrations');
         } elseif (version_compare($version, '8.0', '>=')) {
             $this->loadMigrationsFrom(__DIR__.'/skeleton/laravel-10.x/migrations');
-        }else{
+        } else {
             $this->loadLaravelMigrations();
         }
     }
@@ -150,8 +149,9 @@ class TestCase extends BaseTestCase
     /**
      * Get base path.
      *
-     * @return string
      * @throws Exception
+     *
+     * @return string
      */
     protected function getBasePath(): string
     {
@@ -189,6 +189,7 @@ class TestCase extends BaseTestCase
         if ($version !== null) {
             return str_replace('v', '', $version);
         }
+
         throw new Exception('Package '.$name.' not installed');
     }
 }
