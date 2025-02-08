@@ -289,6 +289,7 @@ class SphinxServiceTest extends TestCase
             $randomAlphabet = fake()->word()[0];
         } while ($token[$index] === $randomAlphabet);
         $token[$index] = $randomAlphabet;
+
         self::assertFalse(Sphinx::validateWrapperRefreshToken($token));
     }
 
@@ -331,6 +332,7 @@ class SphinxServiceTest extends TestCase
         $token = Sphinx::generateTokenFor($user)
                        ->getRefreshToken();
 
+        self::assertTrue(Sphinx::validateWrapperRefreshToken($token));
         self::assertTrue(Sphinx::validateInnerRefreshToken($token));
 
         $index = rand(0, strlen($token) - 1);
@@ -339,6 +341,7 @@ class SphinxServiceTest extends TestCase
         } while ($token[$index] === $randomAlphabet);
         $token[$index] = $randomAlphabet;
 
+        self::assertFalse(Sphinx::validateWrapperRefreshToken($token));
         self::assertFalse(Sphinx::validateInnerRefreshToken($token));
     }
 
@@ -355,6 +358,7 @@ class SphinxServiceTest extends TestCase
         $token = Sphinx::generateTokenFor($user)
                        ->getRefreshToken();
 
+        Sphinx::assertWrapperRefreshToken($token);
         Sphinx::assertInnerRefreshToken($token);
 
         $index = rand(0, strlen($token) - 1);
@@ -365,6 +369,7 @@ class SphinxServiceTest extends TestCase
 
         $this->expectException(SphinxException::class);
 
+        Sphinx::assertWrapperRefreshToken($token);
         Sphinx::assertInnerRefreshToken($token);
     }
 
@@ -382,6 +387,7 @@ class SphinxServiceTest extends TestCase
                        ->getRefreshToken();
 
         $inner = Sphinx::getInnerRefreshToken($token);
+        
         self::assertStringEqualsStringIgnoringLineEndings(
             Sphinx::decode($token)->claims()->get('_token'),
             $inner->toString()
