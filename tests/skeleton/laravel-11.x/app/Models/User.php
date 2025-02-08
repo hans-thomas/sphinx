@@ -3,15 +3,17 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Database\Factories\UserFactory;
 use Hans\Sphinx\Traits\SphinxTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<UserFactory> */
     use HasFactory;
     use Notifiable;
     use SphinxTrait, SphinxTrait {
@@ -56,6 +58,11 @@ class User extends Authenticatable
     protected static function booted(): void
     {
         self::handleCaching();
+    }
+
+    public function getRole(): ?Role
+    {
+        return $this->roles()->first();
     }
 
     public function getDeviceLimit(): int

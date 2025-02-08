@@ -136,14 +136,7 @@ class TestCase extends BaseTestCase
      */
     protected function defineDatabaseMigrations(): void
     {
-        $version = $this->getPackageVersion('orchestra/testbench');
-        if (version_compare($version, '9.0', '>=')) {
-            $this->loadMigrationsFrom(__DIR__.'/skeleton/laravel-11.x/database/migrations');
-        } elseif (version_compare($version, '8.0', '>=')) {
-            $this->loadMigrationsFrom(__DIR__.'/skeleton/laravel-10.x/migrations');
-        } else {
-            $this->loadLaravelMigrations();
-        }
+        $this->loadMigrationsFrom(__DIR__.'/skeleton/laravel-11.x/database/migrations');
     }
 
     /**
@@ -155,41 +148,6 @@ class TestCase extends BaseTestCase
      */
     protected function getBasePath(): string
     {
-        $version = $this->getPackageVersion('orchestra/testbench');
-
-        if (version_compare($version, '9.0', '>=')) {
-            return __DIR__.'/skeleton/laravel-11.x';
-        } elseif (version_compare($version, '8.0', '>=')) {
-            return __DIR__.'/skeleton/laravel-10.x';
-        }
-
-        return parent::getBasePath();
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function getPackageVersion(string $name): string
-    {
-        $version = null;
-        $lockFileContent = json_decode(file_get_contents(__DIR__.'/../composer.lock'), true);
-
-        foreach ($lockFileContent['packages'] as $package) {
-            if ($package['name'] === $name) {
-                $version = $package['version'];
-            }
-        }
-
-        foreach ($lockFileContent['packages-dev'] as $package) {
-            if ($package['name'] === $name) {
-                $version = $package['version'];
-            }
-        }
-
-        if ($version !== null) {
-            return str_replace('v', '', $version);
-        }
-
-        throw new Exception('Package '.$name.' not installed');
+        return __DIR__.'/skeleton/laravel-11.x';
     }
 }

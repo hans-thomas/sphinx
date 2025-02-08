@@ -13,17 +13,8 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest ]
-        php: [ 8.1, 8.2, 8.3, 8.4 ]
-        testbench: [ 8.*, 9.*]
+        php: [ 8.2, 8.3, 8.4 ]
         dependency-version: [ prefer-stable ]
-        exclude:
-          - php: 8.1
-            testbench: 9.*
-        include:
-          - testbench: 8.*
-            horus: 1.*
-          - testbench: 9.*
-            horus: 2.*
 
 
     name: "TESTS: PHP ${{ matrix.php }} - testbench ${{ matrix.testbench }} - OS ${{ matrix.os }}"
@@ -54,9 +45,8 @@ jobs:
         key: dependencies-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
 
     - name: Install dependencies
-      run: |
-        composer require "orchestra/testbench:${{ matrix.testbench }}" "hans-thomas/horus:${{ matrix.horus }}" --dev --no-interaction --no-update
-        composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
+      run: composer install --${{ matrix.dependency-version }} --prefer-dist --no-interaction
+
 
     - name: Run test suite
       run: composer run-script test:coverage

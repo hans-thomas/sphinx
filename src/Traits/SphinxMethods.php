@@ -56,16 +56,14 @@ trait SphinxMethods
      */
     public function getVersion(): int
     {
-        $version = Cache::rememberForever(
+        return Cache::rememberForever(
             SphinxCache::VERSION.$this->id,
             fn () => $this->sessions()
                           ->latest()
                           ->limit(1)
                           ->select('id', 'sessionable_version')
                           ->first()?->sessionable_version
-        );
-
-        return $version ?? 1;
+        ) ?? 1;
     }
 
     protected function version(): Attribute
