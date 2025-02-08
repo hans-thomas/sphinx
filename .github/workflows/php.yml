@@ -19,6 +19,11 @@ jobs:
         exclude:
           - php: 8.1
             testbench: 9.*
+        include:
+          - testbench: 8.*
+            horus: 1.*
+          - testbench: 9.*
+            horus: 2.*
 
 
     name: "TESTS: PHP ${{ matrix.php }} - testbench ${{ matrix.testbench }} - OS ${{ matrix.os }}"
@@ -50,7 +55,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        composer require "orchestra/testbench:${{ matrix.testbench }}" --dev --no-interaction --no-update
+        composer require "orchestra/testbench:${{ matrix.testbench }}" "hans-thomas/horus:${{ matrix.horus }}" --dev --no-interaction --no-update
         composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
 
     - name: Run test suite
