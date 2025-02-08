@@ -387,7 +387,7 @@ class SphinxServiceTest extends TestCase
                        ->getRefreshToken();
 
         $inner = Sphinx::getInnerRefreshToken($token);
-        
+
         self::assertStringEqualsStringIgnoringLineEndings(
             Sphinx::decode($token)->claims()->get('_token'),
             $inner->toString()
