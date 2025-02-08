@@ -14,7 +14,6 @@ jobs:
       matrix:
         os: [ ubuntu-latest ]
         php: [ 8.2, 8.3, 8.4 ]
-        dependency-version: [ prefer-stable ]
 
 
     name: "TESTS: PHP ${{ matrix.php }} - testbench ${{ matrix.testbench }} - OS ${{ matrix.os }}"
@@ -45,7 +44,7 @@ jobs:
         key: dependencies-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
 
     - name: Install dependencies
-      run: composer install --${{ matrix.dependency-version }} --prefer-dist --no-interaction
+      run: composer install --prefer-dist --no-interaction
 
 
     - name: Run test suite
