@@ -102,7 +102,15 @@ trait SphinxTokenCan
     private function tokenCan(string|int $ability): bool
     {
         if (!isset($this->tokenPermissions)) {
-            $this->tokenPermissions = Sphinx::getPermissions(request()->bearerToken());
+            if (filled(request()->bearerToken())) {
+                $this->tokenPermissions = Sphinx::getPermissions(request()->bearerToken());
+            } else {
+                // Support authorization from other guards
+                // TODO: improve performance using caching permissions and refresh them in increasing version action
+                $this->tokenPermissions = collect($this->extractPermissions())
+                    ->pluck('name', 'id')
+                    ->toArray();
+            }
         }
         $separator = sphinx_config('permission_separator');
         $model = Str::beforeLast($ability, $separator);
