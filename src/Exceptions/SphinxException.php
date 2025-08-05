@@ -25,10 +25,11 @@ class SphinxException extends Exception
     {
         return new JsonResponse(
             [
-                'title' => 'Unexpected error!',
+                'title'  => 'Unexpected error!',
                 'detail' => $this->getMessage(),
-                'code' => $this->getErrorCode(),
-            ], $this->getCode()
+                'code'   => $this->getErrorCode(),
+            ],
+            $this->getCode()
         );
     }
 
