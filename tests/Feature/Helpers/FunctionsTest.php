@@ -2,8 +2,6 @@
 
 namespace Hans\Sphinx\Tests\Feature\Helpers;
 
-use Hans\Horus\Exceptions\HorusException;
-use Hans\Sphinx\Exceptions\SphinxException;
 use Hans\Sphinx\Helpers\Enums\SphinxCache;
 use Hans\Sphinx\Models\Session;
 use Hans\Sphinx\Tests\Factories\UserFactory;
@@ -13,7 +11,8 @@ use PHPUnit\Framework\Attributes\Test;
 
 class FunctionsTest extends TestCase
 {
-    #[Test] public function capture_session(): void
+    #[Test]
+    public function capture_session(): void
     {
         $user = UserFactory::createNormalUser();
         $session = capture_session($user);
@@ -28,7 +27,8 @@ class FunctionsTest extends TestCase
         );
     }
 
-    #[Test] public function capture_sessionWithSeveralCalls(): void
+    #[Test]
+    public function capture_sessionWithSeveralCalls(): void
     {
         $user = UserFactory::createNormalUser();
         $deviceLimit = $user->getDeviceLimit();
@@ -56,7 +56,8 @@ class FunctionsTest extends TestCase
         );
     }
 
-    #[Test] public function capture_sessionAsSecondSession(): void
+    #[Test]
+    public function capture_sessionAsSecondSession(): void
     {
         $user = UserFactory::createNormalUser();
         $sessions[] = capture_session($user); // version should be 1
@@ -73,7 +74,8 @@ class FunctionsTest extends TestCase
         );
     }
 
-    #[Test] public function sphinx_config(): void
+    #[Test]
+    public function sphinx_config(): void
     {
         $config = require __DIR__.'/../../../config/config.php';
         $key = 'access_expired_at';
@@ -90,7 +92,8 @@ class FunctionsTest extends TestCase
         );
     }
 
-    #[Test] public function generate_secret_key(): void
+    #[Test]
+    public function generate_secret_key(): void
     {
         self::assertIsString(generate_secret_key());
     }

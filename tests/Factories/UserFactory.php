@@ -3,7 +3,6 @@
 namespace Hans\Sphinx\Tests\Factories;
 
 use App\Models\User;
-use Hans\Horus\Exceptions\HorusException;
 use Hans\Sphinx\Exceptions\SphinxException;
 use Hans\Sphinx\Facades\Sphinx;
 use Hans\Sphinx\Services\SphinxService;

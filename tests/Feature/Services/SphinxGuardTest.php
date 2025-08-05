@@ -2,7 +2,6 @@
 
 namespace Hans\Sphinx\Tests\Feature\Services;
 
-use Hans\Horus\Exceptions\HorusException;
 use Hans\Sphinx\Facades\Sphinx;
 use Hans\Sphinx\Services\SphinxGuard;
 use Hans\Sphinx\Services\SphinxUserProvider;
@@ -35,7 +34,8 @@ class SphinxGuardTest extends TestCase
         ]);
     }
 
-    #[Test] public function getAuthIdentifierName(): void
+    #[Test]
+    public function getAuthIdentifierName(): void
     {
         self::assertEquals(
             $this->user->getKeyName(),
@@ -43,7 +43,8 @@ class SphinxGuardTest extends TestCase
         );
     }
 
-    #[Test] public function getAuthIdentifier(): void
+    #[Test]
+    public function getAuthIdentifier(): void
     {
         self::assertEquals(
             $this->user->id,
@@ -51,7 +52,8 @@ class SphinxGuardTest extends TestCase
         );
     }
 
-    #[Test] public function getAuthPassword(): void
+    #[Test]
+    public function getAuthPassword(): void
     {
         self::assertEquals(
             $this->user->password,
@@ -59,22 +61,26 @@ class SphinxGuardTest extends TestCase
         );
     }
 
-    #[Test] public function getRememberToken(): void
+    #[Test]
+    public function getRememberToken(): void
     {
         self::assertNull($this->guard->getRememberToken());
     }
 
-    #[Test] public function setRememberToken(): void
+    #[Test]
+    public function setRememberToken(): void
     {
         self::assertNull($this->guard->setRememberToken());
     }
 
-    #[Test] public function getRememberTokenName(): void
+    #[Test]
+    public function getRememberTokenName(): void
     {
         self::assertNull($this->guard->getRememberTokenName());
     }
 
-    #[Test] public function user(): void
+    #[Test]
+    public function user(): void
     {
         self::assertEquals(
             $this->user->only('id', 'name', 'email', 'version'),
@@ -82,7 +88,8 @@ class SphinxGuardTest extends TestCase
         );
     }
 
-    #[Test] public function attempt(): void
+    #[Test]
+    public function attempt(): void
     {
         self::assertTrue(
             $this->guard->attempt(['id' => $this->user->id, 'password' => 'password'])
@@ -100,7 +107,8 @@ class SphinxGuardTest extends TestCase
         );
     }
 
-    #[Test] public function loginUsingId(): void
+    #[Test]
+    public function loginUsingId(): void
     {
         self::assertEquals(
             $this->user->withoutRelations()->toArray(),
@@ -113,7 +121,8 @@ class SphinxGuardTest extends TestCase
         );
     }
 
-    #[Test] public function validate(): void
+    #[Test]
+    public function validate(): void
     {
         self::assertTrue(
             $this->guard->validate(['id' => $this->user->id, 'password' => 'password'])
@@ -133,7 +142,8 @@ class SphinxGuardTest extends TestCase
         );
     }
 
-    #[Test] public function login(): void
+    #[Test]
+    public function login(): void
     {
         $user = UserFactory::createNormalUser();
         $this->guard->login($user);
@@ -144,7 +154,8 @@ class SphinxGuardTest extends TestCase
         );
     }
 
-    #[Test] public function loginUsingToken(): void
+    #[Test]
+    public function loginUsingToken(): void
     {
         $user = UserFactory::createNormalUser();
         $token = Sphinx::generateTokenFor($user)->getAccessToken();

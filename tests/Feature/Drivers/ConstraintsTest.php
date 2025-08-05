@@ -29,7 +29,8 @@ class ConstraintsTest extends TestCase
         $this->user = UserFactory::createNormalUser();
     }
 
-    #[Test] public function ExpirationValidator(): void
+    #[Test]
+    public function ExpirationValidator(): void
     {
         $this->instance->registerConstrain(new ExpirationValidator());
 
@@ -45,7 +46,8 @@ class ConstraintsTest extends TestCase
         $this->instance->assert($token);
     }
 
-    #[Test] public function RoleIdValidator(): void
+    #[Test]
+    public function RoleIdValidator(): void
     {
         $this->instance->registerConstrain(new RoleIdValidator());
 
@@ -65,7 +67,8 @@ class ConstraintsTest extends TestCase
         $this->instance->assert($token);
     }
 
-    #[Test] public function SecretVerificationValidator(): void
+    #[Test]
+    public function SecretVerificationValidator(): void
     {
         $this->instance->registerConstrain(
             new SecretVerificationValidator(new Sha512(), InMemory::plainText($this->secret))
@@ -87,7 +90,8 @@ class ConstraintsTest extends TestCase
         $this->instance->assert($token);
     }
 
-    #[Test] public function SessionIdValidator(): void
+    #[Test]
+    public function SessionIdValidator(): void
     {
         $this->instance->registerConstrain(new SessionIdValidator());
 

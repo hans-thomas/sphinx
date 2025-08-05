@@ -2,20 +2,20 @@
 
 namespace Hans\Sphinx\Tests\Feature\Services;
 
-use Hans\Horus\Exceptions\HorusException;
 use Hans\Sphinx\Exceptions\SphinxException;
 use Hans\Sphinx\Facades\Sphinx;
 use Hans\Sphinx\Services\SphinxService;
 use Hans\Sphinx\Tests\Factories\UserFactory;
 use Hans\Sphinx\Tests\TestCase;
 use Lcobucci\JWT\UnencryptedToken;
-
 use PHPUnit\Framework\Attributes\Test;
+
 use function PHPUnit\Framework\assertStringEqualsStringIgnoringLineEndings;
 
 class SphinxServiceTest extends TestCase
 {
-    #[Test] public function decode(): void
+    #[Test]
+    public function decode(): void
     {
         $token = UserFactory::generateToken()->getAccessToken();
 
@@ -31,7 +31,8 @@ class SphinxServiceTest extends TestCase
         );
     }
 
-    #[Test] public function generateTokenFor(): void
+    #[Test]
+    public function generateTokenFor(): void
     {
         $user = UserFactory::createNormalUser();
         $instance = Sphinx::generateTokenFor($user);
@@ -44,7 +45,8 @@ class SphinxServiceTest extends TestCase
         self::assertIsString($instance->getRefreshToken());
     }
 
-    #[Test] public function getAccessToken(): void
+    #[Test]
+    public function getAccessToken(): void
     {
         $user = UserFactory::createNormalUser();
         $token = Sphinx::generateTokenFor($user)->getAccessToken();
@@ -60,7 +62,8 @@ class SphinxServiceTest extends TestCase
         );
     }
 
-    #[Test] public function getRefreshToken(): void
+    #[Test]
+    public function getRefreshToken(): void
     {
         $user = UserFactory::createNormalUser();
         $token = Sphinx::generateTokenFor($user)->getRefreshToken();
@@ -76,7 +79,8 @@ class SphinxServiceTest extends TestCase
         );
     }
 
-    #[Test] public function claim(): void
+    #[Test]
+    public function claim(): void
     {
         $user = UserFactory::createNormalUser();
         $token = Sphinx::generateTokenFor($user)
@@ -92,7 +96,8 @@ class SphinxServiceTest extends TestCase
         );
     }
 
-    #[Test] public function header(): void
+    #[Test]
+    public function header(): void
     {
         $user = UserFactory::createNormalUser();
         $token = Sphinx::generateTokenFor($user)
@@ -108,7 +113,8 @@ class SphinxServiceTest extends TestCase
         );
     }
 
-    #[Test] public function validateWrapperAccessToken(): void
+    #[Test]
+    public function validateWrapperAccessToken(): void
     {
         $user = UserFactory::createNormalUser();
         $token = Sphinx::generateTokenFor($user)
@@ -124,7 +130,8 @@ class SphinxServiceTest extends TestCase
         self::assertFalse(Sphinx::validateWrapperAccessToken($token));
     }
 
-    #[Test] public function assertWrapperAccessToken(): void
+    #[Test]
+    public function assertWrapperAccessToken(): void
     {
         $user = UserFactory::createNormalUser();
         $token = Sphinx::generateTokenFor($user)
@@ -143,7 +150,8 @@ class SphinxServiceTest extends TestCase
         Sphinx::assertWrapperAccessToken($token);
     }
 
-    #[Test] public function validateInnerAccessToken(): void
+    #[Test]
+    public function validateInnerAccessToken(): void
     {
         $user = UserFactory::createNormalUser();
         $token = Sphinx::generateTokenFor($user)
@@ -160,7 +168,8 @@ class SphinxServiceTest extends TestCase
         self::assertFalse(Sphinx::validateInnerAccessToken($token));
     }
 
-    #[Test] public function assertInnerAccessToken(): void
+    #[Test]
+    public function assertInnerAccessToken(): void
     {
         $user = UserFactory::createNormalUser();
         $token = Sphinx::generateTokenFor($user)
@@ -179,7 +188,8 @@ class SphinxServiceTest extends TestCase
         Sphinx::assertWrapperAccessToken($token);
     }
 
-    #[Test] public function getInnerAccessToken(): void
+    #[Test]
+    public function getInnerAccessToken(): void
     {
         $user = UserFactory::createNormalUser();
         $token = Sphinx::generateTokenFor($user)
@@ -192,7 +202,8 @@ class SphinxServiceTest extends TestCase
         );
     }
 
-    #[Test] public function validateWrapperRefreshToken(): void
+    #[Test]
+    public function validateWrapperRefreshToken(): void
     {
         $user = UserFactory::createNormalUser();
         $token = Sphinx::generateTokenFor($user)
@@ -209,7 +220,8 @@ class SphinxServiceTest extends TestCase
         self::assertFalse(Sphinx::validateWrapperRefreshToken($token));
     }
 
-    #[Test] public function assertWrapperRefreshToken(): void
+    #[Test]
+    public function assertWrapperRefreshToken(): void
     {
         $user = UserFactory::createNormalUser();
         $token = Sphinx::generateTokenFor($user)
@@ -228,7 +240,8 @@ class SphinxServiceTest extends TestCase
         Sphinx::assertWrapperRefreshToken($token);
     }
 
-    #[Test] public function validateInnerRefreshToken(): void
+    #[Test]
+    public function validateInnerRefreshToken(): void
     {
         $user = UserFactory::createNormalUser();
         $token = Sphinx::generateTokenFor($user)
@@ -247,7 +260,8 @@ class SphinxServiceTest extends TestCase
         self::assertFalse(Sphinx::validateInnerRefreshToken($token));
     }
 
-    #[Test] public function assertInnerRefreshToken(): void
+    #[Test]
+    public function assertInnerRefreshToken(): void
     {
         $user = UserFactory::createNormalUser();
         $token = Sphinx::generateTokenFor($user)
@@ -268,7 +282,8 @@ class SphinxServiceTest extends TestCase
         Sphinx::assertInnerRefreshToken($token);
     }
 
-    #[Test] public function getInnerRefreshToken(): void
+    #[Test]
+    public function getInnerRefreshToken(): void
     {
         $user = UserFactory::createNormalUser();
         $token = Sphinx::generateTokenFor($user)
@@ -282,7 +297,8 @@ class SphinxServiceTest extends TestCase
         );
     }
 
-    #[Test] public function getPermissions(): void
+    #[Test]
+    public function getPermissions(): void
     {
         $user = UserFactory::createNormalUser();
         $token = Sphinx::generateTokenFor($user)
@@ -298,7 +314,8 @@ class SphinxServiceTest extends TestCase
         );
     }
 
-    #[Test] public function isRefreshToken(): void
+    #[Test]
+    public function isRefreshToken(): void
     {
         $user = UserFactory::createNormalUser();
         $instance = Sphinx::generateTokenFor($user);
@@ -309,7 +326,8 @@ class SphinxServiceTest extends TestCase
         self::assertTrue(Sphinx::isRefreshToken($refresh));
     }
 
-    #[Test] public function isNotRefreshToken(): void
+    #[Test]
+    public function isNotRefreshToken(): void
     {
         $user = UserFactory::createNormalUser();
         $instance = Sphinx::generateTokenFor($user);
@@ -320,7 +338,8 @@ class SphinxServiceTest extends TestCase
         self::assertFalse(Sphinx::isNotRefreshToken($refresh));
     }
 
-    #[Test] public function getCurrentSessionAndGuessSession(): void
+    #[Test]
+    public function getCurrentSessionAndGuessSession(): void
     {
         $user = UserFactory::createNormalUser();
         $access = (new SphinxService())->generateTokenFor($user)->getAccessToken();

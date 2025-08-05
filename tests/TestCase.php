@@ -13,7 +13,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Cache;
 use Orchestra\Testbench\TestCase as BaseTestCase;
-use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionServiceProvider;
 
 class TestCase extends BaseTestCase

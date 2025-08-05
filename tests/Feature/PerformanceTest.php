@@ -19,7 +19,8 @@ class PerformanceTest extends TestCase
         $this->user = UserFactory::createNormalUser();
     }
 
-    #[Test] public function noQueryDuringAuthenticatingUsingToken(): void
+    #[Test]
+    public function noQueryDuringAuthenticatingUsingToken(): void
     {
         $token = Sphinx::generateTokenFor($this->user)->getAccessToken();
 

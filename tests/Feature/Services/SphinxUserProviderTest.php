@@ -24,7 +24,8 @@ class SphinxUserProviderTest extends TestCase
         );
     }
 
-    #[Test] public function retrieveByToken(): void
+    #[Test]
+    public function retrieveByToken(): void
     {
         self::assertEquals(
             $this->user->withoutRelations()->toArray(),
@@ -32,14 +33,16 @@ class SphinxUserProviderTest extends TestCase
         );
     }
 
-    #[Test] public function updateRememberToken(): void
+    #[Test]
+    public function updateRememberToken(): void
     {
         self::assertNull(
             $this->provider->updateRememberToken()
         );
     }
 
-    #[Test] public function retrieveByJwtTokenCredentials(): void
+    #[Test]
+    public function retrieveByJwtTokenCredentials(): void
     {
         Sphinx::generateTokenFor($this->user)->getAccessToken();
 

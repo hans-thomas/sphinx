@@ -3,8 +3,6 @@
 namespace Hans\Sphinx\Tests\Feature\Traits;
 
 use App\Models\User;
-use Hans\Horus\Exceptions\HorusException;
-use Hans\Sphinx\Exceptions\SphinxException;
 use Hans\Sphinx\Helpers\Enums\SphinxCache;
 use Hans\Sphinx\Tests\Factories\UserFactory;
 use Hans\Sphinx\Tests\TestCase;
@@ -22,7 +20,8 @@ class SphinxMethodsTest extends TestCase
         $this->user = UserFactory::createNormalUser();
     }
 
-    #[Test] public function increaseVersionUsingNoSession(): void
+    #[Test]
+    public function increaseVersionUsingNoSession(): void
     {
         $version = $this->user->getVersion();
 
@@ -34,7 +33,8 @@ class SphinxMethodsTest extends TestCase
         );
     }
 
-    #[Test] public function increaseVersionUsingSession(): void
+    #[Test]
+    public function increaseVersionUsingSession(): void
     {
         capture_session($this->user);
 
@@ -59,7 +59,8 @@ class SphinxMethodsTest extends TestCase
         );
     }
 
-    #[Test] public function getVersion(): void
+    #[Test]
+    public function getVersion(): void
     {
         self::assertEquals(
             $this->user->version,

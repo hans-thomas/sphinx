@@ -23,7 +23,8 @@ class SphinxTokenCanTest extends TestCase
         );
     }
 
-    #[Test] public function can(): void
+    #[Test]
+    public function can(): void
     {
         self::assertTrue(
             $this->user->can('user-view')
@@ -40,7 +41,8 @@ class SphinxTokenCanTest extends TestCase
         );
     }
 
-    #[Test] public function canAny(): void
+    #[Test]
+    public function canAny(): void
     {
         self::assertTrue(
             $this->user->canAny(['wrong-update', 'user-view', 'wrong-view'])
@@ -57,7 +59,8 @@ class SphinxTokenCanTest extends TestCase
         );
     }
 
-    #[Test] public function cannot(): void
+    #[Test]
+    public function cannot(): void
     {
         self::assertTrue(
             $this->user->cannot('wrong-update')
@@ -77,7 +80,8 @@ class SphinxTokenCanTest extends TestCase
         );
     }
 
-    #[Test] public function cant(): void
+    #[Test]
+    public function cant(): void
     {
         self::assertTrue(
             $this->user->cant('wrong-update')
