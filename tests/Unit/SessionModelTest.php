@@ -2,8 +2,6 @@
 
 namespace Hans\Sphinx\Tests\Unit;
 
-use Hans\Horus\Exceptions\HorusException;
-use Hans\Sphinx\Exceptions\SphinxException;
 use Hans\Sphinx\Helpers\Enums\SphinxCache;
 use Hans\Sphinx\Models\Session;
 use Hans\Sphinx\Tests\Factories\UserFactory;
@@ -11,17 +9,11 @@ use Hans\Sphinx\Tests\TestCase;
 use Illuminate\Cache\ArrayStore;
 use Illuminate\Support\Facades\Cache;
 use Mockery;
+use PHPUnit\Framework\Attributes\Test;
 
 class SessionModelTest extends TestCase
 {
-    /**
-     * @test
-     *
-     * @throws HorusException
-     * @throws SphinxException
-     *
-     * @return void
-     */
+    #[Test]
     public function create(): void
     {
         request()->headers->set('User-Agent', 'Mozilla/5.0 (X11; Linux x86_64; rv:130.0) Gecko/20100101 Firefox/130.0');
@@ -31,14 +23,7 @@ class SessionModelTest extends TestCase
         $this->assertModelExists($model);
     }
 
-    /**
-     * @test
-     *
-     * @throws HorusException
-     * @throws SphinxException
-     *
-     * @return void
-     */
+    #[Test]
     public function findAndCache(): void
     {
         $user = UserFactory::createNormalUser();

@@ -10,6 +10,7 @@ use Hans\Sphinx\Tests\Instances\JwtTokenInstance;
 use Hans\Sphinx\Tests\TestCase;
 use Illuminate\Database\Eloquent\Model;
 use Lcobucci\JWT\Token\Plain;
+use PHPUnit\Framework\Attributes\Test;
 
 class JwtTokenTest extends TestCase
 {
@@ -23,11 +24,7 @@ class JwtTokenTest extends TestCase
         $this->user = UserFactory::createNormalUser();
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function issuedBy(): void
     {
         self::assertArrayNotHasKey('iss', $this->instance->getToken()->claims()->all());
@@ -41,11 +38,7 @@ class JwtTokenTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function permittedFor(): void
     {
         self::assertArrayNotHasKey('aud', $this->instance->getToken()->claims()->all());
@@ -59,11 +52,7 @@ class JwtTokenTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function identifiedBy(): void
     {
         self::assertArrayNotHasKey('jti', $this->instance->getToken()->claims()->all());
@@ -77,11 +66,7 @@ class JwtTokenTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function canOnlyBeUsedAfter(): void
     {
         self::assertArrayNotHasKey('nbf', $this->instance->getToken()->claims()->all());
@@ -101,11 +86,7 @@ class JwtTokenTest extends TestCase
         self::assertEquals(59, $now->diff($nbf)->s);
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function expiresAt(): void
     {
         self::assertArrayNotHasKey('exp', $this->instance->getToken()->claims()->all());
@@ -125,13 +106,7 @@ class JwtTokenTest extends TestCase
         self::assertEquals(59, $now->diff($nbf)->s);
     }
 
-    /**
-     * @test
-     *
-     * @throws SphinxException
-     *
-     * @return void
-     */
+    #[Test]
     public function claims(): void
     {
         $claims = [
@@ -169,11 +144,7 @@ class JwtTokenTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function claim(): void
     {
         $key = 'DontLetMeGo';
@@ -196,11 +167,7 @@ class JwtTokenTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function claimWhen(): void
     {
         $key = 'LifeStyleOfReachAndHated';
@@ -223,13 +190,7 @@ class JwtTokenTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @throws SphinxException
-     *
-     * @return void
-     */
+    #[Test]
     public function headers(): void
     {
         $headers = [
@@ -267,11 +228,7 @@ class JwtTokenTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function header(): void
     {
         $key = 'HadEnough';
@@ -294,11 +251,7 @@ class JwtTokenTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function headerWhen(): void
     {
         $key = 'Spectacular now';
@@ -321,11 +274,7 @@ class JwtTokenTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function encode(): void
     {
         self::assertArrayNotHasKey(
@@ -349,13 +298,7 @@ class JwtTokenTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @throws SphinxException
-     *
-     * @return void
-     */
+    #[Test]
     public function decode(): void
     {
         $encoded = $this->instance
@@ -386,13 +329,7 @@ class JwtTokenTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @throws SphinxException
-     *
-     * @return void
-     */
+    #[Test]
     public function assert(): void
     {
         $token = $this->instance
@@ -415,11 +352,7 @@ class JwtTokenTest extends TestCase
         $this->instance->assert($token);
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function validate(): void
     {
         $token = $this->instance
@@ -439,11 +372,7 @@ class JwtTokenTest extends TestCase
         self::assertFalse($this->instance->validate($token));
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function getToken(): void
     {
         self::assertInstanceOf(

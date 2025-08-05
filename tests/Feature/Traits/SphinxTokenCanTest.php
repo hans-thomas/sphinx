@@ -6,6 +6,7 @@ use App\Models\User;
 use Hans\Sphinx\Facades\Sphinx;
 use Hans\Sphinx\Tests\Factories\UserFactory;
 use Hans\Sphinx\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 use Spatie\Permission\Models\Permission;
 
 class SphinxTokenCanTest extends TestCase
@@ -22,11 +23,7 @@ class SphinxTokenCanTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function can(): void
     {
         self::assertTrue(
@@ -44,11 +41,7 @@ class SphinxTokenCanTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function canAny(): void
     {
         self::assertTrue(
@@ -66,11 +59,7 @@ class SphinxTokenCanTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function cannot(): void
     {
         self::assertTrue(
@@ -91,11 +80,7 @@ class SphinxTokenCanTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function cant(): void
     {
         self::assertTrue(

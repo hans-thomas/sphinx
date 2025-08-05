@@ -2,13 +2,13 @@
 
 namespace Hans\Sphinx\Tests\Feature\Services;
 
-use Hans\Horus\Exceptions\HorusException;
 use Hans\Sphinx\Facades\Sphinx;
 use Hans\Sphinx\Services\SphinxGuard;
 use Hans\Sphinx\Services\SphinxUserProvider;
 use Hans\Sphinx\Tests\Factories\UserFactory;
 use Hans\Sphinx\Tests\TestCase;
 use Illuminate\Database\Eloquent\Model;
+use PHPUnit\Framework\Attributes\Test;
 
 class SphinxGuardTest extends TestCase
 {
@@ -34,11 +34,7 @@ class SphinxGuardTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function getAuthIdentifierName(): void
     {
         self::assertEquals(
@@ -47,11 +43,7 @@ class SphinxGuardTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function getAuthIdentifier(): void
     {
         self::assertEquals(
@@ -60,11 +52,7 @@ class SphinxGuardTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function getAuthPassword(): void
     {
         self::assertEquals(
@@ -73,41 +61,25 @@ class SphinxGuardTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function getRememberToken(): void
     {
         self::assertNull($this->guard->getRememberToken());
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function setRememberToken(): void
     {
         self::assertNull($this->guard->setRememberToken());
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function getRememberTokenName(): void
     {
         self::assertNull($this->guard->getRememberTokenName());
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function user(): void
     {
         self::assertEquals(
@@ -116,11 +88,7 @@ class SphinxGuardTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function attempt(): void
     {
         self::assertTrue(
@@ -139,11 +107,7 @@ class SphinxGuardTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function loginUsingId(): void
     {
         self::assertEquals(
@@ -157,11 +121,7 @@ class SphinxGuardTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function validate(): void
     {
         self::assertTrue(
@@ -182,13 +142,7 @@ class SphinxGuardTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @throws HorusException
-     *
-     * @return void
-     */
+    #[Test]
     public function login(): void
     {
         $user = UserFactory::createNormalUser();
@@ -200,13 +154,7 @@ class SphinxGuardTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @throws HorusException
-     *
-     * @return void
-     */
+    #[Test]
     public function loginUsingToken(): void
     {
         $user = UserFactory::createNormalUser();

@@ -10,7 +10,7 @@ class SphinxException extends Exception
 {
     private int $errorCode;
 
-    public function __construct(string $message, int $errorCode, int $responseCode = 500, Throwable $previous = null)
+    public function __construct(string $message, int $errorCode, int $responseCode = 500, ?Throwable $previous = null)
     {
         parent::__construct($message, $responseCode, $previous);
         $this->errorCode = $errorCode;
@@ -23,11 +23,14 @@ class SphinxException extends Exception
      */
     public function render(): JsonResponse
     {
-        return new JsonResponse([
-            'code'   => $this->getErrorCode(),
-            'detail' => $this->getMessage(),
-            'title'  => 'Unexpected error!',
-        ], $this->getCode());
+        return new JsonResponse(
+            [
+                'title'  => 'Unexpected error!',
+                'detail' => $this->getMessage(),
+                'code'   => $this->getErrorCode(),
+            ],
+            $this->getCode()
+        );
     }
 
     public function getErrorCode(): int

@@ -146,7 +146,7 @@ class TestCase extends BaseTestCase
      *
      * @return string
      */
-    protected function getBasePath(): string
+    public static function applicationBasePath(): string
     {
         return __DIR__.'/skeleton/laravel-11.x';
     }

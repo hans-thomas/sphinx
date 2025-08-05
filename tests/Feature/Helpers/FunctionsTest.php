@@ -2,23 +2,16 @@
 
 namespace Hans\Sphinx\Tests\Feature\Helpers;
 
-use Hans\Horus\Exceptions\HorusException;
-use Hans\Sphinx\Exceptions\SphinxException;
 use Hans\Sphinx\Helpers\Enums\SphinxCache;
 use Hans\Sphinx\Models\Session;
 use Hans\Sphinx\Tests\Factories\UserFactory;
 use Hans\Sphinx\Tests\TestCase;
 use Illuminate\Support\Facades\Cache;
+use PHPUnit\Framework\Attributes\Test;
 
 class FunctionsTest extends TestCase
 {
-    /**
-     * @test
-     *
-     * @throws HorusException|SphinxException
-     *
-     * @return void
-     */
+    #[Test]
     public function capture_session(): void
     {
         $user = UserFactory::createNormalUser();
@@ -34,13 +27,7 @@ class FunctionsTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @throws HorusException|SphinxException
-     *
-     * @return void
-     */
+    #[Test]
     public function capture_sessionWithSeveralCalls(): void
     {
         $user = UserFactory::createNormalUser();
@@ -69,14 +56,7 @@ class FunctionsTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @throws HorusException
-     * @throws SphinxException
-     *
-     * @return void
-     */
+    #[Test]
     public function capture_sessionAsSecondSession(): void
     {
         $user = UserFactory::createNormalUser();
@@ -94,11 +74,7 @@ class FunctionsTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function sphinx_config(): void
     {
         $config = require __DIR__.'/../../../config/config.php';
@@ -116,11 +92,7 @@ class FunctionsTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function generate_secret_key(): void
     {
         self::assertIsString(generate_secret_key());

@@ -2,26 +2,19 @@
 
 namespace Hans\Sphinx\Tests\Feature\Services;
 
-use Hans\Horus\Exceptions\HorusException;
 use Hans\Sphinx\Exceptions\SphinxException;
 use Hans\Sphinx\Facades\Sphinx;
 use Hans\Sphinx\Services\SphinxService;
 use Hans\Sphinx\Tests\Factories\UserFactory;
 use Hans\Sphinx\Tests\TestCase;
 use Lcobucci\JWT\UnencryptedToken;
+use PHPUnit\Framework\Attributes\Test;
 
 use function PHPUnit\Framework\assertStringEqualsStringIgnoringLineEndings;
 
 class SphinxServiceTest extends TestCase
 {
-    /**
-     * @test
-     *
-     * @throws HorusException
-     * @throws SphinxException
-     *
-     * @return void
-     */
+    #[Test]
     public function decode(): void
     {
         $token = UserFactory::generateToken()->getAccessToken();
@@ -38,13 +31,7 @@ class SphinxServiceTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @throws HorusException
-     *
-     * @return void
-     */
+    #[Test]
     public function generateTokenFor(): void
     {
         $user = UserFactory::createNormalUser();
@@ -58,13 +45,7 @@ class SphinxServiceTest extends TestCase
         self::assertIsString($instance->getRefreshToken());
     }
 
-    /**
-     * @test
-     *
-     * @throws HorusException
-     *
-     * @return void
-     */
+    #[Test]
     public function getAccessToken(): void
     {
         $user = UserFactory::createNormalUser();
@@ -81,13 +62,7 @@ class SphinxServiceTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @throws HorusException
-     *
-     * @return void
-     */
+    #[Test]
     public function getRefreshToken(): void
     {
         $user = UserFactory::createNormalUser();
@@ -104,13 +79,7 @@ class SphinxServiceTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @throws HorusException
-     *
-     * @return void
-     */
+    #[Test]
     public function claim(): void
     {
         $user = UserFactory::createNormalUser();
@@ -127,13 +96,7 @@ class SphinxServiceTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @throws HorusException
-     *
-     * @return void
-     */
+    #[Test]
     public function header(): void
     {
         $user = UserFactory::createNormalUser();
@@ -150,13 +113,7 @@ class SphinxServiceTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @throws HorusException
-     *
-     * @return void
-     */
+    #[Test]
     public function validateWrapperAccessToken(): void
     {
         $user = UserFactory::createNormalUser();
@@ -173,13 +130,7 @@ class SphinxServiceTest extends TestCase
         self::assertFalse(Sphinx::validateWrapperAccessToken($token));
     }
 
-    /**
-     * @test
-     *
-     * @throws HorusException
-     *
-     * @return void
-     */
+    #[Test]
     public function assertWrapperAccessToken(): void
     {
         $user = UserFactory::createNormalUser();
@@ -199,13 +150,7 @@ class SphinxServiceTest extends TestCase
         Sphinx::assertWrapperAccessToken($token);
     }
 
-    /**
-     * @test
-     *
-     * @throws HorusException
-     *
-     * @return void
-     */
+    #[Test]
     public function validateInnerAccessToken(): void
     {
         $user = UserFactory::createNormalUser();
@@ -223,13 +168,7 @@ class SphinxServiceTest extends TestCase
         self::assertFalse(Sphinx::validateInnerAccessToken($token));
     }
 
-    /**
-     * @test
-     *
-     * @throws HorusException
-     *
-     * @return void
-     */
+    #[Test]
     public function assertInnerAccessToken(): void
     {
         $user = UserFactory::createNormalUser();
@@ -249,13 +188,7 @@ class SphinxServiceTest extends TestCase
         Sphinx::assertWrapperAccessToken($token);
     }
 
-    /**
-     * @test
-     *
-     * @throws HorusException
-     *
-     * @return void
-     */
+    #[Test]
     public function getInnerAccessToken(): void
     {
         $user = UserFactory::createNormalUser();
@@ -269,13 +202,7 @@ class SphinxServiceTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @throws HorusException
-     *
-     * @return void
-     */
+    #[Test]
     public function validateWrapperRefreshToken(): void
     {
         $user = UserFactory::createNormalUser();
@@ -293,13 +220,7 @@ class SphinxServiceTest extends TestCase
         self::assertFalse(Sphinx::validateWrapperRefreshToken($token));
     }
 
-    /**
-     * @test
-     *
-     * @throws HorusException
-     *
-     * @return void
-     */
+    #[Test]
     public function assertWrapperRefreshToken(): void
     {
         $user = UserFactory::createNormalUser();
@@ -319,13 +240,7 @@ class SphinxServiceTest extends TestCase
         Sphinx::assertWrapperRefreshToken($token);
     }
 
-    /**
-     * @test
-     *
-     * @throws HorusException
-     *
-     * @return void
-     */
+    #[Test]
     public function validateInnerRefreshToken(): void
     {
         $user = UserFactory::createNormalUser();
@@ -345,13 +260,7 @@ class SphinxServiceTest extends TestCase
         self::assertFalse(Sphinx::validateInnerRefreshToken($token));
     }
 
-    /**
-     * @test
-     *
-     * @throws HorusException
-     *
-     * @return void
-     */
+    #[Test]
     public function assertInnerRefreshToken(): void
     {
         $user = UserFactory::createNormalUser();
@@ -373,13 +282,7 @@ class SphinxServiceTest extends TestCase
         Sphinx::assertInnerRefreshToken($token);
     }
 
-    /**
-     * @test
-     *
-     * @throws HorusException
-     *
-     * @return void
-     */
+    #[Test]
     public function getInnerRefreshToken(): void
     {
         $user = UserFactory::createNormalUser();
@@ -394,13 +297,7 @@ class SphinxServiceTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @throws HorusException
-     *
-     * @return void
-     */
+    #[Test]
     public function getPermissions(): void
     {
         $user = UserFactory::createNormalUser();
@@ -417,13 +314,7 @@ class SphinxServiceTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @throws HorusException
-     *
-     * @return void
-     */
+    #[Test]
     public function isRefreshToken(): void
     {
         $user = UserFactory::createNormalUser();
@@ -435,13 +326,7 @@ class SphinxServiceTest extends TestCase
         self::assertTrue(Sphinx::isRefreshToken($refresh));
     }
 
-    /**
-     * @test
-     *
-     * @throws HorusException
-     *
-     * @return void
-     */
+    #[Test]
     public function isNotRefreshToken(): void
     {
         $user = UserFactory::createNormalUser();
@@ -453,14 +338,7 @@ class SphinxServiceTest extends TestCase
         self::assertFalse(Sphinx::isNotRefreshToken($refresh));
     }
 
-    /**
-     * @test
-     *
-     * @throws HorusException
-     * @throws SphinxException
-     *
-     * @return void
-     */
+    #[Test]
     public function getCurrentSessionAndGuessSession(): void
     {
         $user = UserFactory::createNormalUser();

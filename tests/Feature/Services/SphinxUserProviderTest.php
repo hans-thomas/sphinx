@@ -7,6 +7,7 @@ use Hans\Sphinx\Facades\Sphinx;
 use Hans\Sphinx\Services\SphinxUserProvider;
 use Hans\Sphinx\Tests\Factories\UserFactory;
 use Hans\Sphinx\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class SphinxUserProviderTest extends TestCase
 {
@@ -23,11 +24,7 @@ class SphinxUserProviderTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function retrieveByToken(): void
     {
         self::assertEquals(
@@ -36,11 +33,7 @@ class SphinxUserProviderTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function updateRememberToken(): void
     {
         self::assertNull(
@@ -48,11 +41,7 @@ class SphinxUserProviderTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
+    #[Test]
     public function retrieveByJwtTokenCredentials(): void
     {
         Sphinx::generateTokenFor($this->user)->getAccessToken();

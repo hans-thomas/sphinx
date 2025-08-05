@@ -14,6 +14,7 @@ use Hans\Sphinx\Tests\TestCase;
 use Illuminate\Database\Eloquent\Model;
 use Lcobucci\JWT\Signer\Hmac\Sha512;
 use Lcobucci\JWT\Signer\Key\InMemory;
+use PHPUnit\Framework\Attributes\Test;
 
 class ConstraintsTest extends TestCase
 {
@@ -28,13 +29,7 @@ class ConstraintsTest extends TestCase
         $this->user = UserFactory::createNormalUser();
     }
 
-    /**
-     * @test
-     *
-     * @throws SphinxException
-     *
-     * @return void
-     */
+    #[Test]
     public function ExpirationValidator(): void
     {
         $this->instance->registerConstrain(new ExpirationValidator());
@@ -51,13 +46,7 @@ class ConstraintsTest extends TestCase
         $this->instance->assert($token);
     }
 
-    /**
-     * @test
-     *
-     * @throws SphinxException
-     *
-     * @return void
-     */
+    #[Test]
     public function RoleIdValidator(): void
     {
         $this->instance->registerConstrain(new RoleIdValidator());
@@ -78,13 +67,7 @@ class ConstraintsTest extends TestCase
         $this->instance->assert($token);
     }
 
-    /**
-     * @test
-     *
-     * @throws SphinxException
-     *
-     * @return void
-     */
+    #[Test]
     public function SecretVerificationValidator(): void
     {
         $this->instance->registerConstrain(
@@ -107,13 +90,7 @@ class ConstraintsTest extends TestCase
         $this->instance->assert($token);
     }
 
-    /**
-     * @test
-     *
-     * @throws SphinxException
-     *
-     * @return void
-     */
+    #[Test]
     public function SessionIdValidator(): void
     {
         $this->instance->registerConstrain(new SessionIdValidator());

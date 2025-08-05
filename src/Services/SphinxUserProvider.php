@@ -29,7 +29,7 @@ class SphinxUserProvider extends EloquentUserProvider
      *
      * @return void
      */
-    public function updateRememberToken(Authenticatable $user = null, $token = null): void
+    public function updateRememberToken(?Authenticatable $user = null, $token = null): void
     {
     }
 
