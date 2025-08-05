@@ -14,7 +14,7 @@ class UserFactory
     /**
      * @return User
      */
-    public static function creatWithoutRole(): User
+    public static function createWithoutRole(): User
     {
         $user = User::factory()->create();
 
@@ -22,8 +22,6 @@ class UserFactory
     }
 
     /**
-     * @throws HorusException
-     *
      * @return User
      */
     public static function createNormalUser(): User
@@ -35,7 +33,6 @@ class UserFactory
     }
 
     /**
-     * @throws HorusException
      * @throws SphinxException
      *
      * @return User
@@ -50,8 +47,6 @@ class UserFactory
     }
 
     /**
-     * @throws HorusException
-     *
      * @return User
      */
     public static function createAdminUser(): User
@@ -65,12 +60,11 @@ class UserFactory
     /**
      * @param User|null $user
      *
-     * @throws HorusException
      * @throws SphinxException
      *
      * @return SphinxService
      */
-    public static function generateToken(User $user = null): SphinxService
+    public static function generateToken(?User $user = null): SphinxService
     {
         if (is_null($user)) {
             $user = self::createNormalUserWithSession();

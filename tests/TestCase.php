@@ -13,6 +13,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Cache;
 use Orchestra\Testbench\TestCase as BaseTestCase;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionServiceProvider;
 
 class TestCase extends BaseTestCase
@@ -146,7 +147,7 @@ class TestCase extends BaseTestCase
      *
      * @return string
      */
-    protected function getBasePath(): string
+    public static function applicationBasePath(): string
     {
         return __DIR__.'/skeleton/laravel-11.x';
     }

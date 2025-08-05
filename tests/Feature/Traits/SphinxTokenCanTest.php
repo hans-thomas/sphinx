@@ -6,6 +6,7 @@ use App\Models\User;
 use Hans\Sphinx\Facades\Sphinx;
 use Hans\Sphinx\Tests\Factories\UserFactory;
 use Hans\Sphinx\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 use Spatie\Permission\Models\Permission;
 
 class SphinxTokenCanTest extends TestCase
@@ -22,12 +23,7 @@ class SphinxTokenCanTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
-    public function can(): void
+    #[Test] public function can(): void
     {
         self::assertTrue(
             $this->user->can('user-view')
@@ -44,12 +40,7 @@ class SphinxTokenCanTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
-    public function canAny(): void
+    #[Test] public function canAny(): void
     {
         self::assertTrue(
             $this->user->canAny(['wrong-update', 'user-view', 'wrong-view'])
@@ -66,12 +57,7 @@ class SphinxTokenCanTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
-    public function cannot(): void
+    #[Test] public function cannot(): void
     {
         self::assertTrue(
             $this->user->cannot('wrong-update')
@@ -91,12 +77,7 @@ class SphinxTokenCanTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @return void
-     */
-    public function cant(): void
+    #[Test] public function cant(): void
     {
         self::assertTrue(
             $this->user->cant('wrong-update')

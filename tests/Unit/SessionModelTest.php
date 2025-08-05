@@ -11,18 +11,11 @@ use Hans\Sphinx\Tests\TestCase;
 use Illuminate\Cache\ArrayStore;
 use Illuminate\Support\Facades\Cache;
 use Mockery;
+use PHPUnit\Framework\Attributes\Test;
 
 class SessionModelTest extends TestCase
 {
-    /**
-     * @test
-     *
-     * @throws HorusException
-     * @throws SphinxException
-     *
-     * @return void
-     */
-    public function create(): void
+    #[Test] public function create(): void
     {
         request()->headers->set('User-Agent', 'Mozilla/5.0 (X11; Linux x86_64; rv:130.0) Gecko/20100101 Firefox/130.0');
         $user = UserFactory::createNormalUser();
@@ -31,15 +24,7 @@ class SessionModelTest extends TestCase
         $this->assertModelExists($model);
     }
 
-    /**
-     * @test
-     *
-     * @throws HorusException
-     * @throws SphinxException
-     *
-     * @return void
-     */
-    public function findAndCache(): void
+    #[Test] public function findAndCache(): void
     {
         $user = UserFactory::createNormalUser();
         $model = capture_session($user);
