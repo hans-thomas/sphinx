@@ -303,9 +303,9 @@ class SphinxServiceTest extends TestCase
         $user = UserFactory::createNormalUser();
         $refresh = Sphinx::generateTokenFor($user)->getRefreshToken();
 
-        request()->headers->set('Authorization', 'Bearer ' . $refresh);
+        request()->headers->set('Authorization', 'Bearer '.$refresh);
 
-        Sphinx::swap(new SphinxService);
+        Sphinx::swap(new SphinxService());
 
         $inner = Sphinx::getInnerRefreshToken($refresh);
 
