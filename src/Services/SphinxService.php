@@ -435,7 +435,9 @@ class SphinxService
             $this->wrapperRefreshTokenProvider
                 ->encode()
                 ->expiresAt(sphinx_config('refresh_expired_at'))
-                ->header('refresh', true);
+                ->header('refresh', true)
+                ->header('session_id', $this->session->id);
+
             $this->innerRefreshTokenProvider
                 ->encode()
                 ->claim(

@@ -298,6 +298,24 @@ class SphinxServiceTest extends TestCase
     }
 
     #[Test]
+    public function getInnerRefreshTokenFromFreshInstance(): void
+    {
+        $user = UserFactory::createNormalUser();
+        $refresh = Sphinx::generateTokenFor($user)->getRefreshToken();
+
+        request()->headers->set('Authorization', 'Bearer '.$refresh);
+
+        Sphinx::swap(new SphinxService());
+
+        $inner = Sphinx::getInnerRefreshToken($refresh);
+
+        self::assertStringEqualsStringIgnoringLineEndings(
+            Sphinx::decode($refresh)->claims()->get('_token'),
+            $inner->toString()
+        );
+    }
+
+    #[Test]
     public function getPermissions(): void
     {
         $user = UserFactory::createNormalUser();
